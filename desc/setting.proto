@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message UpdateSettingReq {
+  string module = 1;
+  string jsonString = 2;
+}
+
+message FindSettingReq {
+  string module = 1;
+}
+
+message FindSettingResp {
+  string jsonString = 2;
+}
+
+message WithdrawThresholdResp {
+  float withdrawThreshold = 1;
+}
+
+message MinWithdrawNumResp {
+  float minWithdrawNum = 1;
+}
+
+message WithdrawCommissionResp {
+  float withdrawCommission = 1;
+}
+
+message IdleTimeResp {
+  uint32 idleTime = 1;
+}
+
+message RobotLampNumResp {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+message GameRuleResp {
+  string title = 1;
+  string content = 2;
+}
+
+message RobotNumResp {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+service Wolflamp {
+  // group: setting
+  //rpc createSetting (CreateSettingReq) returns (BaseIDResp);
+
+  // group: setting
+  rpc updateSetting (UpdateSettingReq) returns (BaseIDResp);
+
+  // group: setting
+  //rpc deleteSetting (DeleteSettingReq) returns (BaseIDResp);
+
+  // group: setting
+  rpc findSetting (FindSettingReq) returns (FindSettingResp);
+
+  // group: setting
+  //rpc listSetting (ListSettingReq) returns (ListSettingResp);
+
+  // group: setting
+  rpc getWithdrawThreshold (Empty) returns (WithdrawThresholdResp);
+
+  // group: setting
+  rpc getMinWithdrawNum (Empty) returns (MinWithdrawNumResp);
+
+  // group: setting
+  rpc getWithdrawCommission (Empty) returns (WithdrawCommissionResp);
+
+  // group: setting
+  rpc getIdleTime (Empty) returns (IdleTimeResp);
+
+  // group: setting
+  rpc getRobotLampNum (Empty) returns (RobotLampNumResp);
+
+  // group: setting
+  rpc getGameRule (Empty) returns (GameRuleResp);
+
+  // group: setting
+  rpc getRobotNum (Empty) returns (RobotNumResp);
+
+}

@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message RewardInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  uint64 contributor_id = 5;
+  string contributor_email = 6;
+  uint32 contributor_level = 7;
+  float num = 8;
+  string remark = 9;
+  uint64 to_id = 10;
+}
+
+message CreateRewardReq {
+  uint32 status = 4;
+  uint64 contributor_id = 5;
+  string contributor_email = 6;
+  uint32 contributor_level = 7;
+  float num = 8;
+  string remark = 9;
+  uint64 to_id = 10;
+}
+
+message UpdateRewardReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional uint64 contributor_id = 5;
+  optional string contributor_email = 6;
+  optional uint32 contributor_level = 7;
+  optional float num = 8;
+  optional string remark = 9;
+  optional uint64 to_id = 10;
+}
+
+message DeleteRewardReq {
+  uint64 id = 1;
+}
+
+message FindRewardReq {
+  uint64 id = 1;
+  optional uint64 to_id = 2;
+}
+
+message ListRewardReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 to_id = 3;
+  optional uint32 status = 4;
+  optional uint32 contributor_level = 5;
+}
+
+message ListRewardResp {
+  uint64 total = 1;
+  repeated RewardInfo data = 2;
+}
+
+message RewardAggregateReq {
+  uint64 to_id = 1;
+  bool get_total = 2;
+  bool get_today = 3;
+}
+
+message RewardAggregateResp {
+  optional double total = 1;
+  optional double today = 2;
+}
+
+service Wolflamp {
+  // group: reward
+  rpc createReward (CreateRewardReq) returns (BaseIDResp);
+
+  // group: reward
+  rpc updateReward (UpdateRewardReq) returns (BaseIDResp);
+
+  // group: reward
+  rpc deleteReward (DeleteRewardReq) returns (BaseIDResp);
+
+  // group: reward
+  rpc findReward (FindRewardReq) returns (RewardInfo);
+
+  // group: reward
+  rpc listReward (ListRewardReq) returns (ListRewardResp);
+
+  // group: reward
+  rpc rewardAggregate (RewardAggregateReq) returns (RewardAggregateResp);
+}

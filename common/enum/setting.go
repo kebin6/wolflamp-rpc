@@ -1,0 +1,85 @@
+package enum
+
+// SettingModule 平台配置项所属模块
+type SettingModule string
+
+const (
+	PlatformSetting SettingModule = "platform_setting"
+	PlatformNotice  SettingModule = "platform_notice"
+)
+
+func (p SettingModule) Val() string {
+	return string(p)
+}
+
+func (p SettingModule) Desc() string {
+	switch p {
+	case PlatformSetting:
+		return "平台配置"
+	case PlatformNotice:
+		return "平台公告"
+	default:
+		return ""
+	}
+}
+
+func (p SettingModule) DescMap() map[SettingModule]string {
+	return map[SettingModule]string{
+		PlatformSetting: PlatformSetting.Desc(),
+		PlatformNotice:  PlatformNotice.Desc(),
+	}
+}
+
+// SettingKey 平台配置项代码
+type SettingKey string
+
+const (
+	GameRule           SettingKey = "game_rule"
+	WithdrawCommission SettingKey = "withdraw_commission"
+	MinWithdrawNum     SettingKey = "min_withdraw_num"
+	RobotNum           SettingKey = "robot_num"
+	RobotLampNum       SettingKey = "robot_lamp_num"
+	IdleTime           SettingKey = "idle_time"
+	WithdrawThreshold  SettingKey = "withdraw_threshold"
+)
+
+func (p SettingKey) Val() string {
+	return string(p)
+}
+
+func (p SettingKey) Desc() string {
+	switch p {
+	case GameRule:
+		return "游戏规则"
+	case WithdrawCommission:
+		return "提币手续费"
+	case MinWithdrawNum:
+		return "最小提币金额"
+	case RobotNum:
+		return "机器人数量"
+	case RobotLampNum:
+		return "机器人投入羊数量"
+	case IdleTime:
+		return "机器人空闲秒数"
+	case WithdrawThreshold:
+		return "提币免审阈值"
+	default:
+		return ""
+	}
+}
+
+func (p SettingKey) DescMap() map[SettingKey]string {
+	return map[SettingKey]string{
+		GameRule:           GameRule.Desc(),
+		WithdrawCommission: WithdrawCommission.Desc(),
+		MinWithdrawNum:     MinWithdrawNum.Desc(),
+		RobotNum:           RobotNum.Desc(),
+		RobotLampNum:       RobotLampNum.Desc(),
+		IdleTime:           IdleTime.Desc(),
+		WithdrawThreshold:  WithdrawThreshold.Desc(),
+	}
+}
+
+func (p SettingKey) CacheKey() string {
+	return "cache_setting:" + p.Val()
+}

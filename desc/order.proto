@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message OrderInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  string type = 5;
+  string code = 6;
+  double num = 7;
+  string to_address = 8;
+  string from_address = 9;
+  string transaction_id = 10;
+  uint64 player_id = 11;
+  double handling_fee = 12;
+  string network = 13;
+  string remark = 14;
+}
+
+message CreateOrderReq {
+  uint64 player_id = 3;
+  uint32 status = 4;
+  string type = 5;
+  double num = 6;
+  string to_address = 8;
+  string from_address = 9;
+  double handling_fee = 10;
+  string network = 11;
+}
+
+message UpdateOrderReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional string type = 5;
+  optional double num = 6;
+  optional string to_address = 8;
+  optional string from_address = 9;
+  optional string transaction_id = 10;
+}
+
+message DeleteOrderReq {
+  uint64 id = 1;
+}
+
+message FindOrderReq {
+  uint64 id = 1;
+  optional uint64 player_id = 2;
+}
+
+message ListOrderReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 player_id = 3;
+  optional uint32 status = 4;
+  optional string type = 5;
+  optional string code = 6;
+  optional double num = 7;
+  optional string to_address = 8;
+  optional string from_address = 9;
+}
+
+message ListOrderResp {
+  uint64 total = 1;
+  repeated OrderInfo data = 2;
+}
+
+// 计算提币相关费用
+message CalculateWithdrawFeeReq {
+  double balance = 1;
+  double amount = 2;
+}
+
+message CalculateWithdrawFeeResp {
+  double handling_fee = 1;
+  double received_amount = 2;
+  double total_amount = 3;
+}
+
+service Wolflamp {
+  // group: order
+  rpc createOrder (CreateOrderReq) returns (BaseIDResp);
+
+  // group: order
+  rpc updateOrder (UpdateOrderReq) returns (BaseIDResp);
+
+  // group: order
+  rpc deleteOrder (DeleteOrderReq) returns (BaseIDResp);
+
+  // group: order
+  rpc findOrder (FindOrderReq) returns (OrderInfo);
+
+  // group: order
+  rpc listOrder (ListOrderReq) returns (ListOrderResp);
+
+  // group: order
+  rpc calculateWithdrawFee (CalculateWithdrawFeeReq) returns (CalculateWithdrawFeeResp);
+}

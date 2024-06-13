@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message BannerInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  string endpoint = 5;
+  string module = 6;
+  uint32 file_type = 7;
+  string path = 8;
+  string jump_url = 9;
+  FileInfo file = 11;
+}
+
+message CreateBannerReq {
+  uint32 status = 4;
+  string endpoint = 5;
+  string module = 6;
+  uint32 file_type = 7;
+  string path = 8;
+  string jump_url = 9;
+  string file_id = 10;
+}
+
+message UpdateBannerReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional string endpoint = 5;
+  optional string module = 6;
+  optional uint32 file_type = 7;
+  optional string path = 8;
+  optional string jump_url = 9;
+  optional string file_id = 10;
+}
+
+message DeleteBannerReq {
+  uint64 id = 1;
+}
+
+message FindBannerReq {
+  uint64 id = 1;
+}
+
+message ListBannerReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint32 status = 4;
+  optional string endpoint = 5;
+  optional string module = 6;
+  optional uint32 file_type = 7;
+  optional string path = 8;
+  optional string jump_url = 9;
+}
+
+message ListBannerResp {
+  uint64 total = 1;
+  repeated BannerInfo data = 2;
+}
+
+service Wolflamp {
+  // group: banner
+  rpc createBanner (CreateBannerReq) returns (BaseIDResp);
+
+  // group: banner
+  rpc updateBanner (UpdateBannerReq) returns (BaseIDResp);
+
+  // group: banner
+  rpc deleteBanner (DeleteBannerReq) returns (BaseIDResp);
+
+  // group: banner
+  rpc findBanner (FindBannerReq) returns (BannerInfo);
+
+  // group: banner
+  rpc listBanner (ListBannerReq) returns (ListBannerResp);
+}

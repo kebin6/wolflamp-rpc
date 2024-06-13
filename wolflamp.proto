@@ -1,0 +1,649 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package = "./wolflamp";
+
+message BannerInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  string endpoint = 5;
+  string module = 6;
+  uint32 file_type = 7;
+  string path = 8;
+  string jump_url = 9;
+  FileInfo file = 11;
+}
+
+message BaseIDInt32Resp {
+  int32 id = 1;
+  string msg = 2;
+}
+
+message BaseIDInt64Resp {
+  int64 id = 1;
+  string msg = 2;
+}
+
+message BaseIDResp {
+  uint64 id = 1;
+  string msg = 2;
+}
+
+message BaseIDUint32Resp {
+  uint32 id = 1;
+  string msg = 2;
+}
+
+message BaseResp {
+  string msg = 1;
+}
+
+message BaseUUIDResp {
+  string id = 1;
+  string msg = 2;
+}
+
+//  计算提币相关费用
+message CalculateWithdrawFeeReq {
+  double balance = 1;
+  double amount = 2;
+}
+
+message CalculateWithdrawFeeResp {
+  double handling_fee = 1;
+  double received_amount = 2;
+  double total_amount = 3;
+}
+
+message CreateBannerReq {
+  uint32 status = 4;
+  string endpoint = 5;
+  string module = 6;
+  uint32 file_type = 7;
+  string path = 8;
+  string jump_url = 9;
+  string file_id = 10;
+}
+
+message CreateExchangeReq {
+  uint64 player_id = 5;
+  string transaction_id = 6;
+  uint32 type = 7;
+  uint32 coin_num = 8;
+  uint32 lamp_num = 9;
+}
+
+message CreateInvestReq {
+  uint64 player_id = 5;
+  uint32 fold_no = 7;
+  uint32 lamb_num = 8;
+  float profit_and_loss = 9;
+  uint64 round_id = 10;
+}
+
+message CreateOrderReq {
+  uint64 player_id = 3;
+  uint32 status = 4;
+  string type = 5;
+  double num = 6;
+  string to_address = 8;
+  string from_address = 9;
+  double handling_fee = 10;
+  string network = 11;
+}
+
+message CreatePlayerReq {
+  string email = 1;
+  string password = 2;
+  uint32 status = 4;
+  string name = 5;
+  float lamp = 6;
+  uint32 rank = 7;
+  double amount = 8;
+  uint32 invited_num = 10;
+  double total_income = 11;
+  float profit_and_loss = 12;
+  float recent_100_win_percent = 13;
+  string invited_code = 14;
+  float system_commission = 15;
+}
+
+message CreateRewardReq {
+  uint32 status = 4;
+  uint64 contributor_id = 5;
+  string contributor_email = 6;
+  uint32 contributor_level = 7;
+  float num = 8;
+  string remark = 9;
+  uint64 to_id = 10;
+}
+
+message CreateRoundReq {
+  int64 start_at = 5;
+  int64 open_at = 6;
+  int64 end_at = 7;
+}
+
+message DeleteBannerReq {
+  uint64 id = 1;
+}
+
+message DeleteExchangeReq {
+  uint64 id = 1;
+}
+
+message DeleteOrderReq {
+  uint64 id = 1;
+}
+
+message DeletePlayerReq {
+  uint64 id = 1;
+}
+
+message DeleteRewardReq {
+  uint64 id = 1;
+}
+
+//  base message
+message Empty {}
+
+message ExchangeInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  uint64 player_id = 5;
+  string transaction_id = 6;
+  uint32 type = 7;
+  uint32 coin_num = 8;
+  uint32 lamp_num = 9;
+}
+
+message ExchangeReq {
+  uint32 type = 1;
+  uint32 coin_amount = 2;
+  uint32 lamp_amount = 3;
+  uint64 player_id = 4;
+}
+
+message FileInfo {
+  string id = 1;
+  string name = 2;
+  string path = 3;
+  uint32 file_type = 4;
+}
+
+message FindBannerReq {
+  uint64 id = 1;
+}
+
+message FindExchangeReq {
+  uint64 id = 1;
+  optional uint64 player_id = 2;
+}
+
+message FindOrderReq {
+  uint64 id = 1;
+  optional uint64 player_id = 2;
+}
+
+message FindPlayerReq {
+  uint64 id = 1;
+}
+
+message FindRewardReq {
+  uint64 id = 1;
+  optional uint64 to_id = 2;
+}
+
+message FindRoundReq {
+  optional uint64 id = 1;
+}
+
+message FindSettingReq {
+  string module = 1;
+}
+
+message FindSettingResp {
+  string jsonString = 2;
+}
+
+//  FOLD
+message FoldInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 fold_no = 4;
+  uint32 lamb_num = 5;
+  uint64 round_id = 6;
+}
+
+message GameRuleResp {
+  string title = 1;
+  string content = 2;
+}
+
+message GetByEmailReq {
+  string email = 1;
+}
+
+message GetByInviteCodeReq {
+  string invite_code = 1;
+}
+
+message GetInvestInfoByPlayerIdReq {
+  uint64 player_id = 1;
+  optional uint64 round_id = 2;
+}
+
+message GetInvestInfoByPlayerIdResp {
+  repeated InvestInfo data = 1;
+}
+
+message IDInt32Req {
+  int32 id = 1;
+}
+
+message IDInt64Req {
+  int64 id = 1;
+}
+
+message IDReq {
+  uint64 id = 1;
+}
+
+message IDUint32Req {
+  uint32 id = 1;
+}
+
+message IDsInt32Req {
+  repeated int32 ids = 1;
+}
+
+message IDsInt64Req {
+  repeated int64 ids = 1;
+}
+
+message IDsReq {
+  repeated uint64 ids = 1;
+}
+
+message IDsUint32Req {
+  repeated uint32 ids = 1;
+}
+
+message IdleTimeResp {
+  uint32 idleTime = 1;
+}
+
+//  INVEST
+message InvestInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint64 player_id = 5;
+  string player_email = 6;
+  uint32 fold_no = 7;
+  uint32 lamb_num = 8;
+  float profit_and_loss = 9;
+  uint64 round_id = 10;
+}
+
+message ListBannerReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint32 status = 4;
+  optional string endpoint = 5;
+  optional string module = 6;
+  optional uint32 file_type = 7;
+  optional string path = 8;
+  optional string jump_url = 9;
+}
+
+message ListBannerResp {
+  uint64 total = 1;
+  repeated BannerInfo data = 2;
+}
+
+message ListExchangeReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 player_id = 5;
+  optional string transaction_id = 6;
+  optional uint32 type = 7;
+}
+
+message ListExchangeResp {
+  uint64 total = 1;
+  repeated ExchangeInfo data = 2;
+}
+
+message ListOrderReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 player_id = 3;
+  optional uint32 status = 4;
+  optional string type = 5;
+  optional string code = 6;
+  optional double num = 7;
+  optional string to_address = 8;
+  optional string from_address = 9;
+}
+
+message ListOrderResp {
+  uint64 total = 1;
+  repeated OrderInfo data = 2;
+}
+
+message ListPlayerReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string email = 3;
+  optional uint32 status = 4;
+  optional string name = 5;
+  optional float lamp = 6;
+  optional uint32 rank = 7;
+  optional double amount = 8;
+  optional uint32 invited_num = 10;
+  optional double total_income = 11;
+  optional float profit_and_loss = 12;
+  optional float recent_100_win_percent = 13;
+  optional string invite_code = 14;
+  optional uint64 inviter_id = 15;
+  optional string invited_code = 16;
+}
+
+message ListPlayerResp {
+  uint64 total = 1;
+  repeated PlayerInfo data = 2;
+}
+
+message ListRewardReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 to_id = 3;
+  optional uint32 status = 4;
+  optional uint32 contributor_level = 5;
+}
+
+message ListRewardResp {
+  uint64 total = 1;
+  repeated RewardInfo data = 2;
+}
+
+message MinWithdrawNumResp {
+  float minWithdrawNum = 1;
+}
+
+message OrderInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  string type = 5;
+  string code = 6;
+  double num = 7;
+  string to_address = 8;
+  string from_address = 9;
+  string transaction_id = 10;
+  uint64 player_id = 11;
+  double handling_fee = 12;
+  string network = 13;
+  string remark = 14;
+}
+
+message PageInfoReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+}
+
+message PlayerInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  string name = 5;
+  float lamp = 6;
+  uint32 rank = 7;
+  double amount = 8;
+  uint32 invited_num = 10;
+  double total_income = 11;
+  float profit_and_loss = 12;
+  float recent_100_win_percent = 13;
+  string invite_code = 14;
+  uint64 inviter_id = 15;
+  string invited_code = 16;
+  float system_commission = 17;
+  string email = 18;
+  string password = 19;
+  string transaction_password = 20;
+  string deposit_address = 21;
+}
+
+message RewardAggregateReq {
+  uint64 to_id = 1;
+  bool get_total = 2;
+  bool get_today = 3;
+}
+
+message RewardAggregateResp {
+  optional double total = 1;
+  optional double today = 2;
+}
+
+message RewardInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  uint64 contributor_id = 5;
+  string contributor_email = 6;
+  uint32 contributor_level = 7;
+  float num = 8;
+  string remark = 9;
+  uint64 to_id = 10;
+}
+
+message RobotLampNumResp {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+message RobotNumResp {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+//  ROUND
+message RoundInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  int64 start_at = 5;
+  int64 open_at = 6;
+  int64 end_at = 7;
+  uint32 selected_fold = 8;
+  repeated FoldInfo folds = 9;
+}
+
+message UUIDReq {
+  string id = 1;
+}
+
+message UUIDsReq {
+  repeated string ids = 1;
+}
+
+message UpdateBannerReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional string endpoint = 5;
+  optional string module = 6;
+  optional uint32 file_type = 7;
+  optional string path = 8;
+  optional string jump_url = 9;
+  optional string file_id = 10;
+}
+
+message UpdateExchangeReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional uint64 player_id = 5;
+  optional string transaction_id = 6;
+  optional uint32 type = 7;
+  optional uint32 coin_num = 8;
+  optional uint32 lamp_num = 9;
+}
+
+message UpdateInvestReq {
+  uint64 id = 1;
+  optional float profit_and_loss = 2;
+}
+
+message UpdateOrderReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional string type = 5;
+  optional double num = 6;
+  optional string to_address = 8;
+  optional string from_address = 9;
+  optional string transaction_id = 10;
+}
+
+message UpdatePlayerReq {
+  uint64 id = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional uint32 status = 4;
+  optional string name = 5;
+  optional float lamp = 6;
+  optional uint32 rank = 7;
+  optional double amount = 8;
+  optional uint32 invited_num = 10;
+  optional double total_income = 11;
+  optional float profit_and_loss = 12;
+  optional float recent_100_win_percent = 13;
+  optional string invite_code = 14;
+  optional string invited_code = 15;
+  optional float system_commission = 16;
+  optional string transaction_password = 17;
+}
+
+message UpdateRewardReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional uint64 contributor_id = 5;
+  optional string contributor_email = 6;
+  optional uint32 contributor_level = 7;
+  optional float num = 8;
+  optional string remark = 9;
+  optional uint64 to_id = 10;
+}
+
+message UpdateSettingReq {
+  string module = 1;
+  string jsonString = 2;
+}
+
+message WithdrawCommissionResp {
+  float withdrawCommission = 1;
+}
+
+message WithdrawThresholdResp {
+  float withdrawThreshold = 1;
+}
+
+service Wolflamp {
+  //  group: banner
+  rpc createBanner(CreateBannerReq) returns (BaseIDResp);
+  //  group: banner
+  rpc updateBanner(UpdateBannerReq) returns (BaseIDResp);
+  //  group: banner
+  rpc deleteBanner(DeleteBannerReq) returns (BaseIDResp);
+  //  group: banner
+  rpc findBanner(FindBannerReq) returns (BannerInfo);
+  //  group: banner
+  rpc listBanner(ListBannerReq) returns (ListBannerResp);
+  //  group: base
+  rpc initDatabase(Empty) returns (BaseResp);
+  //  group: exchange
+  rpc createExchange(CreateExchangeReq) returns (BaseIDResp);
+  //  group: exchange
+  rpc updateExchange(UpdateExchangeReq) returns (BaseIDResp);
+  //  group: exchange
+  rpc deleteExchange(DeleteExchangeReq) returns (BaseIDResp);
+  //  group: exchange
+  rpc findExchange(FindExchangeReq) returns (ExchangeInfo);
+  //  group: exchange
+  rpc listExchange(ListExchangeReq) returns (ListExchangeResp);
+  //  group: exchange
+  rpc exchange(ExchangeReq) returns (BaseIDResp);
+  //  group: game
+  rpc createRound(CreateRoundReq) returns (BaseIDResp);
+  //  group: game
+  rpc findRound(FindRoundReq) returns (RoundInfo);
+  //  group: game
+  rpc invest(CreateInvestReq) returns (BaseIDResp);
+  //  group: game
+  rpc getInvestInfoByPlayerId(GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
+  //  group: order
+  rpc createOrder(CreateOrderReq) returns (BaseIDResp);
+  //  group: order
+  rpc updateOrder(UpdateOrderReq) returns (BaseIDResp);
+  //  group: order
+  rpc deleteOrder(DeleteOrderReq) returns (BaseIDResp);
+  //  group: order
+  rpc findOrder(FindOrderReq) returns (OrderInfo);
+  //  group: order
+  rpc listOrder(ListOrderReq) returns (ListOrderResp);
+  //  group: order
+  rpc calculateWithdrawFee(CalculateWithdrawFeeReq) returns (CalculateWithdrawFeeResp);
+  //  group: player
+  rpc createPlayer(CreatePlayerReq) returns (BaseIDResp);
+  //  group: player
+  rpc updatePlayer(UpdatePlayerReq) returns (BaseIDResp);
+  //  group: player
+  rpc deletePlayer(DeletePlayerReq) returns (BaseIDResp);
+  //  group: player
+  rpc findPlayer(FindPlayerReq) returns (PlayerInfo);
+  //  group: player
+  rpc listPlayer(ListPlayerReq) returns (ListPlayerResp);
+  //  group: player
+  rpc getByEmail(GetByEmailReq) returns (PlayerInfo);
+  //  group: player
+  rpc getByInviteCode(GetByInviteCodeReq) returns (PlayerInfo);
+  //  group: reward
+  rpc createReward(CreateRewardReq) returns (BaseIDResp);
+  //  group: reward
+  rpc updateReward(UpdateRewardReq) returns (BaseIDResp);
+  //  group: reward
+  rpc deleteReward(DeleteRewardReq) returns (BaseIDResp);
+  //  group: reward
+  rpc findReward(FindRewardReq) returns (RewardInfo);
+  //  group: reward
+  rpc listReward(ListRewardReq) returns (ListRewardResp);
+  //  group: reward
+  rpc rewardAggregate(RewardAggregateReq) returns (RewardAggregateResp);
+  //  group: setting
+  rpc updateSetting(UpdateSettingReq) returns (BaseIDResp);
+  //  group: setting
+  rpc findSetting(FindSettingReq) returns (FindSettingResp);
+  //  group: setting
+  rpc getWithdrawThreshold(Empty) returns (WithdrawThresholdResp);
+  //  group: setting
+  rpc getMinWithdrawNum(Empty) returns (MinWithdrawNumResp);
+  //  group: setting
+  rpc getWithdrawCommission(Empty) returns (WithdrawCommissionResp);
+  //  group: setting
+  rpc getIdleTime(Empty) returns (IdleTimeResp);
+  //  group: setting
+  rpc getRobotLampNum(Empty) returns (RobotLampNumResp);
+  //  group: setting
+  rpc getGameRule(Empty) returns (GameRuleResp);
+  //  group: setting
+  rpc getRobotNum(Empty) returns (RobotNumResp);
+}
+
