@@ -107,6 +107,10 @@ message GetLambFoldAggregateResp {
   repeated LambFoldAggregateInfo data = 1;
 }
 
+message dealOpenGameReq {
+  uint32 lambFoldNo = 1;
+}
+
 service Wolflamp {
   // group: game
   rpc createRound (CreateRoundReq) returns (BaseIDResp);
@@ -125,4 +129,7 @@ service Wolflamp {
 
   // group: game
   rpc getLambFoldAggregate (GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
+
+  // group: game
+  rpc dealOpenGame (dealOpenGameReq) returns (BaseIDResp);
 }

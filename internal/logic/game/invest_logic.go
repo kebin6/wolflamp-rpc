@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
+	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
-	"github.com/kebin6/wolflamp-rpc/ent/round"
+	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
@@ -35,30 +36,64 @@ func NewInvestLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InvestLogi
 
 func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp, error) {
 
+	var player *ent.Player
+	// 判断当前玩家剩余羊数量是否满足要求
+	if util.IsRealPlayer(in.PlayerId) {
+		player, err := l.svcCtx.DB.Player.Get(l.ctx, in.PlayerId)
+		if err != nil {
+			return nil, err
+		}
+		if player.Lamp < float32(in.LambNum) {
+			return nil, errorx.NewInvalidArgumentError("game.lambNotEnough")
+		}
+	}
 	// 获取当前轮次信息
-	roundInfo, err := l.svcCtx.DB.Round.Query().Order(ent.Desc(round.FieldID)).First(l.ctx)
+	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
-	if in.RoundId != roundInfo.ID {
+	if in.RoundId != roundInfo.Id {
 		return nil, errorx.NewInvalidArgumentError(fmt.Sprintf("round id %d has expired", in.RoundId))
 	}
 	// 不在投注阶段
-	if roundInfo.Status != uint8(roundenum.Investing.Val()) || roundInfo.StartAt.Unix() > time.Now().Unix() ||
-		roundInfo.OpenAt.Unix() < time.Now().Unix() {
+	if roundInfo.Status != roundenum.Investing.Val() || roundInfo.StartAt > time.Now().Unix() ||
+		roundInfo.OpenAt < time.Now().Unix() {
 		return nil, errorx.NewInvalidArgumentError(fmt.Sprint("investing time over"))
 	}
 
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-		result, err = l.svcCtx.DB.RoundInvest.Create().
-			SetPlayerID(in.PlayerId).
-			SetRoundID(in.RoundId).
-			SetFoldNo(in.FoldNo).
-			SetLambNum(in.LambNum).
-			SetProfitAndLoss(0.0).
-			SetRoundCount(roundInfo.RoundCount).
-			Save(l.ctx)
+		round, err := l.svcCtx.DB.RoundInvest.Query().
+			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId), roundinvest.FoldNo(in.FoldNo)).First(l.ctx)
+		if err != nil && !ent.IsNotFound(err) {
+			return err
+		}
+		if ent.IsNotFound(err) {
+			playerEmail := ""
+			if player != nil {
+				playerEmail = player.Email
+
+				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+					AddLamp(-float32(in.LambNum)).
+					Exec(l.ctx)
+				if err != nil {
+					return err
+				}
+			}
+			result, err = l.svcCtx.DB.RoundInvest.Create().
+				SetPlayerID(in.PlayerId).
+				SetPlayerEmail(playerEmail).
+				SetRoundID(in.RoundId).
+				SetFoldNo(in.FoldNo).
+				SetLambNum(in.LambNum).
+				SetProfitAndLoss(0.0).
+				SetRoundCount(roundInfo.RoundCount).
+				SetTotalRoundCount(roundInfo.TotalRoundCount).
+				Save(l.ctx)
+		} else {
+			result, err = tx.RoundInvest.UpdateOne(round).
+				AddLambNum(int32(in.LambNum)).Save(l.ctx)
+		}
 		if err != nil {
 			return err
 		}

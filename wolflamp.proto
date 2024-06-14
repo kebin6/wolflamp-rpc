@@ -592,6 +592,10 @@ message WithdrawThresholdResp {
   float withdrawThreshold = 1;
 }
 
+message dealOpenGameReq {
+  uint32 lambFoldNo = 1;
+}
+
 service Wolflamp {
   //  group: banner
   rpc createBanner(CreateBannerReq) returns (BaseIDResp);
@@ -629,6 +633,8 @@ service Wolflamp {
   rpc getInvestInfoByPlayerId(GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
   //  group: game
   rpc getLambFoldAggregate(GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
+  //  group: game
+  rpc dealOpenGame(dealOpenGameReq) returns (BaseIDResp);
   //  group: order
   rpc createOrder(CreateOrderReq) returns (BaseIDResp);
   //  group: order

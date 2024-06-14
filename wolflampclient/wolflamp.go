@@ -29,6 +29,7 @@ type (
 	CreatePlayerReq             = wolflamp.CreatePlayerReq
 	CreateRewardReq             = wolflamp.CreateRewardReq
 	CreateRoundReq              = wolflamp.CreateRoundReq
+	DealOpenGameReq             = wolflamp.DealOpenGameReq
 	DeleteBannerReq             = wolflamp.DeleteBannerReq
 	DeleteExchangeReq           = wolflamp.DeleteExchangeReq
 	DeleteOrderReq              = wolflamp.DeleteOrderReq
@@ -118,6 +119,7 @@ type (
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
+		DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateOrder(ctx context.Context, in *UpdateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteOrder(ctx context.Context, in *DeleteOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -247,6 +249,11 @@ func (m *defaultWolflamp) GetInvestInfoByPlayerId(ctx context.Context, in *GetIn
 func (m *defaultWolflamp) GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetLambFoldAggregate(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.DealOpenGame(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

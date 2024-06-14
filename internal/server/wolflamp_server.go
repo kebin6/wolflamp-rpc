@@ -119,6 +119,11 @@ func (s *WolflampServer) GetLambFoldAggregate(ctx context.Context, in *wolflamp.
 	return l.GetLambFoldAggregate(in)
 }
 
+func (s *WolflampServer) DealOpenGame(ctx context.Context, in *wolflamp.DealOpenGameReq) (*wolflamp.BaseIDResp, error) {
+	l := game.NewDealOpenGameLogic(ctx, s.svcCtx)
+	return l.DealOpenGame(in)
+}
+
 func (s *WolflampServer) CreateOrder(ctx context.Context, in *wolflamp.CreateOrderReq) (*wolflamp.BaseIDResp, error) {
 	l := order.NewCreateOrderLogic(ctx, s.svcCtx)
 	return l.CreateOrder(in)

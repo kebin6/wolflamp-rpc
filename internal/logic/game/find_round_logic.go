@@ -98,15 +98,17 @@ func (l *FindRoundLogic) Po2Vo(po *ent.Round) (vo *wolflamp.RoundInfo) {
 	}
 
 	return &wolflamp.RoundInfo{
-		Id:           po.ID,
-		CreatedAt:    po.CreatedAt.Unix(),
-		UpdatedAt:    po.UpdatedAt.Unix(),
-		StartAt:      po.StartAt.Unix(),
-		OpenAt:       po.OpenAt.Unix(),
-		EndAt:        po.EndAt.Unix(),
-		Status:       uint32(po.Status),
-		SelectedFold: po.SelectedFold,
-		Folds:        folds,
+		Id:              po.ID,
+		CreatedAt:       po.CreatedAt.Unix(),
+		UpdatedAt:       po.UpdatedAt.Unix(),
+		StartAt:         po.StartAt.Unix(),
+		OpenAt:          po.OpenAt.Unix(),
+		EndAt:           po.EndAt.Unix(),
+		Status:          uint32(po.Status),
+		SelectedFold:    po.SelectedFold,
+		TotalRoundCount: po.TotalRoundCount,
+		RoundCount:      po.RoundCount,
+		Folds:           folds,
 	}
 
 }
