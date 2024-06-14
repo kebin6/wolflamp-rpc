@@ -34,6 +34,12 @@ func (l *ListFoldLogic) ListFold(in *wolflamp.ListFoldReq) (*wolflamp.ListFoldRe
 	if in.TotalRoundCount != nil {
 		predicates = append(predicates, roundlambfold.TotalRoundCount(*in.TotalRoundCount))
 	}
+	if in.TotalRoundCoundMin != nil {
+		predicates = append(predicates, roundlambfold.TotalRoundCountGTE(*in.TotalRoundCoundMin))
+	}
+	if in.TotalRoundCoundMax != nil {
+		predicates = append(predicates, roundlambfold.TotalRoundCountLTE(*in.TotalRoundCoundMax))
+	}
 
 	result, err := l.svcCtx.DB.RoundLambFold.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize)
 	if err != nil {

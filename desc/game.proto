@@ -45,6 +45,8 @@ message ListFoldReq {
   uint64 page_size = 2;
   optional uint64 round_id = 3;
   optional uint64 total_round_count = 4;
+  optional uint64 total_round_cound_min = 5;
+  optional uint64 total_round_cound_max = 6;
 }
 
 message ListFoldResp {
