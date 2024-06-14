@@ -8399,28 +8399,30 @@ func (m *RoundMutation) ResetEdge(name string) error {
 // RoundInvestMutation represents an operation that mutates the RoundInvest nodes in the graph.
 type RoundInvestMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *uint64
-	created_at         *time.Time
-	updated_at         *time.Time
-	player_id          *uint64
-	addplayer_id       *int64
-	player_email       *string
-	fold_no            *uint32
-	addfold_no         *int32
-	lamb_num           *uint32
-	addlamb_num        *int32
-	profit_and_loss    *float32
-	addprofit_and_loss *float32
-	round_count        *uint32
-	addround_count     *int32
-	clearedFields      map[string]struct{}
-	round              *uint64
-	clearedround       bool
-	done               bool
-	oldValue           func(context.Context) (*RoundInvest, error)
-	predicates         []predicate.RoundInvest
+	op                   Op
+	typ                  string
+	id                   *uint64
+	created_at           *time.Time
+	updated_at           *time.Time
+	player_id            *uint64
+	addplayer_id         *int64
+	player_email         *string
+	fold_no              *uint32
+	addfold_no           *int32
+	lamb_num             *uint32
+	addlamb_num          *int32
+	profit_and_loss      *float32
+	addprofit_and_loss   *float32
+	round_count          *uint32
+	addround_count       *int32
+	total_round_count    *uint64
+	addtotal_round_count *int64
+	clearedFields        map[string]struct{}
+	round                *uint64
+	clearedround         bool
+	done                 bool
+	oldValue             func(context.Context) (*RoundInvest, error)
+	predicates           []predicate.RoundInvest
 }
 
 var _ ent.Mutation = (*RoundInvestMutation)(nil)
@@ -8978,6 +8980,76 @@ func (m *RoundInvestMutation) ResetRoundCount() {
 	delete(m.clearedFields, roundinvest.FieldRoundCount)
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (m *RoundInvestMutation) SetTotalRoundCount(u uint64) {
+	m.total_round_count = &u
+	m.addtotal_round_count = nil
+}
+
+// TotalRoundCount returns the value of the "total_round_count" field in the mutation.
+func (m *RoundInvestMutation) TotalRoundCount() (r uint64, exists bool) {
+	v := m.total_round_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTotalRoundCount returns the old "total_round_count" field's value of the RoundInvest entity.
+// If the RoundInvest object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundInvestMutation) OldTotalRoundCount(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTotalRoundCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTotalRoundCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTotalRoundCount: %w", err)
+	}
+	return oldValue.TotalRoundCount, nil
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (m *RoundInvestMutation) AddTotalRoundCount(u int64) {
+	if m.addtotal_round_count != nil {
+		*m.addtotal_round_count += u
+	} else {
+		m.addtotal_round_count = &u
+	}
+}
+
+// AddedTotalRoundCount returns the value that was added to the "total_round_count" field in this mutation.
+func (m *RoundInvestMutation) AddedTotalRoundCount() (r int64, exists bool) {
+	v := m.addtotal_round_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (m *RoundInvestMutation) ClearTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	m.clearedFields[roundinvest.FieldTotalRoundCount] = struct{}{}
+}
+
+// TotalRoundCountCleared returns if the "total_round_count" field was cleared in this mutation.
+func (m *RoundInvestMutation) TotalRoundCountCleared() bool {
+	_, ok := m.clearedFields[roundinvest.FieldTotalRoundCount]
+	return ok
+}
+
+// ResetTotalRoundCount resets all changes to the "total_round_count" field.
+func (m *RoundInvestMutation) ResetTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	delete(m.clearedFields, roundinvest.FieldTotalRoundCount)
+}
+
 // ClearRound clears the "round" edge to the Round entity.
 func (m *RoundInvestMutation) ClearRound() {
 	m.clearedround = true
@@ -9039,7 +9111,7 @@ func (m *RoundInvestMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundInvestMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.created_at != nil {
 		fields = append(fields, roundinvest.FieldCreatedAt)
 	}
@@ -9067,6 +9139,9 @@ func (m *RoundInvestMutation) Fields() []string {
 	if m.round_count != nil {
 		fields = append(fields, roundinvest.FieldRoundCount)
 	}
+	if m.total_round_count != nil {
+		fields = append(fields, roundinvest.FieldTotalRoundCount)
+	}
 	return fields
 }
 
@@ -9093,6 +9168,8 @@ func (m *RoundInvestMutation) Field(name string) (ent.Value, bool) {
 		return m.RoundID()
 	case roundinvest.FieldRoundCount:
 		return m.RoundCount()
+	case roundinvest.FieldTotalRoundCount:
+		return m.TotalRoundCount()
 	}
 	return nil, false
 }
@@ -9120,6 +9197,8 @@ func (m *RoundInvestMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldRoundID(ctx)
 	case roundinvest.FieldRoundCount:
 		return m.OldRoundCount(ctx)
+	case roundinvest.FieldTotalRoundCount:
+		return m.OldTotalRoundCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown RoundInvest field %s", name)
 }
@@ -9192,6 +9271,13 @@ func (m *RoundInvestMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoundCount(v)
 		return nil
+	case roundinvest.FieldTotalRoundCount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTotalRoundCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest field %s", name)
 }
@@ -9215,6 +9301,9 @@ func (m *RoundInvestMutation) AddedFields() []string {
 	if m.addround_count != nil {
 		fields = append(fields, roundinvest.FieldRoundCount)
 	}
+	if m.addtotal_round_count != nil {
+		fields = append(fields, roundinvest.FieldTotalRoundCount)
+	}
 	return fields
 }
 
@@ -9233,6 +9322,8 @@ func (m *RoundInvestMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedProfitAndLoss()
 	case roundinvest.FieldRoundCount:
 		return m.AddedRoundCount()
+	case roundinvest.FieldTotalRoundCount:
+		return m.AddedTotalRoundCount()
 	}
 	return nil, false
 }
@@ -9277,6 +9368,13 @@ func (m *RoundInvestMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRoundCount(v)
 		return nil
+	case roundinvest.FieldTotalRoundCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTotalRoundCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest numeric field %s", name)
 }
@@ -9290,6 +9388,9 @@ func (m *RoundInvestMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(roundinvest.FieldRoundCount) {
 		fields = append(fields, roundinvest.FieldRoundCount)
+	}
+	if m.FieldCleared(roundinvest.FieldTotalRoundCount) {
+		fields = append(fields, roundinvest.FieldTotalRoundCount)
 	}
 	return fields
 }
@@ -9310,6 +9411,9 @@ func (m *RoundInvestMutation) ClearField(name string) error {
 		return nil
 	case roundinvest.FieldRoundCount:
 		m.ClearRoundCount()
+		return nil
+	case roundinvest.FieldTotalRoundCount:
+		m.ClearTotalRoundCount()
 		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest nullable field %s", name)
@@ -9345,6 +9449,9 @@ func (m *RoundInvestMutation) ResetField(name string) error {
 		return nil
 	case roundinvest.FieldRoundCount:
 		m.ResetRoundCount()
+		return nil
+	case roundinvest.FieldTotalRoundCount:
+		m.ResetTotalRoundCount()
 		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest field %s", name)

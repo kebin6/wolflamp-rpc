@@ -259,6 +259,7 @@ var (
 		{Name: "lamb_num", Type: field.TypeUint32, Comment: "投注羊数量", Default: 0},
 		{Name: "profit_and_loss", Type: field.TypeFloat32, Comment: "投注盈亏结果", Default: 0},
 		{Name: "round_count", Type: field.TypeUint32, Nullable: true, Comment: "当日第几回合", Default: 0},
+		{Name: "total_round_count", Type: field.TypeUint64, Nullable: true, Comment: "累计第几回合", Default: 0},
 		{Name: "round_id", Type: field.TypeUint64, Nullable: true, Comment: "所属回合ID", Default: 0},
 	}
 	// WlRoundInvestTable holds the schema information for the "wl_round_invest" table.
@@ -270,7 +271,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_round_invest_wl_round_invest",
-				Columns:    []*schema.Column{WlRoundInvestColumns[9]},
+				Columns:    []*schema.Column{WlRoundInvestColumns[10]},
 				RefColumns: []*schema.Column{WlRoundColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -279,12 +280,17 @@ var (
 			{
 				Name:    "idx_round",
 				Unique:  false,
-				Columns: []*schema.Column{WlRoundInvestColumns[9]},
+				Columns: []*schema.Column{WlRoundInvestColumns[10]},
 			},
 			{
 				Name:    "idx_player",
 				Unique:  false,
 				Columns: []*schema.Column{WlRoundInvestColumns[3]},
+			},
+			{
+				Name:    "idx_total_count",
+				Unique:  false,
+				Columns: []*schema.Column{WlRoundInvestColumns[9]},
 			},
 		},
 	}

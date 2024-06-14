@@ -48,6 +48,11 @@ func (RoundInvest) Fields() []ent.Field {
 			Default(0).
 			Comment("当日第几回合").
 			Annotations(entsql.WithComments(true)),
+		field.Uint64("total_round_count").
+			Optional().
+			Default(0).
+			Comment("累计第几回合").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 
@@ -57,6 +62,8 @@ func (RoundInvest) Indexes() []ent.Index {
 			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("回合ID")),
 		index.Fields("player_id").StorageKey("idx_player").
 			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("玩家ID")),
+		index.Fields("total_round_count").StorageKey("idx_total_count").
+			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("累计第几回合")),
 	}
 }
 

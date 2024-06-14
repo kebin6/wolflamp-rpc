@@ -90,6 +90,23 @@ message GetInvestInfoByPlayerIdResp {
   repeated InvestInfo data = 1;
 }
 
+message LambFoldAggregateInfo {
+  uint32 lamb_fold_no = 1;
+  float profit_and_loss_count = 2;
+  uint32 total_round_count = 3;
+  uint32 win_count = 4;
+  float avg_win_rate = 5;
+}
+
+message GetLambFoldAggregateReq {
+  uint64 total_round_count_min = 1;
+  uint64 total_round_count_max = 2;
+}
+
+message GetLambFoldAggregateResp {
+  repeated LambFoldAggregateInfo data = 1;
+}
+
 service Wolflamp {
   // group: game
   rpc createRound (CreateRoundReq) returns (BaseIDResp);
@@ -105,4 +122,7 @@ service Wolflamp {
 
   // group: game
   rpc getInvestInfoByPlayerId (GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
+
+  // group: game
+  rpc getLambFoldAggregate (GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
 }

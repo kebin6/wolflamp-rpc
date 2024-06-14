@@ -245,6 +245,15 @@ message GetInvestInfoByPlayerIdResp {
   repeated InvestInfo data = 1;
 }
 
+message GetLambFoldAggregateReq {
+  uint64 total_round_count_min = 1;
+  uint64 total_round_count_max = 2;
+}
+
+message GetLambFoldAggregateResp {
+  repeated LambFoldAggregateInfo data = 1;
+}
+
 message IDInt32Req {
   int32 id = 1;
 }
@@ -292,6 +301,14 @@ message InvestInfo {
   uint32 lamb_num = 8;
   float profit_and_loss = 9;
   uint64 round_id = 10;
+}
+
+message LambFoldAggregateInfo {
+  uint32 lamb_fold_no = 1;
+  float profit_and_loss_count = 2;
+  uint32 total_round_count = 3;
+  uint32 win_count = 4;
+  float avg_win_rate = 5;
 }
 
 message ListBannerReq {
@@ -610,6 +627,8 @@ service Wolflamp {
   rpc invest(CreateInvestReq) returns (BaseIDResp);
   //  group: game
   rpc getInvestInfoByPlayerId(GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
+  //  group: game
+  rpc getLambFoldAggregate(GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
   //  group: order
   rpc createOrder(CreateOrderReq) returns (BaseIDResp);
   //  group: order

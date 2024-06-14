@@ -147,6 +147,20 @@ func (ric *RoundInvestCreate) SetNillableRoundCount(u *uint32) *RoundInvestCreat
 	return ric
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (ric *RoundInvestCreate) SetTotalRoundCount(u uint64) *RoundInvestCreate {
+	ric.mutation.SetTotalRoundCount(u)
+	return ric
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (ric *RoundInvestCreate) SetNillableTotalRoundCount(u *uint64) *RoundInvestCreate {
+	if u != nil {
+		ric.SetTotalRoundCount(*u)
+	}
+	return ric
+}
+
 // SetID sets the "id" field.
 func (ric *RoundInvestCreate) SetID(u uint64) *RoundInvestCreate {
 	ric.mutation.SetID(u)
@@ -228,6 +242,10 @@ func (ric *RoundInvestCreate) defaults() {
 	if _, ok := ric.mutation.RoundCount(); !ok {
 		v := roundinvest.DefaultRoundCount
 		ric.mutation.SetRoundCount(v)
+	}
+	if _, ok := ric.mutation.TotalRoundCount(); !ok {
+		v := roundinvest.DefaultTotalRoundCount
+		ric.mutation.SetTotalRoundCount(v)
 	}
 }
 
@@ -317,6 +335,10 @@ func (ric *RoundInvestCreate) createSpec() (*RoundInvest, *sqlgraph.CreateSpec) 
 	if value, ok := ric.mutation.RoundCount(); ok {
 		_spec.SetField(roundinvest.FieldRoundCount, field.TypeUint32, value)
 		_node.RoundCount = value
+	}
+	if value, ok := ric.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
+		_node.TotalRoundCount = value
 	}
 	if nodes := ric.mutation.RoundIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

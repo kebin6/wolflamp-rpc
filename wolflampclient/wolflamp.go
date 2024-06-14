@@ -52,6 +52,8 @@ type (
 	GetByInviteCodeReq          = wolflamp.GetByInviteCodeReq
 	GetInvestInfoByPlayerIdReq  = wolflamp.GetInvestInfoByPlayerIdReq
 	GetInvestInfoByPlayerIdResp = wolflamp.GetInvestInfoByPlayerIdResp
+	GetLambFoldAggregateReq     = wolflamp.GetLambFoldAggregateReq
+	GetLambFoldAggregateResp    = wolflamp.GetLambFoldAggregateResp
 	IDInt32Req                  = wolflamp.IDInt32Req
 	IDInt64Req                  = wolflamp.IDInt64Req
 	IDReq                       = wolflamp.IDReq
@@ -62,6 +64,7 @@ type (
 	IDsUint32Req                = wolflamp.IDsUint32Req
 	IdleTimeResp                = wolflamp.IdleTimeResp
 	InvestInfo                  = wolflamp.InvestInfo
+	LambFoldAggregateInfo       = wolflamp.LambFoldAggregateInfo
 	ListBannerReq               = wolflamp.ListBannerReq
 	ListBannerResp              = wolflamp.ListBannerResp
 	ListExchangeReq             = wolflamp.ListExchangeReq
@@ -114,6 +117,7 @@ type (
 		ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
+		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateOrder(ctx context.Context, in *UpdateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteOrder(ctx context.Context, in *DeleteOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -238,6 +242,11 @@ func (m *defaultWolflamp) Invest(ctx context.Context, in *CreateInvestReq, opts 
 func (m *defaultWolflamp) GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetInvestInfoByPlayerId(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetLambFoldAggregate(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

@@ -36,6 +36,8 @@ type RoundInvest struct {
 	RoundID uint64 `json:"round_id,omitempty"`
 	// 当日第几回合
 	RoundCount uint32 `json:"round_count,omitempty"`
+	// 累计第几回合
+	TotalRoundCount uint64 `json:"total_round_count,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoundInvestQuery when eager-loading is set.
 	Edges        RoundInvestEdges `json:"edges"`
@@ -69,7 +71,7 @@ func (*RoundInvest) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case roundinvest.FieldProfitAndLoss:
 			values[i] = new(sql.NullFloat64)
-		case roundinvest.FieldID, roundinvest.FieldPlayerID, roundinvest.FieldFoldNo, roundinvest.FieldLambNum, roundinvest.FieldRoundID, roundinvest.FieldRoundCount:
+		case roundinvest.FieldID, roundinvest.FieldPlayerID, roundinvest.FieldFoldNo, roundinvest.FieldLambNum, roundinvest.FieldRoundID, roundinvest.FieldRoundCount, roundinvest.FieldTotalRoundCount:
 			values[i] = new(sql.NullInt64)
 		case roundinvest.FieldPlayerEmail:
 			values[i] = new(sql.NullString)
@@ -150,6 +152,12 @@ func (ri *RoundInvest) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ri.RoundCount = uint32(value.Int64)
 			}
+		case roundinvest.FieldTotalRoundCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total_round_count", values[i])
+			} else if value.Valid {
+				ri.TotalRoundCount = uint64(value.Int64)
+			}
 		default:
 			ri.selectValues.Set(columns[i], values[i])
 		}
@@ -217,6 +225,9 @@ func (ri *RoundInvest) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("round_count=")
 	builder.WriteString(fmt.Sprintf("%v", ri.RoundCount))
+	builder.WriteString(", ")
+	builder.WriteString("total_round_count=")
+	builder.WriteString(fmt.Sprintf("%v", ri.TotalRoundCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

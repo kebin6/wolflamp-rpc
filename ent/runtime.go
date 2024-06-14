@@ -423,6 +423,10 @@ func init() {
 	roundinvestDescRoundCount := roundinvestFields[6].Descriptor()
 	// roundinvest.DefaultRoundCount holds the default value on creation for the round_count field.
 	roundinvest.DefaultRoundCount = roundinvestDescRoundCount.Default.(uint32)
+	// roundinvestDescTotalRoundCount is the schema descriptor for total_round_count field.
+	roundinvestDescTotalRoundCount := roundinvestFields[7].Descriptor()
+	// roundinvest.DefaultTotalRoundCount holds the default value on creation for the total_round_count field.
+	roundinvest.DefaultTotalRoundCount = roundinvestDescTotalRoundCount.Default.(uint64)
 	roundlambfoldMixin := schema.RoundLambFold{}.Mixin()
 	roundlambfoldMixinFields0 := roundlambfoldMixin[0].Fields()
 	_ = roundlambfoldMixinFields0

@@ -1829,6 +1829,30 @@ func (ri *RoundInvestCreate) SetNotNilRoundCount(value *uint32) *RoundInvestCrea
 }
 
 // set field if value's pointer is not nil.
+func (ri *RoundInvestUpdate) SetNotNilTotalRoundCount(value *uint64) *RoundInvestUpdate {
+	if value != nil {
+		return ri.SetTotalRoundCount(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
+func (ri *RoundInvestUpdateOne) SetNotNilTotalRoundCount(value *uint64) *RoundInvestUpdateOne {
+	if value != nil {
+		return ri.SetTotalRoundCount(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
+func (ri *RoundInvestCreate) SetNotNilTotalRoundCount(value *uint64) *RoundInvestCreate {
+	if value != nil {
+		return ri.SetTotalRoundCount(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
 func (rlf *RoundLambFoldUpdate) SetNotNilUpdatedAt(value *time.Time) *RoundLambFoldUpdate {
 	if value != nil {
 		return rlf.SetUpdatedAt(*value)

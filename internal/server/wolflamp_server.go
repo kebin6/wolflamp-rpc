@@ -114,6 +114,11 @@ func (s *WolflampServer) GetInvestInfoByPlayerId(ctx context.Context, in *wolfla
 	return l.GetInvestInfoByPlayerId(in)
 }
 
+func (s *WolflampServer) GetLambFoldAggregate(ctx context.Context, in *wolflamp.GetLambFoldAggregateReq) (*wolflamp.GetLambFoldAggregateResp, error) {
+	l := game.NewGetLambFoldAggregateLogic(ctx, s.svcCtx)
+	return l.GetLambFoldAggregate(in)
+}
+
 func (s *WolflampServer) CreateOrder(ctx context.Context, in *wolflamp.CreateOrderReq) (*wolflamp.BaseIDResp, error) {
 	l := order.NewCreateOrderLogic(ctx, s.svcCtx)
 	return l.CreateOrder(in)

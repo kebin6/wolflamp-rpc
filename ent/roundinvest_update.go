@@ -180,6 +180,33 @@ func (riu *RoundInvestUpdate) ClearRoundCount() *RoundInvestUpdate {
 	return riu
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (riu *RoundInvestUpdate) SetTotalRoundCount(u uint64) *RoundInvestUpdate {
+	riu.mutation.ResetTotalRoundCount()
+	riu.mutation.SetTotalRoundCount(u)
+	return riu
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (riu *RoundInvestUpdate) SetNillableTotalRoundCount(u *uint64) *RoundInvestUpdate {
+	if u != nil {
+		riu.SetTotalRoundCount(*u)
+	}
+	return riu
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (riu *RoundInvestUpdate) AddTotalRoundCount(u int64) *RoundInvestUpdate {
+	riu.mutation.AddTotalRoundCount(u)
+	return riu
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (riu *RoundInvestUpdate) ClearTotalRoundCount() *RoundInvestUpdate {
+	riu.mutation.ClearTotalRoundCount()
+	return riu
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (riu *RoundInvestUpdate) SetRound(r *Round) *RoundInvestUpdate {
 	return riu.SetRoundID(r.ID)
@@ -279,6 +306,15 @@ func (riu *RoundInvestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if riu.mutation.RoundCountCleared() {
 		_spec.ClearField(roundinvest.FieldRoundCount, field.TypeUint32)
+	}
+	if value, ok := riu.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if value, ok := riu.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if riu.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(roundinvest.FieldTotalRoundCount, field.TypeUint64)
 	}
 	if riu.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -480,6 +516,33 @@ func (riuo *RoundInvestUpdateOne) ClearRoundCount() *RoundInvestUpdateOne {
 	return riuo
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (riuo *RoundInvestUpdateOne) SetTotalRoundCount(u uint64) *RoundInvestUpdateOne {
+	riuo.mutation.ResetTotalRoundCount()
+	riuo.mutation.SetTotalRoundCount(u)
+	return riuo
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (riuo *RoundInvestUpdateOne) SetNillableTotalRoundCount(u *uint64) *RoundInvestUpdateOne {
+	if u != nil {
+		riuo.SetTotalRoundCount(*u)
+	}
+	return riuo
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (riuo *RoundInvestUpdateOne) AddTotalRoundCount(u int64) *RoundInvestUpdateOne {
+	riuo.mutation.AddTotalRoundCount(u)
+	return riuo
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (riuo *RoundInvestUpdateOne) ClearTotalRoundCount() *RoundInvestUpdateOne {
+	riuo.mutation.ClearTotalRoundCount()
+	return riuo
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (riuo *RoundInvestUpdateOne) SetRound(r *Round) *RoundInvestUpdateOne {
 	return riuo.SetRoundID(r.ID)
@@ -609,6 +672,15 @@ func (riuo *RoundInvestUpdateOne) sqlSave(ctx context.Context) (_node *RoundInve
 	}
 	if riuo.mutation.RoundCountCleared() {
 		_spec.ClearField(roundinvest.FieldRoundCount, field.TypeUint32)
+	}
+	if value, ok := riuo.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if value, ok := riuo.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if riuo.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(roundinvest.FieldTotalRoundCount, field.TypeUint64)
 	}
 	if riuo.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{
