@@ -38,7 +38,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 	if err != nil && !ent.IsNotFound(err) {
 		return nil, err
 	}
-	idStr := time.Now().Format("020601021504")
+	idStr := time.Now().Format("060102150405")
 	roundCount := uint32(1)
 	if roundInfo != nil {
 		roundCount = uint32(roundInfo.RoundCount) + 1
@@ -48,14 +48,13 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 		return nil, err
 	}
 
-	id = 0
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		result, err := l.svcCtx.DB.Round.Create().
 			SetID(id).
 			SetStatus(uint8(roundenum.Investing.Val())).
-			SetStartAt(time.UnixMilli(in.StartAt)).
-			SetOpenAt(time.UnixMilli(in.OpenAt)).
-			SetEndAt(time.UnixMilli(in.EndAt)).
+			SetStartAt(time.Unix(in.StartAt, 0)).
+			SetOpenAt(time.Unix(in.OpenAt, 0)).
+			SetEndAt(time.Unix(in.EndAt, 0)).
 			SetRoundCount(roundCount).
 			Save(l.ctx)
 		if err != nil {
@@ -65,14 +64,12 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 
 		var folds []*ent.RoundLambFoldCreate
 		for i := 1; i <= 8; i++ {
-			fold := &ent.RoundLambFoldCreate{}
-			fold.SetRoundID(id)
-			fold.SetRoundCount(roundCount)
-			fold.SetFoldNo(uint32(i))
-			fold.SetLambNum(uint32(0))
-			fold.SetProfitAndLoss(float32(0))
-
-			folds = append(folds, fold)
+			folds = append(folds, l.svcCtx.DB.RoundLambFold.Create().
+				SetRoundID(id).
+				SetRoundCount(roundCount).
+				SetFoldNo(uint32(i)).
+				SetLambNum(uint32(0)).
+				SetProfitAndLoss(float32(0)))
 		}
 		err = l.svcCtx.DB.RoundLambFold.CreateBulk(folds...).Exec(l.ctx)
 		if err != nil {
