@@ -24,10 +24,12 @@ const (
 	FieldLambNum = "lamb_num"
 	// FieldRoundID holds the string denoting the round_id field in the database.
 	FieldRoundID = "round_id"
-	// FieldRoundCount holds the string denoting the round_count field in the database.
-	FieldRoundCount = "round_count"
 	// FieldProfitAndLoss holds the string denoting the profit_and_loss field in the database.
 	FieldProfitAndLoss = "profit_and_loss"
+	// FieldRoundCount holds the string denoting the round_count field in the database.
+	FieldRoundCount = "round_count"
+	// FieldTotalRoundCount holds the string denoting the total_round_count field in the database.
+	FieldTotalRoundCount = "total_round_count"
 	// EdgeRound holds the string denoting the round edge name in mutations.
 	EdgeRound = "round"
 	// Table holds the table name of the roundlambfold in the database.
@@ -49,8 +51,9 @@ var Columns = []string{
 	FieldFoldNo,
 	FieldLambNum,
 	FieldRoundID,
-	FieldRoundCount,
 	FieldProfitAndLoss,
+	FieldRoundCount,
+	FieldTotalRoundCount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,10 +79,12 @@ var (
 	DefaultLambNum uint32
 	// DefaultRoundID holds the default value on creation for the "round_id" field.
 	DefaultRoundID uint64
-	// DefaultRoundCount holds the default value on creation for the "round_count" field.
-	DefaultRoundCount uint32
 	// DefaultProfitAndLoss holds the default value on creation for the "profit_and_loss" field.
 	DefaultProfitAndLoss float32
+	// DefaultRoundCount holds the default value on creation for the "round_count" field.
+	DefaultRoundCount uint32
+	// DefaultTotalRoundCount holds the default value on creation for the "total_round_count" field.
+	DefaultTotalRoundCount uint64
 )
 
 // OrderOption defines the ordering options for the RoundLambFold queries.
@@ -115,14 +120,19 @@ func ByRoundID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRoundID, opts...).ToFunc()
 }
 
+// ByProfitAndLoss orders the results by the profit_and_loss field.
+func ByProfitAndLoss(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProfitAndLoss, opts...).ToFunc()
+}
+
 // ByRoundCount orders the results by the round_count field.
 func ByRoundCount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRoundCount, opts...).ToFunc()
 }
 
-// ByProfitAndLoss orders the results by the profit_and_loss field.
-func ByProfitAndLoss(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldProfitAndLoss, opts...).ToFunc()
+// ByTotalRoundCount orders the results by the total_round_count field.
+func ByTotalRoundCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTotalRoundCount, opts...).ToFunc()
 }
 
 // ByRoundField orders the results by round field.

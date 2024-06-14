@@ -80,14 +80,19 @@ func RoundID(v uint64) predicate.RoundLambFold {
 	return predicate.RoundLambFold(sql.FieldEQ(FieldRoundID, v))
 }
 
+// ProfitAndLoss applies equality check predicate on the "profit_and_loss" field. It's identical to ProfitAndLossEQ.
+func ProfitAndLoss(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldEQ(FieldProfitAndLoss, v))
+}
+
 // RoundCount applies equality check predicate on the "round_count" field. It's identical to RoundCountEQ.
 func RoundCount(v uint32) predicate.RoundLambFold {
 	return predicate.RoundLambFold(sql.FieldEQ(FieldRoundCount, v))
 }
 
-// ProfitAndLoss applies equality check predicate on the "profit_and_loss" field. It's identical to ProfitAndLossEQ.
-func ProfitAndLoss(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldEQ(FieldProfitAndLoss, v))
+// TotalRoundCount applies equality check predicate on the "total_round_count" field. It's identical to TotalRoundCountEQ.
+func TotalRoundCount(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldEQ(FieldTotalRoundCount, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -280,6 +285,46 @@ func RoundIDNotNil() predicate.RoundLambFold {
 	return predicate.RoundLambFold(sql.FieldNotNull(FieldRoundID))
 }
 
+// ProfitAndLossEQ applies the EQ predicate on the "profit_and_loss" field.
+func ProfitAndLossEQ(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldEQ(FieldProfitAndLoss, v))
+}
+
+// ProfitAndLossNEQ applies the NEQ predicate on the "profit_and_loss" field.
+func ProfitAndLossNEQ(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldNEQ(FieldProfitAndLoss, v))
+}
+
+// ProfitAndLossIn applies the In predicate on the "profit_and_loss" field.
+func ProfitAndLossIn(vs ...float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldIn(FieldProfitAndLoss, vs...))
+}
+
+// ProfitAndLossNotIn applies the NotIn predicate on the "profit_and_loss" field.
+func ProfitAndLossNotIn(vs ...float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldNotIn(FieldProfitAndLoss, vs...))
+}
+
+// ProfitAndLossGT applies the GT predicate on the "profit_and_loss" field.
+func ProfitAndLossGT(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldGT(FieldProfitAndLoss, v))
+}
+
+// ProfitAndLossGTE applies the GTE predicate on the "profit_and_loss" field.
+func ProfitAndLossGTE(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldGTE(FieldProfitAndLoss, v))
+}
+
+// ProfitAndLossLT applies the LT predicate on the "profit_and_loss" field.
+func ProfitAndLossLT(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldLT(FieldProfitAndLoss, v))
+}
+
+// ProfitAndLossLTE applies the LTE predicate on the "profit_and_loss" field.
+func ProfitAndLossLTE(v float32) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldLTE(FieldProfitAndLoss, v))
+}
+
 // RoundCountEQ applies the EQ predicate on the "round_count" field.
 func RoundCountEQ(v uint32) predicate.RoundLambFold {
 	return predicate.RoundLambFold(sql.FieldEQ(FieldRoundCount, v))
@@ -330,44 +375,54 @@ func RoundCountNotNil() predicate.RoundLambFold {
 	return predicate.RoundLambFold(sql.FieldNotNull(FieldRoundCount))
 }
 
-// ProfitAndLossEQ applies the EQ predicate on the "profit_and_loss" field.
-func ProfitAndLossEQ(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldEQ(FieldProfitAndLoss, v))
+// TotalRoundCountEQ applies the EQ predicate on the "total_round_count" field.
+func TotalRoundCountEQ(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldEQ(FieldTotalRoundCount, v))
 }
 
-// ProfitAndLossNEQ applies the NEQ predicate on the "profit_and_loss" field.
-func ProfitAndLossNEQ(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldNEQ(FieldProfitAndLoss, v))
+// TotalRoundCountNEQ applies the NEQ predicate on the "total_round_count" field.
+func TotalRoundCountNEQ(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldNEQ(FieldTotalRoundCount, v))
 }
 
-// ProfitAndLossIn applies the In predicate on the "profit_and_loss" field.
-func ProfitAndLossIn(vs ...float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldIn(FieldProfitAndLoss, vs...))
+// TotalRoundCountIn applies the In predicate on the "total_round_count" field.
+func TotalRoundCountIn(vs ...uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldIn(FieldTotalRoundCount, vs...))
 }
 
-// ProfitAndLossNotIn applies the NotIn predicate on the "profit_and_loss" field.
-func ProfitAndLossNotIn(vs ...float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldNotIn(FieldProfitAndLoss, vs...))
+// TotalRoundCountNotIn applies the NotIn predicate on the "total_round_count" field.
+func TotalRoundCountNotIn(vs ...uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldNotIn(FieldTotalRoundCount, vs...))
 }
 
-// ProfitAndLossGT applies the GT predicate on the "profit_and_loss" field.
-func ProfitAndLossGT(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldGT(FieldProfitAndLoss, v))
+// TotalRoundCountGT applies the GT predicate on the "total_round_count" field.
+func TotalRoundCountGT(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldGT(FieldTotalRoundCount, v))
 }
 
-// ProfitAndLossGTE applies the GTE predicate on the "profit_and_loss" field.
-func ProfitAndLossGTE(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldGTE(FieldProfitAndLoss, v))
+// TotalRoundCountGTE applies the GTE predicate on the "total_round_count" field.
+func TotalRoundCountGTE(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldGTE(FieldTotalRoundCount, v))
 }
 
-// ProfitAndLossLT applies the LT predicate on the "profit_and_loss" field.
-func ProfitAndLossLT(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldLT(FieldProfitAndLoss, v))
+// TotalRoundCountLT applies the LT predicate on the "total_round_count" field.
+func TotalRoundCountLT(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldLT(FieldTotalRoundCount, v))
 }
 
-// ProfitAndLossLTE applies the LTE predicate on the "profit_and_loss" field.
-func ProfitAndLossLTE(v float32) predicate.RoundLambFold {
-	return predicate.RoundLambFold(sql.FieldLTE(FieldProfitAndLoss, v))
+// TotalRoundCountLTE applies the LTE predicate on the "total_round_count" field.
+func TotalRoundCountLTE(v uint64) predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldLTE(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountIsNil applies the IsNil predicate on the "total_round_count" field.
+func TotalRoundCountIsNil() predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldIsNull(FieldTotalRoundCount))
+}
+
+// TotalRoundCountNotNil applies the NotNil predicate on the "total_round_count" field.
+func TotalRoundCountNotNil() predicate.RoundLambFold {
+	return predicate.RoundLambFold(sql.FieldNotNull(FieldTotalRoundCount))
 }
 
 // HasRound applies the HasEdge predicate on the "round" edge.

@@ -31,14 +31,19 @@ func (RoundLambFold) Fields() []ent.Field {
 			Default(0).
 			Comment("所属回合ID").
 			Annotations(entsql.WithComments(true)),
+		field.Float32("profit_and_loss").
+			Default(0).
+			Comment("投注盈亏结果").
+			Annotations(entsql.WithComments(true)),
 		field.Uint32("round_count").
 			Optional().
 			Default(0).
 			Comment("当日第几回合").
 			Annotations(entsql.WithComments(true)),
-		field.Float32("profit_and_loss").
+		field.Uint64("total_round_count").
+			Optional().
 			Default(0).
-			Comment("投注盈亏结果").
+			Comment("累计第几回合").
 			Annotations(entsql.WithComments(true)),
 	}
 }
@@ -47,6 +52,8 @@ func (RoundLambFold) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("round_id").StorageKey("idx_round").
 			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("回合ID")),
+		index.Fields("total_round_count").StorageKey("idx_total_count").
+			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("累计第几回合")),
 	}
 }
 

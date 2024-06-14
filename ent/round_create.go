@@ -70,6 +70,20 @@ func (rc *RoundCreate) SetRoundCount(u uint32) *RoundCreate {
 	return rc
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (rc *RoundCreate) SetTotalRoundCount(u uint64) *RoundCreate {
+	rc.mutation.SetTotalRoundCount(u)
+	return rc
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableTotalRoundCount(u *uint64) *RoundCreate {
+	if u != nil {
+		rc.SetTotalRoundCount(*u)
+	}
+	return rc
+}
+
 // SetStartAt sets the "start_at" field.
 func (rc *RoundCreate) SetStartAt(t time.Time) *RoundCreate {
 	rc.mutation.SetStartAt(t)
@@ -185,6 +199,10 @@ func (rc *RoundCreate) defaults() {
 		v := round.DefaultStatus
 		rc.mutation.SetStatus(v)
 	}
+	if _, ok := rc.mutation.TotalRoundCount(); !ok {
+		v := round.DefaultTotalRoundCount
+		rc.mutation.SetTotalRoundCount(v)
+	}
 	if _, ok := rc.mutation.SelectedFold(); !ok {
 		v := round.DefaultSelectedFold
 		rc.mutation.SetSelectedFold(v)
@@ -261,6 +279,10 @@ func (rc *RoundCreate) createSpec() (*Round, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.RoundCount(); ok {
 		_spec.SetField(round.FieldRoundCount, field.TypeUint32, value)
 		_node.RoundCount = value
+	}
+	if value, ok := rc.mutation.TotalRoundCount(); ok {
+		_spec.SetField(round.FieldTotalRoundCount, field.TypeUint64, value)
+		_node.TotalRoundCount = value
 	}
 	if value, ok := rc.mutation.StartAt(); ok {
 		_spec.SetField(round.FieldStartAt, field.TypeTime, value)

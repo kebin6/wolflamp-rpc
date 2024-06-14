@@ -22,6 +22,8 @@ const (
 	FieldStatus = "status"
 	// FieldRoundCount holds the string denoting the round_count field in the database.
 	FieldRoundCount = "round_count"
+	// FieldTotalRoundCount holds the string denoting the total_round_count field in the database.
+	FieldTotalRoundCount = "total_round_count"
 	// FieldStartAt holds the string denoting the start_at field in the database.
 	FieldStartAt = "start_at"
 	// FieldOpenAt holds the string denoting the open_at field in the database.
@@ -59,6 +61,7 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldStatus,
 	FieldRoundCount,
+	FieldTotalRoundCount,
 	FieldStartAt,
 	FieldOpenAt,
 	FieldEndAt,
@@ -84,6 +87,8 @@ var (
 	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus uint8
+	// DefaultTotalRoundCount holds the default value on creation for the "total_round_count" field.
+	DefaultTotalRoundCount uint64
 	// DefaultSelectedFold holds the default value on creation for the "selected_fold" field.
 	DefaultSelectedFold uint32
 )
@@ -114,6 +119,11 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 // ByRoundCount orders the results by the round_count field.
 func ByRoundCount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRoundCount, opts...).ToFunc()
+}
+
+// ByTotalRoundCount orders the results by the total_round_count field.
+func ByTotalRoundCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTotalRoundCount, opts...).ToFunc()
 }
 
 // ByStartAt orders the results by the start_at field.

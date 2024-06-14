@@ -235,6 +235,7 @@ var (
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
 		{Name: "status", Type: field.TypeUint8, Nullable: true, Comment: "Status 1: normal 2: ban | 状态 1 正常 2 禁用", Default: 1},
 		{Name: "round_count", Type: field.TypeUint32, Comment: "Round Count | 当日累计回合数"},
+		{Name: "total_round_count", Type: field.TypeUint64, Nullable: true, Comment: "累计第几回合", Default: 0},
 		{Name: "start_at", Type: field.TypeTime, Comment: "Start Time | 回合开始时间（包括倒计时）"},
 		{Name: "open_at", Type: field.TypeTime, Comment: "Open Time | 回合开奖时间"},
 		{Name: "end_at", Type: field.TypeTime, Comment: "End Time | 回合结束时间"},
@@ -294,8 +295,9 @@ var (
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
 		{Name: "fold_no", Type: field.TypeUint32, Comment: "羊圈号", Default: 0},
 		{Name: "lamb_num", Type: field.TypeUint32, Comment: "投注羊数量", Default: 0},
-		{Name: "round_count", Type: field.TypeUint32, Nullable: true, Comment: "当日第几回合", Default: 0},
 		{Name: "profit_and_loss", Type: field.TypeFloat32, Comment: "投注盈亏结果", Default: 0},
+		{Name: "round_count", Type: field.TypeUint32, Nullable: true, Comment: "当日第几回合", Default: 0},
+		{Name: "total_round_count", Type: field.TypeUint64, Nullable: true, Comment: "累计第几回合", Default: 0},
 		{Name: "round_id", Type: field.TypeUint64, Nullable: true, Comment: "所属回合ID", Default: 0},
 	}
 	// WlRoundLambFoldTable holds the schema information for the "wl_round_lamb_fold" table.
@@ -307,7 +309,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_round_lamb_fold_wl_round_fold",
-				Columns:    []*schema.Column{WlRoundLambFoldColumns[7]},
+				Columns:    []*schema.Column{WlRoundLambFoldColumns[8]},
 				RefColumns: []*schema.Column{WlRoundColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -315,6 +317,11 @@ var (
 		Indexes: []*schema.Index{
 			{
 				Name:    "idx_round",
+				Unique:  false,
+				Columns: []*schema.Column{WlRoundLambFoldColumns[8]},
+			},
+			{
+				Name:    "idx_total_count",
 				Unique:  false,
 				Columns: []*schema.Column{WlRoundLambFoldColumns[7]},
 			},

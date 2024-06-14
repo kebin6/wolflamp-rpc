@@ -97,6 +97,27 @@ func (rlfu *RoundLambFoldUpdate) ClearRoundID() *RoundLambFoldUpdate {
 	return rlfu
 }
 
+// SetProfitAndLoss sets the "profit_and_loss" field.
+func (rlfu *RoundLambFoldUpdate) SetProfitAndLoss(f float32) *RoundLambFoldUpdate {
+	rlfu.mutation.ResetProfitAndLoss()
+	rlfu.mutation.SetProfitAndLoss(f)
+	return rlfu
+}
+
+// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
+func (rlfu *RoundLambFoldUpdate) SetNillableProfitAndLoss(f *float32) *RoundLambFoldUpdate {
+	if f != nil {
+		rlfu.SetProfitAndLoss(*f)
+	}
+	return rlfu
+}
+
+// AddProfitAndLoss adds f to the "profit_and_loss" field.
+func (rlfu *RoundLambFoldUpdate) AddProfitAndLoss(f float32) *RoundLambFoldUpdate {
+	rlfu.mutation.AddProfitAndLoss(f)
+	return rlfu
+}
+
 // SetRoundCount sets the "round_count" field.
 func (rlfu *RoundLambFoldUpdate) SetRoundCount(u uint32) *RoundLambFoldUpdate {
 	rlfu.mutation.ResetRoundCount()
@@ -124,24 +145,30 @@ func (rlfu *RoundLambFoldUpdate) ClearRoundCount() *RoundLambFoldUpdate {
 	return rlfu
 }
 
-// SetProfitAndLoss sets the "profit_and_loss" field.
-func (rlfu *RoundLambFoldUpdate) SetProfitAndLoss(f float32) *RoundLambFoldUpdate {
-	rlfu.mutation.ResetProfitAndLoss()
-	rlfu.mutation.SetProfitAndLoss(f)
+// SetTotalRoundCount sets the "total_round_count" field.
+func (rlfu *RoundLambFoldUpdate) SetTotalRoundCount(u uint64) *RoundLambFoldUpdate {
+	rlfu.mutation.ResetTotalRoundCount()
+	rlfu.mutation.SetTotalRoundCount(u)
 	return rlfu
 }
 
-// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
-func (rlfu *RoundLambFoldUpdate) SetNillableProfitAndLoss(f *float32) *RoundLambFoldUpdate {
-	if f != nil {
-		rlfu.SetProfitAndLoss(*f)
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (rlfu *RoundLambFoldUpdate) SetNillableTotalRoundCount(u *uint64) *RoundLambFoldUpdate {
+	if u != nil {
+		rlfu.SetTotalRoundCount(*u)
 	}
 	return rlfu
 }
 
-// AddProfitAndLoss adds f to the "profit_and_loss" field.
-func (rlfu *RoundLambFoldUpdate) AddProfitAndLoss(f float32) *RoundLambFoldUpdate {
-	rlfu.mutation.AddProfitAndLoss(f)
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (rlfu *RoundLambFoldUpdate) AddTotalRoundCount(u int64) *RoundLambFoldUpdate {
+	rlfu.mutation.AddTotalRoundCount(u)
+	return rlfu
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (rlfu *RoundLambFoldUpdate) ClearTotalRoundCount() *RoundLambFoldUpdate {
+	rlfu.mutation.ClearTotalRoundCount()
 	return rlfu
 }
 
@@ -221,6 +248,12 @@ func (rlfu *RoundLambFoldUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if value, ok := rlfu.mutation.AddedLambNum(); ok {
 		_spec.AddField(roundlambfold.FieldLambNum, field.TypeUint32, value)
 	}
+	if value, ok := rlfu.mutation.ProfitAndLoss(); ok {
+		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	}
+	if value, ok := rlfu.mutation.AddedProfitAndLoss(); ok {
+		_spec.AddField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	}
 	if value, ok := rlfu.mutation.RoundCount(); ok {
 		_spec.SetField(roundlambfold.FieldRoundCount, field.TypeUint32, value)
 	}
@@ -230,11 +263,14 @@ func (rlfu *RoundLambFoldUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if rlfu.mutation.RoundCountCleared() {
 		_spec.ClearField(roundlambfold.FieldRoundCount, field.TypeUint32)
 	}
-	if value, ok := rlfu.mutation.ProfitAndLoss(); ok {
-		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	if value, ok := rlfu.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
 	}
-	if value, ok := rlfu.mutation.AddedProfitAndLoss(); ok {
-		_spec.AddField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	if value, ok := rlfu.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if rlfu.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(roundlambfold.FieldTotalRoundCount, field.TypeUint64)
 	}
 	if rlfu.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -353,6 +389,27 @@ func (rlfuo *RoundLambFoldUpdateOne) ClearRoundID() *RoundLambFoldUpdateOne {
 	return rlfuo
 }
 
+// SetProfitAndLoss sets the "profit_and_loss" field.
+func (rlfuo *RoundLambFoldUpdateOne) SetProfitAndLoss(f float32) *RoundLambFoldUpdateOne {
+	rlfuo.mutation.ResetProfitAndLoss()
+	rlfuo.mutation.SetProfitAndLoss(f)
+	return rlfuo
+}
+
+// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
+func (rlfuo *RoundLambFoldUpdateOne) SetNillableProfitAndLoss(f *float32) *RoundLambFoldUpdateOne {
+	if f != nil {
+		rlfuo.SetProfitAndLoss(*f)
+	}
+	return rlfuo
+}
+
+// AddProfitAndLoss adds f to the "profit_and_loss" field.
+func (rlfuo *RoundLambFoldUpdateOne) AddProfitAndLoss(f float32) *RoundLambFoldUpdateOne {
+	rlfuo.mutation.AddProfitAndLoss(f)
+	return rlfuo
+}
+
 // SetRoundCount sets the "round_count" field.
 func (rlfuo *RoundLambFoldUpdateOne) SetRoundCount(u uint32) *RoundLambFoldUpdateOne {
 	rlfuo.mutation.ResetRoundCount()
@@ -380,24 +437,30 @@ func (rlfuo *RoundLambFoldUpdateOne) ClearRoundCount() *RoundLambFoldUpdateOne {
 	return rlfuo
 }
 
-// SetProfitAndLoss sets the "profit_and_loss" field.
-func (rlfuo *RoundLambFoldUpdateOne) SetProfitAndLoss(f float32) *RoundLambFoldUpdateOne {
-	rlfuo.mutation.ResetProfitAndLoss()
-	rlfuo.mutation.SetProfitAndLoss(f)
+// SetTotalRoundCount sets the "total_round_count" field.
+func (rlfuo *RoundLambFoldUpdateOne) SetTotalRoundCount(u uint64) *RoundLambFoldUpdateOne {
+	rlfuo.mutation.ResetTotalRoundCount()
+	rlfuo.mutation.SetTotalRoundCount(u)
 	return rlfuo
 }
 
-// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
-func (rlfuo *RoundLambFoldUpdateOne) SetNillableProfitAndLoss(f *float32) *RoundLambFoldUpdateOne {
-	if f != nil {
-		rlfuo.SetProfitAndLoss(*f)
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (rlfuo *RoundLambFoldUpdateOne) SetNillableTotalRoundCount(u *uint64) *RoundLambFoldUpdateOne {
+	if u != nil {
+		rlfuo.SetTotalRoundCount(*u)
 	}
 	return rlfuo
 }
 
-// AddProfitAndLoss adds f to the "profit_and_loss" field.
-func (rlfuo *RoundLambFoldUpdateOne) AddProfitAndLoss(f float32) *RoundLambFoldUpdateOne {
-	rlfuo.mutation.AddProfitAndLoss(f)
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (rlfuo *RoundLambFoldUpdateOne) AddTotalRoundCount(u int64) *RoundLambFoldUpdateOne {
+	rlfuo.mutation.AddTotalRoundCount(u)
+	return rlfuo
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (rlfuo *RoundLambFoldUpdateOne) ClearTotalRoundCount() *RoundLambFoldUpdateOne {
+	rlfuo.mutation.ClearTotalRoundCount()
 	return rlfuo
 }
 
@@ -507,6 +570,12 @@ func (rlfuo *RoundLambFoldUpdateOne) sqlSave(ctx context.Context) (_node *RoundL
 	if value, ok := rlfuo.mutation.AddedLambNum(); ok {
 		_spec.AddField(roundlambfold.FieldLambNum, field.TypeUint32, value)
 	}
+	if value, ok := rlfuo.mutation.ProfitAndLoss(); ok {
+		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	}
+	if value, ok := rlfuo.mutation.AddedProfitAndLoss(); ok {
+		_spec.AddField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	}
 	if value, ok := rlfuo.mutation.RoundCount(); ok {
 		_spec.SetField(roundlambfold.FieldRoundCount, field.TypeUint32, value)
 	}
@@ -516,11 +585,14 @@ func (rlfuo *RoundLambFoldUpdateOne) sqlSave(ctx context.Context) (_node *RoundL
 	if rlfuo.mutation.RoundCountCleared() {
 		_spec.ClearField(roundlambfold.FieldRoundCount, field.TypeUint32)
 	}
-	if value, ok := rlfuo.mutation.ProfitAndLoss(); ok {
-		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	if value, ok := rlfuo.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
 	}
-	if value, ok := rlfuo.mutation.AddedProfitAndLoss(); ok {
-		_spec.AddField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+	if value, ok := rlfuo.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if rlfuo.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(roundlambfold.FieldTotalRoundCount, field.TypeUint64)
 	}
 	if rlfuo.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{

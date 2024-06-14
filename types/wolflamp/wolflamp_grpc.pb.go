@@ -51,6 +51,8 @@ type WolflampClient interface {
 	// group: game
 	FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error)
 	// group: game
+	ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
+	// group: game
 	Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: game
 	GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
@@ -240,6 +242,15 @@ func (c *wolflampClient) CreateRound(ctx context.Context, in *CreateRoundReq, op
 func (c *wolflampClient) FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error) {
 	out := new(RoundInfo)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/findRound", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error) {
+	out := new(ListFoldResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/listFold", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -549,6 +560,8 @@ type WolflampServer interface {
 	// group: game
 	FindRound(context.Context, *FindRoundReq) (*RoundInfo, error)
 	// group: game
+	ListFold(context.Context, *ListFoldReq) (*ListFoldResp, error)
+	// group: game
 	Invest(context.Context, *CreateInvestReq) (*BaseIDResp, error)
 	// group: game
 	GetInvestInfoByPlayerId(context.Context, *GetInvestInfoByPlayerIdReq) (*GetInvestInfoByPlayerIdResp, error)
@@ -656,6 +669,9 @@ func (UnimplementedWolflampServer) CreateRound(context.Context, *CreateRoundReq)
 }
 func (UnimplementedWolflampServer) FindRound(context.Context, *FindRoundReq) (*RoundInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindRound not implemented")
+}
+func (UnimplementedWolflampServer) ListFold(context.Context, *ListFoldReq) (*ListFoldResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFold not implemented")
 }
 func (UnimplementedWolflampServer) Invest(context.Context, *CreateInvestReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Invest not implemented")
@@ -1008,6 +1024,24 @@ func _Wolflamp_FindRound_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).FindRound(ctx, req.(*FindRoundReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_ListFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFoldReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).ListFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/listFold",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).ListFold(ctx, req.(*ListFoldReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1614,6 +1648,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "findRound",
 			Handler:    _Wolflamp_FindRound_Handler,
+		},
+		{
+			MethodName: "listFold",
+			Handler:    _Wolflamp_ListFold_Handler,
 		},
 		{
 			MethodName: "invest",

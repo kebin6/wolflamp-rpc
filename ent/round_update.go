@@ -63,6 +63,33 @@ func (ru *RoundUpdate) ClearStatus() *RoundUpdate {
 	return ru
 }
 
+// SetTotalRoundCount sets the "total_round_count" field.
+func (ru *RoundUpdate) SetTotalRoundCount(u uint64) *RoundUpdate {
+	ru.mutation.ResetTotalRoundCount()
+	ru.mutation.SetTotalRoundCount(u)
+	return ru
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableTotalRoundCount(u *uint64) *RoundUpdate {
+	if u != nil {
+		ru.SetTotalRoundCount(*u)
+	}
+	return ru
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (ru *RoundUpdate) AddTotalRoundCount(u int64) *RoundUpdate {
+	ru.mutation.AddTotalRoundCount(u)
+	return ru
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (ru *RoundUpdate) ClearTotalRoundCount() *RoundUpdate {
+	ru.mutation.ClearTotalRoundCount()
+	return ru
+}
+
 // SetSelectedFold sets the "selected_fold" field.
 func (ru *RoundUpdate) SetSelectedFold(u uint32) *RoundUpdate {
 	ru.mutation.ResetSelectedFold()
@@ -218,6 +245,15 @@ func (ru *RoundUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if ru.mutation.StatusCleared() {
 		_spec.ClearField(round.FieldStatus, field.TypeUint8)
 	}
+	if value, ok := ru.mutation.TotalRoundCount(); ok {
+		_spec.SetField(round.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if value, ok := ru.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(round.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if ru.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(round.FieldTotalRoundCount, field.TypeUint64)
+	}
 	if value, ok := ru.mutation.SelectedFold(); ok {
 		_spec.SetField(round.FieldSelectedFold, field.TypeUint32, value)
 	}
@@ -364,6 +400,33 @@ func (ruo *RoundUpdateOne) AddStatus(u int8) *RoundUpdateOne {
 // ClearStatus clears the value of the "status" field.
 func (ruo *RoundUpdateOne) ClearStatus() *RoundUpdateOne {
 	ruo.mutation.ClearStatus()
+	return ruo
+}
+
+// SetTotalRoundCount sets the "total_round_count" field.
+func (ruo *RoundUpdateOne) SetTotalRoundCount(u uint64) *RoundUpdateOne {
+	ruo.mutation.ResetTotalRoundCount()
+	ruo.mutation.SetTotalRoundCount(u)
+	return ruo
+}
+
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableTotalRoundCount(u *uint64) *RoundUpdateOne {
+	if u != nil {
+		ruo.SetTotalRoundCount(*u)
+	}
+	return ruo
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (ruo *RoundUpdateOne) AddTotalRoundCount(u int64) *RoundUpdateOne {
+	ruo.mutation.AddTotalRoundCount(u)
+	return ruo
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (ruo *RoundUpdateOne) ClearTotalRoundCount() *RoundUpdateOne {
+	ruo.mutation.ClearTotalRoundCount()
 	return ruo
 }
 
@@ -551,6 +614,15 @@ func (ruo *RoundUpdateOne) sqlSave(ctx context.Context) (_node *Round, err error
 	}
 	if ruo.mutation.StatusCleared() {
 		_spec.ClearField(round.FieldStatus, field.TypeUint8)
+	}
+	if value, ok := ruo.mutation.TotalRoundCount(); ok {
+		_spec.SetField(round.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if value, ok := ruo.mutation.AddedTotalRoundCount(); ok {
+		_spec.AddField(round.FieldTotalRoundCount, field.TypeUint64, value)
+	}
+	if ruo.mutation.TotalRoundCountCleared() {
+		_spec.ClearField(round.FieldTotalRoundCount, field.TypeUint64)
 	}
 	if value, ok := ruo.mutation.SelectedFold(); ok {
 		_spec.SetField(round.FieldSelectedFold, field.TypeUint32, value)

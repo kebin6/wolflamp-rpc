@@ -6,7 +6,9 @@ import (
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
+	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
+	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"time"
@@ -46,14 +48,28 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		roundInfo.OpenAt.Unix() < time.Now().Unix() {
 		return nil, errorx.NewInvalidArgumentError(fmt.Sprint("investing time over"))
 	}
-	result, err := l.svcCtx.DB.RoundInvest.Create().
-		SetPlayerID(in.PlayerId).
-		SetRoundID(in.RoundId).
-		SetFoldNo(in.FoldNo).
-		SetLambNum(in.LambNum).
-		SetProfitAndLoss(0.0).
-		SetRoundCount(roundInfo.RoundCount).
-		Save(l.ctx)
+
+	var result *ent.RoundInvest
+	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
+		result, err = l.svcCtx.DB.RoundInvest.Create().
+			SetPlayerID(in.PlayerId).
+			SetRoundID(in.RoundId).
+			SetFoldNo(in.FoldNo).
+			SetLambNum(in.LambNum).
+			SetProfitAndLoss(0.0).
+			SetRoundCount(roundInfo.RoundCount).
+			Save(l.ctx)
+		if err != nil {
+			return err
+		}
+		err = l.svcCtx.DB.RoundLambFold.Update().
+			Where(roundlambfold.RoundID(in.RoundId), roundlambfold.FoldNo(in.FoldNo)).
+			AddLambNum(int32(in.LambNum)).Exec(l.ctx)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 
 	if err != nil {
 		return nil, err

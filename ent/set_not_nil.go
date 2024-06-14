@@ -1589,6 +1589,30 @@ func (r *RoundCreate) SetNotNilStatus(value *uint8) *RoundCreate {
 }
 
 // set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilTotalRoundCount(value *uint64) *RoundUpdate {
+	if value != nil {
+		return r.SetTotalRoundCount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilTotalRoundCount(value *uint64) *RoundUpdateOne {
+	if value != nil {
+		return r.SetTotalRoundCount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilTotalRoundCount(value *uint64) *RoundCreate {
+	if value != nil {
+		return r.SetTotalRoundCount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
 func (r *RoundUpdate) SetNotNilSelectedFold(value *uint32) *RoundUpdate {
 	if value != nil {
 		return r.SetSelectedFold(*value)
@@ -1901,6 +1925,30 @@ func (rlf *RoundLambFoldCreate) SetNotNilRoundID(value *uint64) *RoundLambFoldCr
 }
 
 // set field if value's pointer is not nil.
+func (rlf *RoundLambFoldUpdate) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldUpdate {
+	if value != nil {
+		return rlf.SetProfitAndLoss(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
+func (rlf *RoundLambFoldUpdateOne) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldUpdateOne {
+	if value != nil {
+		return rlf.SetProfitAndLoss(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
+func (rlf *RoundLambFoldCreate) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldCreate {
+	if value != nil {
+		return rlf.SetProfitAndLoss(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
 func (rlf *RoundLambFoldUpdate) SetNotNilRoundCount(value *uint32) *RoundLambFoldUpdate {
 	if value != nil {
 		return rlf.SetRoundCount(*value)
@@ -1925,25 +1973,25 @@ func (rlf *RoundLambFoldCreate) SetNotNilRoundCount(value *uint32) *RoundLambFol
 }
 
 // set field if value's pointer is not nil.
-func (rlf *RoundLambFoldUpdate) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldUpdate {
+func (rlf *RoundLambFoldUpdate) SetNotNilTotalRoundCount(value *uint64) *RoundLambFoldUpdate {
 	if value != nil {
-		return rlf.SetProfitAndLoss(*value)
+		return rlf.SetTotalRoundCount(*value)
 	}
 	return rlf
 }
 
 // set field if value's pointer is not nil.
-func (rlf *RoundLambFoldUpdateOne) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldUpdateOne {
+func (rlf *RoundLambFoldUpdateOne) SetNotNilTotalRoundCount(value *uint64) *RoundLambFoldUpdateOne {
 	if value != nil {
-		return rlf.SetProfitAndLoss(*value)
+		return rlf.SetTotalRoundCount(*value)
 	}
 	return rlf
 }
 
 // set field if value's pointer is not nil.
-func (rlf *RoundLambFoldCreate) SetNotNilProfitAndLoss(value *float32) *RoundLambFoldCreate {
+func (rlf *RoundLambFoldCreate) SetNotNilTotalRoundCount(value *uint64) *RoundLambFoldCreate {
 	if value != nil {
-		return rlf.SetProfitAndLoss(*value)
+		return rlf.SetTotalRoundCount(*value)
 	}
 	return rlf
 }

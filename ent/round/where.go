@@ -75,6 +75,11 @@ func RoundCount(v uint32) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldRoundCount, v))
 }
 
+// TotalRoundCount applies equality check predicate on the "total_round_count" field. It's identical to TotalRoundCountEQ.
+func TotalRoundCount(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldTotalRoundCount, v))
+}
+
 // StartAt applies equality check predicate on the "start_at" field. It's identical to StartAtEQ.
 func StartAt(v time.Time) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldStartAt, v))
@@ -263,6 +268,56 @@ func RoundCountLT(v uint32) predicate.Round {
 // RoundCountLTE applies the LTE predicate on the "round_count" field.
 func RoundCountLTE(v uint32) predicate.Round {
 	return predicate.Round(sql.FieldLTE(FieldRoundCount, v))
+}
+
+// TotalRoundCountEQ applies the EQ predicate on the "total_round_count" field.
+func TotalRoundCountEQ(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountNEQ applies the NEQ predicate on the "total_round_count" field.
+func TotalRoundCountNEQ(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountIn applies the In predicate on the "total_round_count" field.
+func TotalRoundCountIn(vs ...uint64) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldTotalRoundCount, vs...))
+}
+
+// TotalRoundCountNotIn applies the NotIn predicate on the "total_round_count" field.
+func TotalRoundCountNotIn(vs ...uint64) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldTotalRoundCount, vs...))
+}
+
+// TotalRoundCountGT applies the GT predicate on the "total_round_count" field.
+func TotalRoundCountGT(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountGTE applies the GTE predicate on the "total_round_count" field.
+func TotalRoundCountGTE(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountLT applies the LT predicate on the "total_round_count" field.
+func TotalRoundCountLT(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountLTE applies the LTE predicate on the "total_round_count" field.
+func TotalRoundCountLTE(v uint64) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldTotalRoundCount, v))
+}
+
+// TotalRoundCountIsNil applies the IsNil predicate on the "total_round_count" field.
+func TotalRoundCountIsNil() predicate.Round {
+	return predicate.Round(sql.FieldIsNull(FieldTotalRoundCount))
+}
+
+// TotalRoundCountNotNil applies the NotNil predicate on the "total_round_count" field.
+func TotalRoundCountNotNil() predicate.Round {
+	return predicate.Round(sql.FieldNotNull(FieldTotalRoundCount))
 }
 
 // StartAtEQ applies the EQ predicate on the "start_at" field.

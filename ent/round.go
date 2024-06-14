@@ -25,6 +25,8 @@ type Round struct {
 	Status uint8 `json:"status,omitempty"`
 	// Round Count | 当日累计回合数
 	RoundCount uint32 `json:"round_count,omitempty"`
+	// 累计第几回合
+	TotalRoundCount uint64 `json:"total_round_count,omitempty"`
 	// Start Time | 回合开始时间（包括倒计时）
 	StartAt time.Time `json:"start_at,omitempty"`
 	// Open Time | 回合开奖时间
@@ -73,7 +75,7 @@ func (*Round) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldSelectedFold:
+		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldTotalRoundCount, round.FieldSelectedFold:
 			values[i] = new(sql.NullInt64)
 		case round.FieldCreatedAt, round.FieldUpdatedAt, round.FieldStartAt, round.FieldOpenAt, round.FieldEndAt:
 			values[i] = new(sql.NullTime)
@@ -121,6 +123,12 @@ func (r *Round) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field round_count", values[i])
 			} else if value.Valid {
 				r.RoundCount = uint32(value.Int64)
+			}
+		case round.FieldTotalRoundCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total_round_count", values[i])
+			} else if value.Valid {
+				r.TotalRoundCount = uint64(value.Int64)
 			}
 		case round.FieldStartAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -203,6 +211,9 @@ func (r *Round) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("round_count=")
 	builder.WriteString(fmt.Sprintf("%v", r.RoundCount))
+	builder.WriteString(", ")
+	builder.WriteString("total_round_count=")
+	builder.WriteString(fmt.Sprintf("%v", r.TotalRoundCount))
 	builder.WriteString(", ")
 	builder.WriteString("start_at=")
 	builder.WriteString(r.StartAt.Format(time.ANSIC))

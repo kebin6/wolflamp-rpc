@@ -28,10 +28,12 @@ type RoundLambFold struct {
 	LambNum uint32 `json:"lamb_num,omitempty"`
 	// 所属回合ID
 	RoundID uint64 `json:"round_id,omitempty"`
-	// 当日第几回合
-	RoundCount uint32 `json:"round_count,omitempty"`
 	// 投注盈亏结果
 	ProfitAndLoss float32 `json:"profit_and_loss,omitempty"`
+	// 当日第几回合
+	RoundCount uint32 `json:"round_count,omitempty"`
+	// 累计第几回合
+	TotalRoundCount uint64 `json:"total_round_count,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoundLambFoldQuery when eager-loading is set.
 	Edges        RoundLambFoldEdges `json:"edges"`
@@ -65,7 +67,7 @@ func (*RoundLambFold) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case roundlambfold.FieldProfitAndLoss:
 			values[i] = new(sql.NullFloat64)
-		case roundlambfold.FieldID, roundlambfold.FieldFoldNo, roundlambfold.FieldLambNum, roundlambfold.FieldRoundID, roundlambfold.FieldRoundCount:
+		case roundlambfold.FieldID, roundlambfold.FieldFoldNo, roundlambfold.FieldLambNum, roundlambfold.FieldRoundID, roundlambfold.FieldRoundCount, roundlambfold.FieldTotalRoundCount:
 			values[i] = new(sql.NullInt64)
 		case roundlambfold.FieldCreatedAt, roundlambfold.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -120,17 +122,23 @@ func (rlf *RoundLambFold) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				rlf.RoundID = uint64(value.Int64)
 			}
+		case roundlambfold.FieldProfitAndLoss:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field profit_and_loss", values[i])
+			} else if value.Valid {
+				rlf.ProfitAndLoss = float32(value.Float64)
+			}
 		case roundlambfold.FieldRoundCount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field round_count", values[i])
 			} else if value.Valid {
 				rlf.RoundCount = uint32(value.Int64)
 			}
-		case roundlambfold.FieldProfitAndLoss:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field profit_and_loss", values[i])
+		case roundlambfold.FieldTotalRoundCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field total_round_count", values[i])
 			} else if value.Valid {
-				rlf.ProfitAndLoss = float32(value.Float64)
+				rlf.TotalRoundCount = uint64(value.Int64)
 			}
 		default:
 			rlf.selectValues.Set(columns[i], values[i])
@@ -188,11 +196,14 @@ func (rlf *RoundLambFold) String() string {
 	builder.WriteString("round_id=")
 	builder.WriteString(fmt.Sprintf("%v", rlf.RoundID))
 	builder.WriteString(", ")
+	builder.WriteString("profit_and_loss=")
+	builder.WriteString(fmt.Sprintf("%v", rlf.ProfitAndLoss))
+	builder.WriteString(", ")
 	builder.WriteString("round_count=")
 	builder.WriteString(fmt.Sprintf("%v", rlf.RoundCount))
 	builder.WriteString(", ")
-	builder.WriteString("profit_and_loss=")
-	builder.WriteString(fmt.Sprintf("%v", rlf.ProfitAndLoss))
+	builder.WriteString("total_round_count=")
+	builder.WriteString(fmt.Sprintf("%v", rlf.TotalRoundCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

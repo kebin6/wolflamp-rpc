@@ -14,6 +14,8 @@ message RoundInfo {
   int64 end_at = 7;
   uint32 selected_fold = 8;
   repeated FoldInfo folds = 9;
+  uint32 round_count = 10;
+  uint64 total_round_count = 11;
 }
 
 message CreateRoundReq {
@@ -34,6 +36,20 @@ message FoldInfo {
   uint32 fold_no = 4;
   uint32 lamb_num = 5;
   uint64 round_id = 6;
+  uint32 round_count = 7;
+  uint64 total_round_count = 8;
+}
+
+message ListFoldReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 round_id = 3;
+  optional uint64 total_round_count = 4;
+}
+
+message ListFoldResp {
+  uint64 total = 1;
+  repeated FoldInfo data = 2;
 }
 
 // INVEST
@@ -77,6 +93,9 @@ service Wolflamp {
 
   // group: game
   rpc findRound (FindRoundReq) returns (RoundInfo);
+
+  // group: game
+  rpc listFold (ListFoldReq) returns (ListFoldResp);
 
   // group: game
   rpc invest (CreateInvestReq) returns (BaseIDResp);

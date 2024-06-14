@@ -2,6 +2,7 @@ package game
 
 import (
 	"context"
+	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
@@ -39,9 +40,15 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 		return nil, err
 	}
 	idStr := time.Now().Format("060102150405")
+	// 游戏回合记录当天累计和历史累计
 	roundCount := uint32(1)
+	totalRoundCount := uint64(1)
 	if roundInfo != nil {
-		roundCount = uint32(roundInfo.RoundCount) + 1
+		// 如果当天有记录，则继续累加
+		if roundInfo.StartAt.After(now.BeginningOfDay()) {
+			roundCount = uint32(roundInfo.RoundCount) + 1
+		}
+		totalRoundCount = uint64(roundInfo.TotalRoundCount) + 1
 	}
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
@@ -56,6 +63,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 			SetOpenAt(time.Unix(in.OpenAt, 0)).
 			SetEndAt(time.Unix(in.EndAt, 0)).
 			SetRoundCount(roundCount).
+			SetTotalRoundCount(totalRoundCount).
 			Save(l.ctx)
 		if err != nil {
 			return err
@@ -67,6 +75,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 			folds = append(folds, l.svcCtx.DB.RoundLambFold.Create().
 				SetRoundID(id).
 				SetRoundCount(roundCount).
+				SetTotalRoundCount(totalRoundCount).
 				SetFoldNo(uint32(i)).
 				SetLambNum(uint32(0)).
 				SetProfitAndLoss(float32(0)))

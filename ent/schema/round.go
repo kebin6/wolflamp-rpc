@@ -21,6 +21,11 @@ func (Round) Fields() []ent.Field {
 			Immutable().
 			Comment("Round Count | 当日累计回合数").
 			Annotations(entsql.WithComments(true)),
+		field.Uint64("total_round_count").
+			Optional().
+			Default(0).
+			Comment("累计第几回合").
+			Annotations(entsql.WithComments(true)),
 		field.Time("start_at").
 			Immutable().
 			Comment("Start Time | 回合开始时间（包括倒计时）").

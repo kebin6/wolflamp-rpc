@@ -7281,30 +7281,32 @@ func (m *RewardMutation) ResetEdge(name string) error {
 // RoundMutation represents an operation that mutates the Round nodes in the graph.
 type RoundMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *uint64
-	created_at       *time.Time
-	updated_at       *time.Time
-	status           *uint8
-	addstatus        *int8
-	round_count      *uint32
-	addround_count   *int32
-	start_at         *time.Time
-	open_at          *time.Time
-	end_at           *time.Time
-	selected_fold    *uint32
-	addselected_fold *int32
-	clearedFields    map[string]struct{}
-	fold             map[uint64]struct{}
-	removedfold      map[uint64]struct{}
-	clearedfold      bool
-	invest           map[uint64]struct{}
-	removedinvest    map[uint64]struct{}
-	clearedinvest    bool
-	done             bool
-	oldValue         func(context.Context) (*Round, error)
-	predicates       []predicate.Round
+	op                   Op
+	typ                  string
+	id                   *uint64
+	created_at           *time.Time
+	updated_at           *time.Time
+	status               *uint8
+	addstatus            *int8
+	round_count          *uint32
+	addround_count       *int32
+	total_round_count    *uint64
+	addtotal_round_count *int64
+	start_at             *time.Time
+	open_at              *time.Time
+	end_at               *time.Time
+	selected_fold        *uint32
+	addselected_fold     *int32
+	clearedFields        map[string]struct{}
+	fold                 map[uint64]struct{}
+	removedfold          map[uint64]struct{}
+	clearedfold          bool
+	invest               map[uint64]struct{}
+	removedinvest        map[uint64]struct{}
+	clearedinvest        bool
+	done                 bool
+	oldValue             func(context.Context) (*Round, error)
+	predicates           []predicate.Round
 }
 
 var _ ent.Mutation = (*RoundMutation)(nil)
@@ -7607,6 +7609,76 @@ func (m *RoundMutation) AddedRoundCount() (r int32, exists bool) {
 func (m *RoundMutation) ResetRoundCount() {
 	m.round_count = nil
 	m.addround_count = nil
+}
+
+// SetTotalRoundCount sets the "total_round_count" field.
+func (m *RoundMutation) SetTotalRoundCount(u uint64) {
+	m.total_round_count = &u
+	m.addtotal_round_count = nil
+}
+
+// TotalRoundCount returns the value of the "total_round_count" field in the mutation.
+func (m *RoundMutation) TotalRoundCount() (r uint64, exists bool) {
+	v := m.total_round_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTotalRoundCount returns the old "total_round_count" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldTotalRoundCount(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTotalRoundCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTotalRoundCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTotalRoundCount: %w", err)
+	}
+	return oldValue.TotalRoundCount, nil
+}
+
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (m *RoundMutation) AddTotalRoundCount(u int64) {
+	if m.addtotal_round_count != nil {
+		*m.addtotal_round_count += u
+	} else {
+		m.addtotal_round_count = &u
+	}
+}
+
+// AddedTotalRoundCount returns the value that was added to the "total_round_count" field in this mutation.
+func (m *RoundMutation) AddedTotalRoundCount() (r int64, exists bool) {
+	v := m.addtotal_round_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (m *RoundMutation) ClearTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	m.clearedFields[round.FieldTotalRoundCount] = struct{}{}
+}
+
+// TotalRoundCountCleared returns if the "total_round_count" field was cleared in this mutation.
+func (m *RoundMutation) TotalRoundCountCleared() bool {
+	_, ok := m.clearedFields[round.FieldTotalRoundCount]
+	return ok
+}
+
+// ResetTotalRoundCount resets all changes to the "total_round_count" field.
+func (m *RoundMutation) ResetTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	delete(m.clearedFields, round.FieldTotalRoundCount)
 }
 
 // SetStartAt sets the "start_at" field.
@@ -7915,7 +7987,7 @@ func (m *RoundMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, round.FieldCreatedAt)
 	}
@@ -7927,6 +7999,9 @@ func (m *RoundMutation) Fields() []string {
 	}
 	if m.round_count != nil {
 		fields = append(fields, round.FieldRoundCount)
+	}
+	if m.total_round_count != nil {
+		fields = append(fields, round.FieldTotalRoundCount)
 	}
 	if m.start_at != nil {
 		fields = append(fields, round.FieldStartAt)
@@ -7956,6 +8031,8 @@ func (m *RoundMutation) Field(name string) (ent.Value, bool) {
 		return m.Status()
 	case round.FieldRoundCount:
 		return m.RoundCount()
+	case round.FieldTotalRoundCount:
+		return m.TotalRoundCount()
 	case round.FieldStartAt:
 		return m.StartAt()
 	case round.FieldOpenAt:
@@ -7981,6 +8058,8 @@ func (m *RoundMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldStatus(ctx)
 	case round.FieldRoundCount:
 		return m.OldRoundCount(ctx)
+	case round.FieldTotalRoundCount:
+		return m.OldTotalRoundCount(ctx)
 	case round.FieldStartAt:
 		return m.OldStartAt(ctx)
 	case round.FieldOpenAt:
@@ -8026,6 +8105,13 @@ func (m *RoundMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoundCount(v)
 		return nil
+	case round.FieldTotalRoundCount:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTotalRoundCount(v)
+		return nil
 	case round.FieldStartAt:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -8068,6 +8154,9 @@ func (m *RoundMutation) AddedFields() []string {
 	if m.addround_count != nil {
 		fields = append(fields, round.FieldRoundCount)
 	}
+	if m.addtotal_round_count != nil {
+		fields = append(fields, round.FieldTotalRoundCount)
+	}
 	if m.addselected_fold != nil {
 		fields = append(fields, round.FieldSelectedFold)
 	}
@@ -8083,6 +8172,8 @@ func (m *RoundMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedStatus()
 	case round.FieldRoundCount:
 		return m.AddedRoundCount()
+	case round.FieldTotalRoundCount:
+		return m.AddedTotalRoundCount()
 	case round.FieldSelectedFold:
 		return m.AddedSelectedFold()
 	}
@@ -8108,6 +8199,13 @@ func (m *RoundMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRoundCount(v)
 		return nil
+	case round.FieldTotalRoundCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTotalRoundCount(v)
+		return nil
 	case round.FieldSelectedFold:
 		v, ok := value.(int32)
 		if !ok {
@@ -8126,6 +8224,9 @@ func (m *RoundMutation) ClearedFields() []string {
 	if m.FieldCleared(round.FieldStatus) {
 		fields = append(fields, round.FieldStatus)
 	}
+	if m.FieldCleared(round.FieldTotalRoundCount) {
+		fields = append(fields, round.FieldTotalRoundCount)
+	}
 	return fields
 }
 
@@ -8142,6 +8243,9 @@ func (m *RoundMutation) ClearField(name string) error {
 	switch name {
 	case round.FieldStatus:
 		m.ClearStatus()
+		return nil
+	case round.FieldTotalRoundCount:
+		m.ClearTotalRoundCount()
 		return nil
 	}
 	return fmt.Errorf("unknown Round nullable field %s", name)
@@ -8162,6 +8266,9 @@ func (m *RoundMutation) ResetField(name string) error {
 		return nil
 	case round.FieldRoundCount:
 		m.ResetRoundCount()
+		return nil
+	case round.FieldTotalRoundCount:
+		m.ResetTotalRoundCount()
 		return nil
 	case round.FieldStartAt:
 		m.ResetStartAt()
@@ -9320,25 +9427,27 @@ func (m *RoundInvestMutation) ResetEdge(name string) error {
 // RoundLambFoldMutation represents an operation that mutates the RoundLambFold nodes in the graph.
 type RoundLambFoldMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *uint64
-	created_at         *time.Time
-	updated_at         *time.Time
-	fold_no            *uint32
-	addfold_no         *int32
-	lamb_num           *uint32
-	addlamb_num        *int32
-	round_count        *uint32
-	addround_count     *int32
-	profit_and_loss    *float32
-	addprofit_and_loss *float32
-	clearedFields      map[string]struct{}
-	round              *uint64
-	clearedround       bool
-	done               bool
-	oldValue           func(context.Context) (*RoundLambFold, error)
-	predicates         []predicate.RoundLambFold
+	op                   Op
+	typ                  string
+	id                   *uint64
+	created_at           *time.Time
+	updated_at           *time.Time
+	fold_no              *uint32
+	addfold_no           *int32
+	lamb_num             *uint32
+	addlamb_num          *int32
+	profit_and_loss      *float32
+	addprofit_and_loss   *float32
+	round_count          *uint32
+	addround_count       *int32
+	total_round_count    *uint64
+	addtotal_round_count *int64
+	clearedFields        map[string]struct{}
+	round                *uint64
+	clearedround         bool
+	done                 bool
+	oldValue             func(context.Context) (*RoundLambFold, error)
+	predicates           []predicate.RoundLambFold
 }
 
 var _ ent.Mutation = (*RoundLambFoldMutation)(nil)
@@ -9678,6 +9787,62 @@ func (m *RoundLambFoldMutation) ResetRoundID() {
 	delete(m.clearedFields, roundlambfold.FieldRoundID)
 }
 
+// SetProfitAndLoss sets the "profit_and_loss" field.
+func (m *RoundLambFoldMutation) SetProfitAndLoss(f float32) {
+	m.profit_and_loss = &f
+	m.addprofit_and_loss = nil
+}
+
+// ProfitAndLoss returns the value of the "profit_and_loss" field in the mutation.
+func (m *RoundLambFoldMutation) ProfitAndLoss() (r float32, exists bool) {
+	v := m.profit_and_loss
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProfitAndLoss returns the old "profit_and_loss" field's value of the RoundLambFold entity.
+// If the RoundLambFold object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundLambFoldMutation) OldProfitAndLoss(ctx context.Context) (v float32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProfitAndLoss is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProfitAndLoss requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProfitAndLoss: %w", err)
+	}
+	return oldValue.ProfitAndLoss, nil
+}
+
+// AddProfitAndLoss adds f to the "profit_and_loss" field.
+func (m *RoundLambFoldMutation) AddProfitAndLoss(f float32) {
+	if m.addprofit_and_loss != nil {
+		*m.addprofit_and_loss += f
+	} else {
+		m.addprofit_and_loss = &f
+	}
+}
+
+// AddedProfitAndLoss returns the value that was added to the "profit_and_loss" field in this mutation.
+func (m *RoundLambFoldMutation) AddedProfitAndLoss() (r float32, exists bool) {
+	v := m.addprofit_and_loss
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetProfitAndLoss resets all changes to the "profit_and_loss" field.
+func (m *RoundLambFoldMutation) ResetProfitAndLoss() {
+	m.profit_and_loss = nil
+	m.addprofit_and_loss = nil
+}
+
 // SetRoundCount sets the "round_count" field.
 func (m *RoundLambFoldMutation) SetRoundCount(u uint32) {
 	m.round_count = &u
@@ -9748,60 +9913,74 @@ func (m *RoundLambFoldMutation) ResetRoundCount() {
 	delete(m.clearedFields, roundlambfold.FieldRoundCount)
 }
 
-// SetProfitAndLoss sets the "profit_and_loss" field.
-func (m *RoundLambFoldMutation) SetProfitAndLoss(f float32) {
-	m.profit_and_loss = &f
-	m.addprofit_and_loss = nil
+// SetTotalRoundCount sets the "total_round_count" field.
+func (m *RoundLambFoldMutation) SetTotalRoundCount(u uint64) {
+	m.total_round_count = &u
+	m.addtotal_round_count = nil
 }
 
-// ProfitAndLoss returns the value of the "profit_and_loss" field in the mutation.
-func (m *RoundLambFoldMutation) ProfitAndLoss() (r float32, exists bool) {
-	v := m.profit_and_loss
+// TotalRoundCount returns the value of the "total_round_count" field in the mutation.
+func (m *RoundLambFoldMutation) TotalRoundCount() (r uint64, exists bool) {
+	v := m.total_round_count
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldProfitAndLoss returns the old "profit_and_loss" field's value of the RoundLambFold entity.
+// OldTotalRoundCount returns the old "total_round_count" field's value of the RoundLambFold entity.
 // If the RoundLambFold object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoundLambFoldMutation) OldProfitAndLoss(ctx context.Context) (v float32, err error) {
+func (m *RoundLambFoldMutation) OldTotalRoundCount(ctx context.Context) (v uint64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldProfitAndLoss is only allowed on UpdateOne operations")
+		return v, errors.New("OldTotalRoundCount is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldProfitAndLoss requires an ID field in the mutation")
+		return v, errors.New("OldTotalRoundCount requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldProfitAndLoss: %w", err)
+		return v, fmt.Errorf("querying old value for OldTotalRoundCount: %w", err)
 	}
-	return oldValue.ProfitAndLoss, nil
+	return oldValue.TotalRoundCount, nil
 }
 
-// AddProfitAndLoss adds f to the "profit_and_loss" field.
-func (m *RoundLambFoldMutation) AddProfitAndLoss(f float32) {
-	if m.addprofit_and_loss != nil {
-		*m.addprofit_and_loss += f
+// AddTotalRoundCount adds u to the "total_round_count" field.
+func (m *RoundLambFoldMutation) AddTotalRoundCount(u int64) {
+	if m.addtotal_round_count != nil {
+		*m.addtotal_round_count += u
 	} else {
-		m.addprofit_and_loss = &f
+		m.addtotal_round_count = &u
 	}
 }
 
-// AddedProfitAndLoss returns the value that was added to the "profit_and_loss" field in this mutation.
-func (m *RoundLambFoldMutation) AddedProfitAndLoss() (r float32, exists bool) {
-	v := m.addprofit_and_loss
+// AddedTotalRoundCount returns the value that was added to the "total_round_count" field in this mutation.
+func (m *RoundLambFoldMutation) AddedTotalRoundCount() (r int64, exists bool) {
+	v := m.addtotal_round_count
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetProfitAndLoss resets all changes to the "profit_and_loss" field.
-func (m *RoundLambFoldMutation) ResetProfitAndLoss() {
-	m.profit_and_loss = nil
-	m.addprofit_and_loss = nil
+// ClearTotalRoundCount clears the value of the "total_round_count" field.
+func (m *RoundLambFoldMutation) ClearTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	m.clearedFields[roundlambfold.FieldTotalRoundCount] = struct{}{}
+}
+
+// TotalRoundCountCleared returns if the "total_round_count" field was cleared in this mutation.
+func (m *RoundLambFoldMutation) TotalRoundCountCleared() bool {
+	_, ok := m.clearedFields[roundlambfold.FieldTotalRoundCount]
+	return ok
+}
+
+// ResetTotalRoundCount resets all changes to the "total_round_count" field.
+func (m *RoundLambFoldMutation) ResetTotalRoundCount() {
+	m.total_round_count = nil
+	m.addtotal_round_count = nil
+	delete(m.clearedFields, roundlambfold.FieldTotalRoundCount)
 }
 
 // ClearRound clears the "round" edge to the Round entity.
@@ -9865,7 +10044,7 @@ func (m *RoundLambFoldMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundLambFoldMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, roundlambfold.FieldCreatedAt)
 	}
@@ -9881,11 +10060,14 @@ func (m *RoundLambFoldMutation) Fields() []string {
 	if m.round != nil {
 		fields = append(fields, roundlambfold.FieldRoundID)
 	}
+	if m.profit_and_loss != nil {
+		fields = append(fields, roundlambfold.FieldProfitAndLoss)
+	}
 	if m.round_count != nil {
 		fields = append(fields, roundlambfold.FieldRoundCount)
 	}
-	if m.profit_and_loss != nil {
-		fields = append(fields, roundlambfold.FieldProfitAndLoss)
+	if m.total_round_count != nil {
+		fields = append(fields, roundlambfold.FieldTotalRoundCount)
 	}
 	return fields
 }
@@ -9905,10 +10087,12 @@ func (m *RoundLambFoldMutation) Field(name string) (ent.Value, bool) {
 		return m.LambNum()
 	case roundlambfold.FieldRoundID:
 		return m.RoundID()
-	case roundlambfold.FieldRoundCount:
-		return m.RoundCount()
 	case roundlambfold.FieldProfitAndLoss:
 		return m.ProfitAndLoss()
+	case roundlambfold.FieldRoundCount:
+		return m.RoundCount()
+	case roundlambfold.FieldTotalRoundCount:
+		return m.TotalRoundCount()
 	}
 	return nil, false
 }
@@ -9928,10 +10112,12 @@ func (m *RoundLambFoldMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldLambNum(ctx)
 	case roundlambfold.FieldRoundID:
 		return m.OldRoundID(ctx)
-	case roundlambfold.FieldRoundCount:
-		return m.OldRoundCount(ctx)
 	case roundlambfold.FieldProfitAndLoss:
 		return m.OldProfitAndLoss(ctx)
+	case roundlambfold.FieldRoundCount:
+		return m.OldRoundCount(ctx)
+	case roundlambfold.FieldTotalRoundCount:
+		return m.OldTotalRoundCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown RoundLambFold field %s", name)
 }
@@ -9976,6 +10162,13 @@ func (m *RoundLambFoldMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoundID(v)
 		return nil
+	case roundlambfold.FieldProfitAndLoss:
+		v, ok := value.(float32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProfitAndLoss(v)
+		return nil
 	case roundlambfold.FieldRoundCount:
 		v, ok := value.(uint32)
 		if !ok {
@@ -9983,12 +10176,12 @@ func (m *RoundLambFoldMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoundCount(v)
 		return nil
-	case roundlambfold.FieldProfitAndLoss:
-		v, ok := value.(float32)
+	case roundlambfold.FieldTotalRoundCount:
+		v, ok := value.(uint64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetProfitAndLoss(v)
+		m.SetTotalRoundCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold field %s", name)
@@ -10004,11 +10197,14 @@ func (m *RoundLambFoldMutation) AddedFields() []string {
 	if m.addlamb_num != nil {
 		fields = append(fields, roundlambfold.FieldLambNum)
 	}
+	if m.addprofit_and_loss != nil {
+		fields = append(fields, roundlambfold.FieldProfitAndLoss)
+	}
 	if m.addround_count != nil {
 		fields = append(fields, roundlambfold.FieldRoundCount)
 	}
-	if m.addprofit_and_loss != nil {
-		fields = append(fields, roundlambfold.FieldProfitAndLoss)
+	if m.addtotal_round_count != nil {
+		fields = append(fields, roundlambfold.FieldTotalRoundCount)
 	}
 	return fields
 }
@@ -10022,10 +10218,12 @@ func (m *RoundLambFoldMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedFoldNo()
 	case roundlambfold.FieldLambNum:
 		return m.AddedLambNum()
-	case roundlambfold.FieldRoundCount:
-		return m.AddedRoundCount()
 	case roundlambfold.FieldProfitAndLoss:
 		return m.AddedProfitAndLoss()
+	case roundlambfold.FieldRoundCount:
+		return m.AddedRoundCount()
+	case roundlambfold.FieldTotalRoundCount:
+		return m.AddedTotalRoundCount()
 	}
 	return nil, false
 }
@@ -10049,6 +10247,13 @@ func (m *RoundLambFoldMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddLambNum(v)
 		return nil
+	case roundlambfold.FieldProfitAndLoss:
+		v, ok := value.(float32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddProfitAndLoss(v)
+		return nil
 	case roundlambfold.FieldRoundCount:
 		v, ok := value.(int32)
 		if !ok {
@@ -10056,12 +10261,12 @@ func (m *RoundLambFoldMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddRoundCount(v)
 		return nil
-	case roundlambfold.FieldProfitAndLoss:
-		v, ok := value.(float32)
+	case roundlambfold.FieldTotalRoundCount:
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddProfitAndLoss(v)
+		m.AddTotalRoundCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold numeric field %s", name)
@@ -10076,6 +10281,9 @@ func (m *RoundLambFoldMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(roundlambfold.FieldRoundCount) {
 		fields = append(fields, roundlambfold.FieldRoundCount)
+	}
+	if m.FieldCleared(roundlambfold.FieldTotalRoundCount) {
+		fields = append(fields, roundlambfold.FieldTotalRoundCount)
 	}
 	return fields
 }
@@ -10096,6 +10304,9 @@ func (m *RoundLambFoldMutation) ClearField(name string) error {
 		return nil
 	case roundlambfold.FieldRoundCount:
 		m.ClearRoundCount()
+		return nil
+	case roundlambfold.FieldTotalRoundCount:
+		m.ClearTotalRoundCount()
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold nullable field %s", name)
@@ -10120,11 +10331,14 @@ func (m *RoundLambFoldMutation) ResetField(name string) error {
 	case roundlambfold.FieldRoundID:
 		m.ResetRoundID()
 		return nil
+	case roundlambfold.FieldProfitAndLoss:
+		m.ResetProfitAndLoss()
+		return nil
 	case roundlambfold.FieldRoundCount:
 		m.ResetRoundCount()
 		return nil
-	case roundlambfold.FieldProfitAndLoss:
-		m.ResetProfitAndLoss()
+	case roundlambfold.FieldTotalRoundCount:
+		m.ResetTotalRoundCount()
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold field %s", name)

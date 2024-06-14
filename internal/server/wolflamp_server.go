@@ -99,6 +99,11 @@ func (s *WolflampServer) FindRound(ctx context.Context, in *wolflamp.FindRoundRe
 	return l.FindRound(in)
 }
 
+func (s *WolflampServer) ListFold(ctx context.Context, in *wolflamp.ListFoldReq) (*wolflamp.ListFoldResp, error) {
+	l := game.NewListFoldLogic(ctx, s.svcCtx)
+	return l.ListFold(in)
+}
+
 func (s *WolflampServer) Invest(ctx context.Context, in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp, error) {
 	l := game.NewInvestLogic(ctx, s.svcCtx)
 	return l.Invest(in)

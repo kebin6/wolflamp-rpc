@@ -91,6 +91,20 @@ func (rlfc *RoundLambFoldCreate) SetNillableRoundID(u *uint64) *RoundLambFoldCre
 	return rlfc
 }
 
+// SetProfitAndLoss sets the "profit_and_loss" field.
+func (rlfc *RoundLambFoldCreate) SetProfitAndLoss(f float32) *RoundLambFoldCreate {
+	rlfc.mutation.SetProfitAndLoss(f)
+	return rlfc
+}
+
+// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
+func (rlfc *RoundLambFoldCreate) SetNillableProfitAndLoss(f *float32) *RoundLambFoldCreate {
+	if f != nil {
+		rlfc.SetProfitAndLoss(*f)
+	}
+	return rlfc
+}
+
 // SetRoundCount sets the "round_count" field.
 func (rlfc *RoundLambFoldCreate) SetRoundCount(u uint32) *RoundLambFoldCreate {
 	rlfc.mutation.SetRoundCount(u)
@@ -105,16 +119,16 @@ func (rlfc *RoundLambFoldCreate) SetNillableRoundCount(u *uint32) *RoundLambFold
 	return rlfc
 }
 
-// SetProfitAndLoss sets the "profit_and_loss" field.
-func (rlfc *RoundLambFoldCreate) SetProfitAndLoss(f float32) *RoundLambFoldCreate {
-	rlfc.mutation.SetProfitAndLoss(f)
+// SetTotalRoundCount sets the "total_round_count" field.
+func (rlfc *RoundLambFoldCreate) SetTotalRoundCount(u uint64) *RoundLambFoldCreate {
+	rlfc.mutation.SetTotalRoundCount(u)
 	return rlfc
 }
 
-// SetNillableProfitAndLoss sets the "profit_and_loss" field if the given value is not nil.
-func (rlfc *RoundLambFoldCreate) SetNillableProfitAndLoss(f *float32) *RoundLambFoldCreate {
-	if f != nil {
-		rlfc.SetProfitAndLoss(*f)
+// SetNillableTotalRoundCount sets the "total_round_count" field if the given value is not nil.
+func (rlfc *RoundLambFoldCreate) SetNillableTotalRoundCount(u *uint64) *RoundLambFoldCreate {
+	if u != nil {
+		rlfc.SetTotalRoundCount(*u)
 	}
 	return rlfc
 }
@@ -185,13 +199,17 @@ func (rlfc *RoundLambFoldCreate) defaults() {
 		v := roundlambfold.DefaultRoundID
 		rlfc.mutation.SetRoundID(v)
 	}
+	if _, ok := rlfc.mutation.ProfitAndLoss(); !ok {
+		v := roundlambfold.DefaultProfitAndLoss
+		rlfc.mutation.SetProfitAndLoss(v)
+	}
 	if _, ok := rlfc.mutation.RoundCount(); !ok {
 		v := roundlambfold.DefaultRoundCount
 		rlfc.mutation.SetRoundCount(v)
 	}
-	if _, ok := rlfc.mutation.ProfitAndLoss(); !ok {
-		v := roundlambfold.DefaultProfitAndLoss
-		rlfc.mutation.SetProfitAndLoss(v)
+	if _, ok := rlfc.mutation.TotalRoundCount(); !ok {
+		v := roundlambfold.DefaultTotalRoundCount
+		rlfc.mutation.SetTotalRoundCount(v)
 	}
 }
 
@@ -260,13 +278,17 @@ func (rlfc *RoundLambFoldCreate) createSpec() (*RoundLambFold, *sqlgraph.CreateS
 		_spec.SetField(roundlambfold.FieldLambNum, field.TypeUint32, value)
 		_node.LambNum = value
 	}
+	if value, ok := rlfc.mutation.ProfitAndLoss(); ok {
+		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
+		_node.ProfitAndLoss = value
+	}
 	if value, ok := rlfc.mutation.RoundCount(); ok {
 		_spec.SetField(roundlambfold.FieldRoundCount, field.TypeUint32, value)
 		_node.RoundCount = value
 	}
-	if value, ok := rlfc.mutation.ProfitAndLoss(); ok {
-		_spec.SetField(roundlambfold.FieldProfitAndLoss, field.TypeFloat32, value)
-		_node.ProfitAndLoss = value
+	if value, ok := rlfc.mutation.TotalRoundCount(); ok {
+		_spec.SetField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
+		_node.TotalRoundCount = value
 	}
 	if nodes := rlfc.mutation.RoundIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
