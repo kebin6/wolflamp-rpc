@@ -3,6 +3,7 @@ package game
 import (
 	"context"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
+	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
@@ -125,7 +126,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			if err != nil {
 				return err
 			}
-			if investInfo.ProfitAndLoss > 0 {
+			if investInfo.ProfitAndLoss > 0 && util.IsRealPlayer(investInfo.PlayerId) {
 				l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddLamp(float32(investInfo.LambNum) + investInfo.ProfitAndLoss)
 			}
 		}
@@ -136,6 +137,11 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			if err != nil {
 				return err
 			}
+		}
+		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).SetStatus(uint8(roundenum.Opening.Val())).
+			SetSelectedFold(in.LambFoldNo).Exec(l.ctx)
+		if err != nil {
+			return err
 		}
 		return nil
 	})

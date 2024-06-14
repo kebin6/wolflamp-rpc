@@ -63,23 +63,28 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-		round, err := l.svcCtx.DB.RoundInvest.Query().
+		investedOne, err := l.svcCtx.DB.RoundInvest.Query().
 			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId), roundinvest.FoldNo(in.FoldNo)).First(l.ctx)
 		if err != nil && !ent.IsNotFound(err) {
 			return err
 		}
-		if ent.IsNotFound(err) {
-			playerEmail := ""
-			if player != nil {
-				playerEmail = player.Email
+		if investedOne != nil && investedOne.FoldNo != in.FoldNo {
+			return errorx.NewInvalidArgumentError("game.foldNoNotMatch")
+		}
 
-				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
-					AddLamp(-float32(in.LambNum)).
-					Exec(l.ctx)
-				if err != nil {
-					return err
-				}
+		playerEmail := ""
+		if player != nil {
+			playerEmail = player.Email
+			err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+				AddLamp(-float32(in.LambNum)).
+				Exec(l.ctx)
+			if err != nil {
+				return err
 			}
+		}
+
+		if ent.IsNotFound(err) {
+
 			result, err = l.svcCtx.DB.RoundInvest.Create().
 				SetPlayerID(in.PlayerId).
 				SetPlayerEmail(playerEmail).
@@ -91,7 +96,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 				SetTotalRoundCount(roundInfo.TotalRoundCount).
 				Save(l.ctx)
 		} else {
-			result, err = tx.RoundInvest.UpdateOne(round).
+			result, err = tx.RoundInvest.UpdateOneID(investedOne.ID).
 				AddLambNum(int32(in.LambNum)).Save(l.ctx)
 		}
 		if err != nil {

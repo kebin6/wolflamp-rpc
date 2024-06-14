@@ -62,6 +62,9 @@ func (l *FindRoundLogic) GetCurrentRoundId() (uint64, error) {
 	if err != nil {
 		return 0, err
 	}
+	if len(listResp.List) == 0 {
+		return 0, errorx.NewInternalError("game.roundNotFound")
+	}
 	newestOne := listResp.List[0]
 	nowTime := time.Now().Unix()
 	// 当前时间段没有新的回合，则返回最后一回合数据
