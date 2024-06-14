@@ -39,13 +39,14 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 	var player *ent.Player
 	// 判断当前玩家剩余羊数量是否满足要求
 	if util.IsRealPlayer(in.PlayerId) {
-		player, err := l.svcCtx.DB.Player.Get(l.ctx, in.PlayerId)
+		playerInfo, err := l.svcCtx.DB.Player.Get(l.ctx, in.PlayerId)
 		if err != nil {
 			return nil, err
 		}
-		if player.Lamp < float32(in.LambNum) {
+		if playerInfo.Lamp < float32(in.LambNum) {
 			return nil, errorx.NewInvalidArgumentError("game.lambNotEnough")
 		}
+		player = playerInfo
 	}
 	// 获取当前轮次信息
 	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
@@ -63,8 +64,9 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
+
 		investedOne, err := l.svcCtx.DB.RoundInvest.Query().
-			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId), roundinvest.FoldNo(in.FoldNo)).First(l.ctx)
+			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId)).First(l.ctx)
 		if err != nil && !ent.IsNotFound(err) {
 			return err
 		}
@@ -82,8 +84,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 				return err
 			}
 		}
-
-		if ent.IsNotFound(err) {
+		if investedOne == nil {
 
 			result, err = l.svcCtx.DB.RoundInvest.Create().
 				SetPlayerID(in.PlayerId).

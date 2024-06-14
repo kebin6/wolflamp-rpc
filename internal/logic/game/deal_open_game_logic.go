@@ -82,15 +82,17 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	for _, v := range allInvests {
 		if v.FoldNo == in.LambFoldNo {
 			investResult = append(investResult, PlayerInvestInfo{
+				InvestId:      v.ID,
 				PlayerId:      v.PlayerID,
 				RoundId:       v.RoundID,
 				LambFoldNo:    v.FoldNo,
 				LambNum:       v.LambNum,
-				ProfitAndLoss: -v.ProfitAndLoss,
+				ProfitAndLoss: -float32(v.LambNum),
 			})
 		} else {
 			proportion := float32(v.LambNum) / float32(totalWinnerInvestNum)
 			investResult = append(investResult, PlayerInvestInfo{
+				InvestId:      v.ID,
 				PlayerId:      v.PlayerID,
 				RoundId:       v.RoundID,
 				LambFoldNo:    v.FoldNo,
@@ -127,7 +129,10 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				return err
 			}
 			if investInfo.ProfitAndLoss > 0 && util.IsRealPlayer(investInfo.PlayerId) {
-				l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddLamp(float32(investInfo.LambNum) + investInfo.ProfitAndLoss)
+				err := l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddLamp(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		for _, foldInfo := range lambFoldResult {
