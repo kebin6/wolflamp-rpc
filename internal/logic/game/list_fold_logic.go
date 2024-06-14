@@ -58,6 +58,7 @@ func (l *ListFoldLogic) ListFold(in *wolflamp.ListFoldReq) (*wolflamp.ListFoldRe
 			RoundCount:      v.RoundCount,
 			TotalRoundCount: v.TotalRoundCount,
 			CreatedAt:       v.CreatedAt.Unix(),
+			ProfitAndLoss:   v.ProfitAndLoss,
 		})
 	}
 

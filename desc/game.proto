@@ -38,6 +38,7 @@ message FoldInfo {
   uint64 round_id = 6;
   uint32 round_count = 7;
   uint64 total_round_count = 8;
+  float profit_and_loss = 9;
 }
 
 message ListFoldReq {
