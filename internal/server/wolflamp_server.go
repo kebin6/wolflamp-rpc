@@ -99,6 +99,11 @@ func (s *WolflampServer) FindRound(ctx context.Context, in *wolflamp.FindRoundRe
 	return l.FindRound(in)
 }
 
+func (s *WolflampServer) PreviousRound(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PreviousRoundResp, error) {
+	l := game.NewPreviousRoundLogic(ctx, s.svcCtx)
+	return l.PreviousRound(in)
+}
+
 func (s *WolflampServer) ListFold(ctx context.Context, in *wolflamp.ListFoldReq) (*wolflamp.ListFoldResp, error) {
 	l := game.NewListFoldLogic(ctx, s.svcCtx)
 	return l.ListFold(in)

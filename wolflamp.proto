@@ -456,6 +456,10 @@ message PlayerInfo {
   string deposit_address = 21;
 }
 
+message PreviousRoundResp {
+  uint32 selected_fold_no = 1;
+}
+
 message RewardAggregateReq {
   uint64 to_id = 1;
   bool get_total = 2;
@@ -625,6 +629,8 @@ service Wolflamp {
   rpc createRound(CreateRoundReq) returns (BaseIDResp);
   //  group: game
   rpc findRound(FindRoundReq) returns (RoundInfo);
+  //  group: game
+  rpc previousRound(Empty) returns (PreviousRoundResp);
   //  group: game
   rpc listFold(ListFoldReq) returns (ListFoldResp);
   //  group: game

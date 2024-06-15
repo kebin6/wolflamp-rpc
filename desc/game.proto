@@ -28,6 +28,10 @@ message FindRoundReq {
   optional uint64 id = 1;
 }
 
+message PreviousRoundResp {
+  uint32 selected_fold_no = 1;
+}
+
 // FOLD
 message FoldInfo {
   uint64 id = 1;
@@ -117,6 +121,9 @@ service Wolflamp {
 
   // group: game
   rpc findRound (FindRoundReq) returns (RoundInfo);
+
+  // group: game
+  rpc previousRound (Empty) returns (PreviousRoundResp);
 
   // group: game
   rpc listFold (ListFoldReq) returns (ListFoldResp);

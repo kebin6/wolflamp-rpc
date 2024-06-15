@@ -82,6 +82,7 @@ type (
 	OrderInfo                   = wolflamp.OrderInfo
 	PageInfoReq                 = wolflamp.PageInfoReq
 	PlayerInfo                  = wolflamp.PlayerInfo
+	PreviousRoundResp           = wolflamp.PreviousRoundResp
 	RewardAggregateReq          = wolflamp.RewardAggregateReq
 	RewardAggregateResp         = wolflamp.RewardAggregateResp
 	RewardInfo                  = wolflamp.RewardInfo
@@ -115,6 +116,7 @@ type (
 		Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateRound(ctx context.Context, in *CreateRoundReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error)
+		PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error)
 		ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
@@ -229,6 +231,11 @@ func (m *defaultWolflamp) CreateRound(ctx context.Context, in *CreateRoundReq, o
 func (m *defaultWolflamp) FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.FindRound(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.PreviousRound(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error) {
