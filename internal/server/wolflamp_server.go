@@ -120,6 +120,11 @@ func (s *WolflampServer) Invest(ctx context.Context, in *wolflamp.CreateInvestRe
 	return l.Invest(in)
 }
 
+func (s *WolflampServer) ChangeInvestFold(ctx context.Context, in *wolflamp.ChangeInvestFoldReq) (*wolflamp.BaseIDResp, error) {
+	l := game.NewChangeInvestFoldLogic(ctx, s.svcCtx)
+	return l.ChangeInvestFold(in)
+}
+
 func (s *WolflampServer) GetInvestInfoByPlayerId(ctx context.Context, in *wolflamp.GetInvestInfoByPlayerIdReq) (*wolflamp.GetInvestInfoByPlayerIdResp, error) {
 	l := game.NewGetInvestInfoByPlayerIdLogic(ctx, s.svcCtx)
 	return l.GetInvestInfoByPlayerId(in)

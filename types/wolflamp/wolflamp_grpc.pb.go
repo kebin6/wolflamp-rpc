@@ -59,6 +59,8 @@ type WolflampClient interface {
 	// group: game
 	Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: game
+	ChangeInvestFold(ctx context.Context, in *ChangeInvestFoldReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: game
 	GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
 	// group: game
 	GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
@@ -302,6 +304,15 @@ func (c *wolflampClient) ListFold(ctx context.Context, in *ListFoldReq, opts ...
 func (c *wolflampClient) Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/invest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) ChangeInvestFold(ctx context.Context, in *ChangeInvestFoldReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/changeInvestFold", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -700,6 +711,8 @@ type WolflampServer interface {
 	// group: game
 	Invest(context.Context, *CreateInvestReq) (*BaseIDResp, error)
 	// group: game
+	ChangeInvestFold(context.Context, *ChangeInvestFoldReq) (*BaseIDResp, error)
+	// group: game
 	GetInvestInfoByPlayerId(context.Context, *GetInvestInfoByPlayerIdReq) (*GetInvestInfoByPlayerIdResp, error)
 	// group: game
 	GetInvestByRoundId(context.Context, *GetInvestsByRoundIdReq) (*GetInvestByRoundIdResp, error)
@@ -837,6 +850,9 @@ func (UnimplementedWolflampServer) ListFold(context.Context, *ListFoldReq) (*Lis
 }
 func (UnimplementedWolflampServer) Invest(context.Context, *CreateInvestReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Invest not implemented")
+}
+func (UnimplementedWolflampServer) ChangeInvestFold(context.Context, *ChangeInvestFoldReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeInvestFold not implemented")
 }
 func (UnimplementedWolflampServer) GetInvestInfoByPlayerId(context.Context, *GetInvestInfoByPlayerIdReq) (*GetInvestInfoByPlayerIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInvestInfoByPlayerId not implemented")
@@ -1288,6 +1304,24 @@ func _Wolflamp_Invest_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).Invest(ctx, req.(*CreateInvestReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_ChangeInvestFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeInvestFoldReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).ChangeInvestFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/changeInvestFold",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).ChangeInvestFold(ctx, req.(*ChangeInvestFoldReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2072,6 +2106,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "invest",
 			Handler:    _Wolflamp_Invest_Handler,
+		},
+		{
+			MethodName: "changeInvestFold",
+			Handler:    _Wolflamp_ChangeInvestFold_Handler,
 		},
 		{
 			MethodName: "getInvestInfoByPlayerId",

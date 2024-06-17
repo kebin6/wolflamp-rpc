@@ -57,6 +57,11 @@ message CalculateWithdrawFeeResp {
   double total_amount = 3;
 }
 
+message ChangeInvestFoldReq {
+  uint64 player_id = 1;
+  uint32 fold_no = 2;
+}
+
 message CreateBannerReq {
   uint32 status = 4;
   string endpoint = 5;
@@ -745,6 +750,8 @@ service Wolflamp {
   rpc listFold(ListFoldReq) returns (ListFoldResp);
   //  group: game
   rpc invest(CreateInvestReq) returns (BaseIDResp);
+  //  group: game
+  rpc changeInvestFold(ChangeInvestFoldReq) returns (BaseIDResp);
   //  group: game
   rpc getInvestInfoByPlayerId(GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
   //  group: game

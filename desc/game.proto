@@ -97,6 +97,11 @@ message UpdateInvestReq {
   optional float profit_and_loss = 2;
 }
 
+message ChangeInvestFoldReq {
+  uint64 player_id = 1;
+  uint32 fold_no = 2;
+}
+
 message GetInvestInfoByPlayerIdReq {
   uint64 player_id = 1;
   optional uint64 round_id = 2;
@@ -154,6 +159,9 @@ service Wolflamp {
 
   // group: game
   rpc invest (CreateInvestReq) returns (BaseIDResp);
+
+  // group: game
+  rpc changeInvestFold (ChangeInvestFoldReq) returns (BaseIDResp);
 
   // group: game
   rpc getInvestInfoByPlayerId (GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);

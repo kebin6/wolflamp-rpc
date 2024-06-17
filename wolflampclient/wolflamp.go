@@ -22,6 +22,7 @@ type (
 	BaseUUIDResp                = wolflamp.BaseUUIDResp
 	CalculateWithdrawFeeReq     = wolflamp.CalculateWithdrawFeeReq
 	CalculateWithdrawFeeResp    = wolflamp.CalculateWithdrawFeeResp
+	ChangeInvestFoldReq         = wolflamp.ChangeInvestFoldReq
 	CreateBannerReq             = wolflamp.CreateBannerReq
 	CreateExchangeReq           = wolflamp.CreateExchangeReq
 	CreateInvestReq             = wolflamp.CreateInvestReq
@@ -135,6 +136,7 @@ type (
 		ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error)
 		ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		ChangeInvestFold(ctx context.Context, in *ChangeInvestFoldReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
 		GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
@@ -275,6 +277,11 @@ func (m *defaultWolflamp) ListFold(ctx context.Context, in *ListFoldReq, opts ..
 func (m *defaultWolflamp) Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.Invest(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) ChangeInvestFold(ctx context.Context, in *ChangeInvestFoldReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.ChangeInvestFold(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error) {
