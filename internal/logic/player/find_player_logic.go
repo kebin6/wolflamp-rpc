@@ -57,6 +57,7 @@ func (l *FindPlayerLogic) Po2Vo(po *ent.Player) (vo *wolflamp.PlayerInfo) {
 		InvitedCode:          po.InvitedCode,
 		TransactionPassword:  po.TransactionPassword,
 		DepositAddress:       po.DepositAddress,
+		SystemCommission:     po.SystemCommission,
 	}
 
 }

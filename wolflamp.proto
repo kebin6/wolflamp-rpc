@@ -108,6 +108,7 @@ message CreatePlayerReq {
   float recent_100_win_percent = 13;
   string invited_code = 14;
   float system_commission = 15;
+  string deposit_address = 16;
 }
 
 message CreateRewardReq {
@@ -643,6 +644,7 @@ message UpdatePlayerReq {
   optional string invited_code = 15;
   optional float system_commission = 16;
   optional string transaction_password = 17;
+  optional string deposit_address = 18;
 }
 
 message UpdateRewardReq {

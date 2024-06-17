@@ -41,6 +41,9 @@ func (l *UpdatePlayerLogic) UpdatePlayer(in *wolflamp.UpdatePlayerReq) (*wolflam
 		SetNotNilProfitAndLoss(in.ProfitAndLoss).
 		SetNotNilRecent100WinPercent(in.Recent_100WinPercent).
 		SetNotNilTransactionPassword(in.TransactionPassword).
+		SetNotNilLamp(in.Lamp).
+		SetNotNilDepositAddress(in.DepositAddress).
+		SetNotNilSystemCommission(in.SystemCommission).
 		Exec(l.ctx)
 
 	if err != nil {

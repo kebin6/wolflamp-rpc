@@ -71,6 +71,8 @@ func (l *CreatePlayerLogic) CreatePlayer(in *wolflamp.CreatePlayerReq) (*wolflam
 		SetInviteCode(inviteCode).
 		SetInviterID(inviterId).
 		SetInvitedCode(in.InvitedCode).
+		SetDepositAddress(in.DepositAddress).
+		SetSystemCommission(in.SystemCommission).
 		Save(l.ctx)
 
 	if err != nil {
