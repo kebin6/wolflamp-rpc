@@ -350,6 +350,44 @@ var (
 		Columns:    WlSettingColumns,
 		PrimaryKey: []*schema.Column{WlSettingColumns[0]},
 	}
+	// WlStatementColumns holds the columns for the "wl_statement" table.
+	WlStatementColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Create Time | 创建日期"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
+		{Name: "status", Type: field.TypeUint8, Nullable: true, Comment: "Status 1: normal 2: ban | 状态 1 正常 2 禁用", Default: 1},
+		{Name: "player_id", Type: field.TypeUint64, Comment: "Player 's id | 玩家ID，平台默认0", Default: 0},
+		{Name: "module", Type: field.TypeUint32, Comment: "Statement Module | 所属模块", Default: 0},
+		{Name: "code", Type: field.TypeString, Comment: "statement 's code | 账单编号", Default: ""},
+		{Name: "inout_type", Type: field.TypeUint32, Comment: "input or output | 收支类型：1=入账；2=出账", Default: 1},
+		{Name: "amount", Type: field.TypeFloat64, Comment: "amount | 金额", Default: 0},
+		{Name: "refer_id", Type: field.TypeString, Comment: "refer id | 对应单ID", Default: ""},
+		{Name: "remark", Type: field.TypeString, Comment: "remark | 备注", Default: ""},
+	}
+	// WlStatementTable holds the schema information for the "wl_statement" table.
+	WlStatementTable = &schema.Table{
+		Name:       "wl_statement",
+		Comment:    "账单表",
+		Columns:    WlStatementColumns,
+		PrimaryKey: []*schema.Column{WlStatementColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "idx_player_id",
+				Unique:  false,
+				Columns: []*schema.Column{WlStatementColumns[4]},
+			},
+			{
+				Name:    "uniq_code",
+				Unique:  true,
+				Columns: []*schema.Column{WlStatementColumns[6]},
+			},
+			{
+				Name:    "idx_refer",
+				Unique:  false,
+				Columns: []*schema.Column{WlStatementColumns[9]},
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		WlBannerTable,
@@ -363,6 +401,7 @@ var (
 		WlRoundInvestTable,
 		WlRoundLambFoldTable,
 		WlSettingTable,
+		WlStatementTable,
 	}
 )
 
@@ -421,6 +460,11 @@ func init() {
 	}
 	WlSettingTable.Annotation = &entsql.Annotation{
 		Table:     "wl_setting",
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_general_ci",
+	}
+	WlStatementTable.Annotation = &entsql.Annotation{
+		Table:     "wl_statement",
 		Charset:   "utf8mb4",
 		Collation: "utf8mb4_general_ci",
 	}

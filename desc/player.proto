@@ -100,6 +100,25 @@ message GetByInviteCodeReq {
   string invite_code = 1;
 }
 
+message InvitorInfo {
+
+  uint64 invitorId = 1;
+  uint32 rank = 2;
+  float system_commission = 3;
+  uint64 playerId = 4;
+  string playerEmail = 5;
+  uint32 playerLevel = 6;
+
+}
+
+message GetInvitorListByIdsReq {
+  repeated uint64 player_ids = 1;
+}
+
+message GetInvitorListByIdsResp {
+  repeated InvitorInfo data = 1;
+}
+
 service Wolflamp {
   // group: player
   rpc createPlayer (CreatePlayerReq) returns (BaseIDResp);
@@ -121,4 +140,7 @@ service Wolflamp {
 
   // group: player
   rpc getByInviteCode (GetByInviteCodeReq) returns (PlayerInfo);
+
+  // group: player
+  rpc getInvitorListByIds (GetInvitorListByIdsReq) returns (GetInvitorListByIdsResp);
 }

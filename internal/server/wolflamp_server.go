@@ -14,6 +14,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/internal/logic/player"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/reward"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
+	"github.com/kebin6/wolflamp-rpc/internal/logic/statement"
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
 	"github.com/kebin6/wolflamp-rpc/types/wolflamp"
 )
@@ -194,6 +195,11 @@ func (s *WolflampServer) GetByInviteCode(ctx context.Context, in *wolflamp.GetBy
 	return l.GetByInviteCode(in)
 }
 
+func (s *WolflampServer) GetInvitorListByIds(ctx context.Context, in *wolflamp.GetInvitorListByIdsReq) (*wolflamp.GetInvitorListByIdsResp, error) {
+	l := player.NewGetInvitorListByIdsLogic(ctx, s.svcCtx)
+	return l.GetInvitorListByIds(in)
+}
+
 func (s *WolflampServer) CreateReward(ctx context.Context, in *wolflamp.CreateRewardReq) (*wolflamp.BaseIDResp, error) {
 	l := reward.NewCreateRewardLogic(ctx, s.svcCtx)
 	return l.CreateReward(in)
@@ -267,4 +273,34 @@ func (s *WolflampServer) GetGameRule(ctx context.Context, in *wolflamp.Empty) (*
 func (s *WolflampServer) GetRobotNum(ctx context.Context, in *wolflamp.Empty) (*wolflamp.RobotNumResp, error) {
 	l := setting.NewGetRobotNumLogic(ctx, s.svcCtx)
 	return l.GetRobotNum(in)
+}
+
+func (s *WolflampServer) GetGameCommission(ctx context.Context, in *wolflamp.Empty) (*wolflamp.GameCommissionResp, error) {
+	l := setting.NewGetGameCommissionLogic(ctx, s.svcCtx)
+	return l.GetGameCommission(in)
+}
+
+func (s *WolflampServer) CreateStatement(ctx context.Context, in *wolflamp.CreateStatementReq) (*wolflamp.BaseIDResp, error) {
+	l := statement.NewCreateStatementLogic(ctx, s.svcCtx)
+	return l.CreateStatement(in)
+}
+
+func (s *WolflampServer) UpdateStatement(ctx context.Context, in *wolflamp.UpdateStatementReq) (*wolflamp.BaseIDResp, error) {
+	l := statement.NewUpdateStatementLogic(ctx, s.svcCtx)
+	return l.UpdateStatement(in)
+}
+
+func (s *WolflampServer) DeleteStatement(ctx context.Context, in *wolflamp.DeleteStatementReq) (*wolflamp.BaseIDResp, error) {
+	l := statement.NewDeleteStatementLogic(ctx, s.svcCtx)
+	return l.DeleteStatement(in)
+}
+
+func (s *WolflampServer) FindStatement(ctx context.Context, in *wolflamp.FindStatementReq) (*wolflamp.StatementInfo, error) {
+	l := statement.NewFindStatementLogic(ctx, s.svcCtx)
+	return l.FindStatement(in)
+}
+
+func (s *WolflampServer) ListStatement(ctx context.Context, in *wolflamp.ListStatementReq) (*wolflamp.ListStatementResp, error) {
+	l := statement.NewListStatementLogic(ctx, s.svcCtx)
+	return l.ListStatement(in)
 }

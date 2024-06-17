@@ -17,6 +17,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 )
 
 const errInvalidPage = "INVALID_PAGE"
@@ -944,6 +945,87 @@ func (s *SettingQuery) Page(
 		s = s.Order(pager.Order)
 	} else {
 		s = s.Order(DefaultSettingOrder)
+	}
+
+	s = s.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))
+	list, err := s.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ret.List = list
+
+	return ret, nil
+}
+
+type StatementPager struct {
+	Order  statement.OrderOption
+	Filter func(*StatementQuery) (*StatementQuery, error)
+}
+
+// StatementPaginateOption enables pagination customization.
+type StatementPaginateOption func(*StatementPager)
+
+// DefaultStatementOrder is the default ordering of Statement.
+var DefaultStatementOrder = Desc(statement.FieldID)
+
+func newStatementPager(opts []StatementPaginateOption) (*StatementPager, error) {
+	pager := &StatementPager{}
+	for _, opt := range opts {
+		opt(pager)
+	}
+	if pager.Order == nil {
+		pager.Order = DefaultStatementOrder
+	}
+	return pager, nil
+}
+
+func (p *StatementPager) ApplyFilter(query *StatementQuery) (*StatementQuery, error) {
+	if p.Filter != nil {
+		return p.Filter(query)
+	}
+	return query, nil
+}
+
+// StatementPageList is Statement PageList result.
+type StatementPageList struct {
+	List        []*Statement `json:"list"`
+	PageDetails *PageDetails `json:"pageDetails"`
+}
+
+func (s *StatementQuery) Page(
+	ctx context.Context, pageNum uint64, pageSize uint64, opts ...StatementPaginateOption,
+) (*StatementPageList, error) {
+
+	pager, err := newStatementPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if s, err = pager.ApplyFilter(s); err != nil {
+		return nil, err
+	}
+
+	ret := &StatementPageList{}
+
+	ret.PageDetails = &PageDetails{
+		Page: pageNum,
+		Size: pageSize,
+	}
+
+	query := s.Clone()
+	query.ctx.Fields = nil
+	count, err := query.Count(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ret.PageDetails.Total = uint64(count)
+
+	if pager.Order != nil {
+		s = s.Order(pager.Order)
+	} else {
+		s = s.Order(DefaultStatementOrder)
 	}
 
 	s = s.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))

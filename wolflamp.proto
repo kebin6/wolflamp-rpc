@@ -126,6 +126,17 @@ message CreateRoundReq {
   int64 end_at = 7;
 }
 
+message CreateStatementReq {
+  uint32 status = 4;
+  uint64 player_id = 5;
+  uint32 module = 6;
+  uint32 inout_type = 9;
+  double amount = 10;
+  string refer_id = 11;
+  optional string remark = 12;
+  optional string prefix = 13;
+}
+
 message DeleteBannerReq {
   uint64 id = 1;
 }
@@ -143,6 +154,10 @@ message DeletePlayerReq {
 }
 
 message DeleteRewardReq {
+  uint64 id = 1;
+}
+
+message DeleteStatementReq {
   uint64 id = 1;
 }
 
@@ -210,6 +225,11 @@ message FindSettingResp {
   string jsonString = 2;
 }
 
+message FindStatementReq {
+  uint64 id = 1;
+  optional uint64 player_id = 2;
+}
+
 //  FOLD
 message FoldInfo {
   uint64 id = 1;
@@ -221,6 +241,10 @@ message FoldInfo {
   uint32 round_count = 7;
   uint64 total_round_count = 8;
   float profit_and_loss = 9;
+}
+
+message GameCommissionResp {
+  float gameCommission = 1;
 }
 
 message GameRuleResp {
@@ -243,6 +267,14 @@ message GetInvestInfoByPlayerIdReq {
 
 message GetInvestInfoByPlayerIdResp {
   repeated InvestInfo data = 1;
+}
+
+message GetInvitorListByIdsReq {
+  repeated uint64 player_ids = 1;
+}
+
+message GetInvitorListByIdsResp {
+  repeated InvitorInfo data = 1;
 }
 
 message GetLambFoldAggregateReq {
@@ -301,6 +333,15 @@ message InvestInfo {
   uint32 lamb_num = 8;
   float profit_and_loss = 9;
   uint64 round_id = 10;
+}
+
+message InvitorInfo {
+  uint64 invitorId = 1;
+  uint32 rank = 2;
+  float system_commission = 3;
+  uint64 playerId = 4;
+  string playerEmail = 5;
+  uint32 playerLevel = 6;
 }
 
 message LambFoldAggregateInfo {
@@ -407,6 +448,24 @@ message ListRewardResp {
   repeated RewardInfo data = 2;
 }
 
+message ListStatementReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint32 status = 4;
+  optional uint64 player_id = 5;
+  optional uint32 module = 6;
+  optional string code = 7;
+  optional uint32 inout_type = 9;
+  optional double amount = 10;
+  optional string refer_id = 11;
+  optional string remark = 12;
+}
+
+message ListStatementResp {
+  uint64 total = 1;
+  repeated StatementInfo data = 2;
+}
+
 message MinWithdrawNumResp {
   float minWithdrawNum = 1;
 }
@@ -509,6 +568,20 @@ message RoundInfo {
   uint64 total_round_count = 11;
 }
 
+message StatementInfo {
+  uint64 id = 1;
+  int64 created_at = 2;
+  int64 updated_at = 3;
+  uint32 status = 4;
+  uint64 player_id = 5;
+  uint32 module = 6;
+  string code = 7;
+  uint32 inout_type = 9;
+  double amount = 10;
+  string refer_id = 11;
+  string remark = 12;
+}
+
 message UUIDReq {
   string id = 1;
 }
@@ -586,6 +659,18 @@ message UpdateRewardReq {
 message UpdateSettingReq {
   string module = 1;
   string jsonString = 2;
+}
+
+message UpdateStatementReq {
+  uint64 id = 1;
+  optional uint32 status = 4;
+  optional uint64 player_id = 5;
+  optional uint32 module = 6;
+  optional string code = 7;
+  optional uint32 inout_type = 9;
+  optional double amount = 10;
+  optional string refer_id = 11;
+  optional string remark = 12;
 }
 
 message WithdrawCommissionResp {
@@ -667,6 +752,8 @@ service Wolflamp {
   rpc getByEmail(GetByEmailReq) returns (PlayerInfo);
   //  group: player
   rpc getByInviteCode(GetByInviteCodeReq) returns (PlayerInfo);
+  //  group: player
+  rpc getInvitorListByIds(GetInvitorListByIdsReq) returns (GetInvitorListByIdsResp);
   //  group: reward
   rpc createReward(CreateRewardReq) returns (BaseIDResp);
   //  group: reward
@@ -697,5 +784,17 @@ service Wolflamp {
   rpc getGameRule(Empty) returns (GameRuleResp);
   //  group: setting
   rpc getRobotNum(Empty) returns (RobotNumResp);
+  //  group: setting
+  rpc getGameCommission(Empty) returns (GameCommissionResp);
+  //  group: statement
+  rpc createStatement(CreateStatementReq) returns (BaseIDResp);
+  //  group: statement
+  rpc updateStatement(UpdateStatementReq) returns (BaseIDResp);
+  //  group: statement
+  rpc deleteStatement(DeleteStatementReq) returns (BaseIDResp);
+  //  group: statement
+  rpc findStatement(FindStatementReq) returns (StatementInfo);
+  //  group: statement
+  rpc listStatement(ListStatementReq) returns (ListStatementResp);
 }
 

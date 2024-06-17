@@ -38,3 +38,6 @@ type RoundLambFold func(*sql.Selector)
 
 // Setting is the predicate function for setting builders.
 type Setting func(*sql.Selector)
+
+// Statement is the predicate function for statement builders.
+type Statement func(*sql.Selector)

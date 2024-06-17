@@ -23,6 +23,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -94,6 +95,7 @@ func checkColumn(table, column string) error {
 			roundinvest.Table:      roundinvest.ValidColumn,
 			roundlambfold.Table:    roundlambfold.ValidColumn,
 			setting.Table:          setting.ValidColumn,
+			statement.Table:        statement.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

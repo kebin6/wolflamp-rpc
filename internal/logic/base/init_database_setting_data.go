@@ -40,6 +40,7 @@ func (l *InitDatabaseLogic) insertSettingData() error {
 				Title:   "",
 				Content: "",
 			},
+			GameCommission: 15, // 默认15个点
 		}
 
 		gameRuleJsonByte, err := json.Marshal(setting)

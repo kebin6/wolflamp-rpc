@@ -88,6 +88,8 @@ type WolflampClient interface {
 	GetByEmail(ctx context.Context, in *GetByEmailReq, opts ...grpc.CallOption) (*PlayerInfo, error)
 	// group: player
 	GetByInviteCode(ctx context.Context, in *GetByInviteCodeReq, opts ...grpc.CallOption) (*PlayerInfo, error)
+	// group: player
+	GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error)
 	// group: reward
 	CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: reward
@@ -118,6 +120,18 @@ type WolflampClient interface {
 	GetGameRule(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameRuleResp, error)
 	// group: setting
 	GetRobotNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotNumResp, error)
+	// group: setting
+	GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error)
+	// group: statement
+	CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: statement
+	UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: statement
+	DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: statement
+	FindStatement(ctx context.Context, in *FindStatementReq, opts ...grpc.CallOption) (*StatementInfo, error)
+	// group: statement
+	ListStatement(ctx context.Context, in *ListStatementReq, opts ...grpc.CallOption) (*ListStatementResp, error)
 }
 
 type wolflampClient struct {
@@ -425,6 +439,15 @@ func (c *wolflampClient) GetByInviteCode(ctx context.Context, in *GetByInviteCod
 	return out, nil
 }
 
+func (c *wolflampClient) GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error) {
+	out := new(GetInvitorListByIdsResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getInvitorListByIds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createReward", in, out, opts...)
@@ -560,6 +583,60 @@ func (c *wolflampClient) GetRobotNum(ctx context.Context, in *Empty, opts ...grp
 	return out, nil
 }
 
+func (c *wolflampClient) GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error) {
+	out := new(GameCommissionResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getGameCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createStatement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/updateStatement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/deleteStatement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) FindStatement(ctx context.Context, in *FindStatementReq, opts ...grpc.CallOption) (*StatementInfo, error) {
+	out := new(StatementInfo)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/findStatement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) ListStatement(ctx context.Context, in *ListStatementReq, opts ...grpc.CallOption) (*ListStatementResp, error) {
+	out := new(ListStatementResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/listStatement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WolflampServer is the server API for Wolflamp service.
 // All implementations must embed UnimplementedWolflampServer
 // for forward compatibility
@@ -630,6 +707,8 @@ type WolflampServer interface {
 	GetByEmail(context.Context, *GetByEmailReq) (*PlayerInfo, error)
 	// group: player
 	GetByInviteCode(context.Context, *GetByInviteCodeReq) (*PlayerInfo, error)
+	// group: player
+	GetInvitorListByIds(context.Context, *GetInvitorListByIdsReq) (*GetInvitorListByIdsResp, error)
 	// group: reward
 	CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error)
 	// group: reward
@@ -660,6 +739,18 @@ type WolflampServer interface {
 	GetGameRule(context.Context, *Empty) (*GameRuleResp, error)
 	// group: setting
 	GetRobotNum(context.Context, *Empty) (*RobotNumResp, error)
+	// group: setting
+	GetGameCommission(context.Context, *Empty) (*GameCommissionResp, error)
+	// group: statement
+	CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error)
+	// group: statement
+	UpdateStatement(context.Context, *UpdateStatementReq) (*BaseIDResp, error)
+	// group: statement
+	DeleteStatement(context.Context, *DeleteStatementReq) (*BaseIDResp, error)
+	// group: statement
+	FindStatement(context.Context, *FindStatementReq) (*StatementInfo, error)
+	// group: statement
+	ListStatement(context.Context, *ListStatementReq) (*ListStatementResp, error)
 	mustEmbedUnimplementedWolflampServer()
 }
 
@@ -766,6 +857,9 @@ func (UnimplementedWolflampServer) GetByEmail(context.Context, *GetByEmailReq) (
 func (UnimplementedWolflampServer) GetByInviteCode(context.Context, *GetByInviteCodeReq) (*PlayerInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByInviteCode not implemented")
 }
+func (UnimplementedWolflampServer) GetInvitorListByIds(context.Context, *GetInvitorListByIdsReq) (*GetInvitorListByIdsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInvitorListByIds not implemented")
+}
 func (UnimplementedWolflampServer) CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateReward not implemented")
 }
@@ -810,6 +904,24 @@ func (UnimplementedWolflampServer) GetGameRule(context.Context, *Empty) (*GameRu
 }
 func (UnimplementedWolflampServer) GetRobotNum(context.Context, *Empty) (*RobotNumResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRobotNum not implemented")
+}
+func (UnimplementedWolflampServer) GetGameCommission(context.Context, *Empty) (*GameCommissionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGameCommission not implemented")
+}
+func (UnimplementedWolflampServer) CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateStatement not implemented")
+}
+func (UnimplementedWolflampServer) UpdateStatement(context.Context, *UpdateStatementReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStatement not implemented")
+}
+func (UnimplementedWolflampServer) DeleteStatement(context.Context, *DeleteStatementReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteStatement not implemented")
+}
+func (UnimplementedWolflampServer) FindStatement(context.Context, *FindStatementReq) (*StatementInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindStatement not implemented")
+}
+func (UnimplementedWolflampServer) ListStatement(context.Context, *ListStatementReq) (*ListStatementResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListStatement not implemented")
 }
 func (UnimplementedWolflampServer) mustEmbedUnimplementedWolflampServer() {}
 
@@ -1418,6 +1530,24 @@ func _Wolflamp_GetByInviteCode_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetInvitorListByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInvitorListByIdsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetInvitorListByIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getInvitorListByIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetInvitorListByIds(ctx, req.(*GetInvitorListByIdsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRewardReq)
 	if err := dec(in); err != nil {
@@ -1688,6 +1818,114 @@ func _Wolflamp_GetRobotNum_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetGameCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetGameCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getGameCommission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetGameCommission(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_CreateStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateStatementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).CreateStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/createStatement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).CreateStatement(ctx, req.(*CreateStatementReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_UpdateStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStatementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).UpdateStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/updateStatement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).UpdateStatement(ctx, req.(*UpdateStatementReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_DeleteStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteStatementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).DeleteStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/deleteStatement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).DeleteStatement(ctx, req.(*DeleteStatementReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_FindStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindStatementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).FindStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/findStatement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).FindStatement(ctx, req.(*FindStatementReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_ListStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListStatementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).ListStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/listStatement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).ListStatement(ctx, req.(*ListStatementReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Wolflamp_ServiceDesc is the grpc.ServiceDesc for Wolflamp service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1828,6 +2066,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wolflamp_GetByInviteCode_Handler,
 		},
 		{
+			MethodName: "getInvitorListByIds",
+			Handler:    _Wolflamp_GetInvitorListByIds_Handler,
+		},
+		{
 			MethodName: "createReward",
 			Handler:    _Wolflamp_CreateReward_Handler,
 		},
@@ -1886,6 +2128,30 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getRobotNum",
 			Handler:    _Wolflamp_GetRobotNum_Handler,
+		},
+		{
+			MethodName: "getGameCommission",
+			Handler:    _Wolflamp_GetGameCommission_Handler,
+		},
+		{
+			MethodName: "createStatement",
+			Handler:    _Wolflamp_CreateStatement_Handler,
+		},
+		{
+			MethodName: "updateStatement",
+			Handler:    _Wolflamp_UpdateStatement_Handler,
+		},
+		{
+			MethodName: "deleteStatement",
+			Handler:    _Wolflamp_DeleteStatement_Handler,
+		},
+		{
+			MethodName: "findStatement",
+			Handler:    _Wolflamp_FindStatement_Handler,
+		},
+		{
+			MethodName: "listStatement",
+			Handler:    _Wolflamp_ListStatement_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

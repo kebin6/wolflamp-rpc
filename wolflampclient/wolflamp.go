@@ -29,12 +29,14 @@ type (
 	CreatePlayerReq             = wolflamp.CreatePlayerReq
 	CreateRewardReq             = wolflamp.CreateRewardReq
 	CreateRoundReq              = wolflamp.CreateRoundReq
+	CreateStatementReq          = wolflamp.CreateStatementReq
 	DealOpenGameReq             = wolflamp.DealOpenGameReq
 	DeleteBannerReq             = wolflamp.DeleteBannerReq
 	DeleteExchangeReq           = wolflamp.DeleteExchangeReq
 	DeleteOrderReq              = wolflamp.DeleteOrderReq
 	DeletePlayerReq             = wolflamp.DeletePlayerReq
 	DeleteRewardReq             = wolflamp.DeleteRewardReq
+	DeleteStatementReq          = wolflamp.DeleteStatementReq
 	Empty                       = wolflamp.Empty
 	ExchangeInfo                = wolflamp.ExchangeInfo
 	ExchangeReq                 = wolflamp.ExchangeReq
@@ -47,12 +49,16 @@ type (
 	FindRoundReq                = wolflamp.FindRoundReq
 	FindSettingReq              = wolflamp.FindSettingReq
 	FindSettingResp             = wolflamp.FindSettingResp
+	FindStatementReq            = wolflamp.FindStatementReq
 	FoldInfo                    = wolflamp.FoldInfo
+	GameCommissionResp          = wolflamp.GameCommissionResp
 	GameRuleResp                = wolflamp.GameRuleResp
 	GetByEmailReq               = wolflamp.GetByEmailReq
 	GetByInviteCodeReq          = wolflamp.GetByInviteCodeReq
 	GetInvestInfoByPlayerIdReq  = wolflamp.GetInvestInfoByPlayerIdReq
 	GetInvestInfoByPlayerIdResp = wolflamp.GetInvestInfoByPlayerIdResp
+	GetInvitorListByIdsReq      = wolflamp.GetInvitorListByIdsReq
+	GetInvitorListByIdsResp     = wolflamp.GetInvitorListByIdsResp
 	GetLambFoldAggregateReq     = wolflamp.GetLambFoldAggregateReq
 	GetLambFoldAggregateResp    = wolflamp.GetLambFoldAggregateResp
 	IDInt32Req                  = wolflamp.IDInt32Req
@@ -65,6 +71,7 @@ type (
 	IDsUint32Req                = wolflamp.IDsUint32Req
 	IdleTimeResp                = wolflamp.IdleTimeResp
 	InvestInfo                  = wolflamp.InvestInfo
+	InvitorInfo                 = wolflamp.InvitorInfo
 	LambFoldAggregateInfo       = wolflamp.LambFoldAggregateInfo
 	ListBannerReq               = wolflamp.ListBannerReq
 	ListBannerResp              = wolflamp.ListBannerResp
@@ -78,6 +85,8 @@ type (
 	ListPlayerResp              = wolflamp.ListPlayerResp
 	ListRewardReq               = wolflamp.ListRewardReq
 	ListRewardResp              = wolflamp.ListRewardResp
+	ListStatementReq            = wolflamp.ListStatementReq
+	ListStatementResp           = wolflamp.ListStatementResp
 	MinWithdrawNumResp          = wolflamp.MinWithdrawNumResp
 	OrderInfo                   = wolflamp.OrderInfo
 	PageInfoReq                 = wolflamp.PageInfoReq
@@ -89,6 +98,7 @@ type (
 	RobotLampNumResp            = wolflamp.RobotLampNumResp
 	RobotNumResp                = wolflamp.RobotNumResp
 	RoundInfo                   = wolflamp.RoundInfo
+	StatementInfo               = wolflamp.StatementInfo
 	UUIDReq                     = wolflamp.UUIDReq
 	UUIDsReq                    = wolflamp.UUIDsReq
 	UpdateBannerReq             = wolflamp.UpdateBannerReq
@@ -98,6 +108,7 @@ type (
 	UpdatePlayerReq             = wolflamp.UpdatePlayerReq
 	UpdateRewardReq             = wolflamp.UpdateRewardReq
 	UpdateSettingReq            = wolflamp.UpdateSettingReq
+	UpdateStatementReq          = wolflamp.UpdateStatementReq
 	WithdrawCommissionResp      = wolflamp.WithdrawCommissionResp
 	WithdrawThresholdResp       = wolflamp.WithdrawThresholdResp
 
@@ -135,6 +146,7 @@ type (
 		ListPlayer(ctx context.Context, in *ListPlayerReq, opts ...grpc.CallOption) (*ListPlayerResp, error)
 		GetByEmail(ctx context.Context, in *GetByEmailReq, opts ...grpc.CallOption) (*PlayerInfo, error)
 		GetByInviteCode(ctx context.Context, in *GetByInviteCodeReq, opts ...grpc.CallOption) (*PlayerInfo, error)
+		GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error)
 		CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateReward(ctx context.Context, in *UpdateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteReward(ctx context.Context, in *DeleteRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -150,6 +162,12 @@ type (
 		GetRobotLampNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotLampNumResp, error)
 		GetGameRule(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameRuleResp, error)
 		GetRobotNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotNumResp, error)
+		GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error)
+		CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		FindStatement(ctx context.Context, in *FindStatementReq, opts ...grpc.CallOption) (*StatementInfo, error)
+		ListStatement(ctx context.Context, in *ListStatementReq, opts ...grpc.CallOption) (*ListStatementResp, error)
 	}
 
 	defaultWolflamp struct {
@@ -328,6 +346,11 @@ func (m *defaultWolflamp) GetByInviteCode(ctx context.Context, in *GetByInviteCo
 	return client.GetByInviteCode(ctx, in, opts...)
 }
 
+func (m *defaultWolflamp) GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetInvitorListByIds(ctx, in, opts...)
+}
+
 func (m *defaultWolflamp) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.CreateReward(ctx, in, opts...)
@@ -401,4 +424,34 @@ func (m *defaultWolflamp) GetGameRule(ctx context.Context, in *Empty, opts ...gr
 func (m *defaultWolflamp) GetRobotNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotNumResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetRobotNum(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetGameCommission(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.CreateStatement(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.UpdateStatement(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.DeleteStatement(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) FindStatement(ctx context.Context, in *FindStatementReq, opts ...grpc.CallOption) (*StatementInfo, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.FindStatement(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) ListStatement(ctx context.Context, in *ListStatementReq, opts ...grpc.CallOption) (*ListStatementResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.ListStatement(ctx, in, opts...)
 }

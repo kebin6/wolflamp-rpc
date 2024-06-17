@@ -41,6 +41,7 @@ const (
 	RobotLampNum       SettingKey = "robot_lamp_num"
 	IdleTime           SettingKey = "idle_time"
 	WithdrawThreshold  SettingKey = "withdraw_threshold"
+	GameCommission     SettingKey = "game_commission"
 )
 
 func (p SettingKey) Val() string {
@@ -52,7 +53,7 @@ func (p SettingKey) Desc() string {
 	case GameRule:
 		return "游戏规则"
 	case WithdrawCommission:
-		return "提币手续费"
+		return "提币手续费(%)"
 	case MinWithdrawNum:
 		return "最小提币金额"
 	case RobotNum:
@@ -63,6 +64,8 @@ func (p SettingKey) Desc() string {
 		return "机器人空闲秒数"
 	case WithdrawThreshold:
 		return "提币免审阈值"
+	case GameCommission:
+		return "游戏抽成比例(%)"
 	default:
 		return ""
 	}
@@ -77,6 +80,7 @@ func (p SettingKey) DescMap() map[SettingKey]string {
 		RobotLampNum:       RobotLampNum.Desc(),
 		IdleTime:           IdleTime.Desc(),
 		WithdrawThreshold:  WithdrawThreshold.Desc(),
+		GameCommission:     GameCommission.Desc(),
 	}
 }
 

@@ -15,6 +15,8 @@ type PlatformSetting struct {
 	WithdrawThreshold float32 `json:"withdrawThreshold"`
 	// 机器人空闲秒数
 	IdleTime uint32 `json:"idleTime"`
+	// 游戏抽佣比例（平台预留部分）
+	GameCommission float32 `json:"gameCommission"`
 }
 
 // GameRule 游戏规则

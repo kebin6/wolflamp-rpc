@@ -2139,3 +2139,219 @@ func (s *SettingCreate) SetNotNilValue(value *string) *SettingCreate {
 	}
 	return s
 }
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilUpdatedAt(value *time.Time) *StatementUpdate {
+	if value != nil {
+		return s.SetUpdatedAt(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilUpdatedAt(value *time.Time) *StatementUpdateOne {
+	if value != nil {
+		return s.SetUpdatedAt(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilUpdatedAt(value *time.Time) *StatementCreate {
+	if value != nil {
+		return s.SetUpdatedAt(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilStatus(value *uint8) *StatementUpdate {
+	if value != nil {
+		return s.SetStatus(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilStatus(value *uint8) *StatementUpdateOne {
+	if value != nil {
+		return s.SetStatus(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilStatus(value *uint8) *StatementCreate {
+	if value != nil {
+		return s.SetStatus(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilPlayerID(value *uint64) *StatementUpdate {
+	if value != nil {
+		return s.SetPlayerID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilPlayerID(value *uint64) *StatementUpdateOne {
+	if value != nil {
+		return s.SetPlayerID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilPlayerID(value *uint64) *StatementCreate {
+	if value != nil {
+		return s.SetPlayerID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilModule(value *uint32) *StatementUpdate {
+	if value != nil {
+		return s.SetModule(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilModule(value *uint32) *StatementUpdateOne {
+	if value != nil {
+		return s.SetModule(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilModule(value *uint32) *StatementCreate {
+	if value != nil {
+		return s.SetModule(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilCode(value *string) *StatementUpdate {
+	if value != nil {
+		return s.SetCode(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilCode(value *string) *StatementUpdateOne {
+	if value != nil {
+		return s.SetCode(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilCode(value *string) *StatementCreate {
+	if value != nil {
+		return s.SetCode(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilInoutType(value *uint32) *StatementUpdate {
+	if value != nil {
+		return s.SetInoutType(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilInoutType(value *uint32) *StatementUpdateOne {
+	if value != nil {
+		return s.SetInoutType(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilInoutType(value *uint32) *StatementCreate {
+	if value != nil {
+		return s.SetInoutType(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilAmount(value *float64) *StatementUpdate {
+	if value != nil {
+		return s.SetAmount(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilAmount(value *float64) *StatementUpdateOne {
+	if value != nil {
+		return s.SetAmount(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilAmount(value *float64) *StatementCreate {
+	if value != nil {
+		return s.SetAmount(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilReferID(value *string) *StatementUpdate {
+	if value != nil {
+		return s.SetReferID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilReferID(value *string) *StatementUpdateOne {
+	if value != nil {
+		return s.SetReferID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilReferID(value *string) *StatementCreate {
+	if value != nil {
+		return s.SetReferID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilRemark(value *string) *StatementUpdate {
+	if value != nil {
+		return s.SetRemark(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilRemark(value *string) *StatementUpdateOne {
+	if value != nil {
+		return s.SetRemark(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilRemark(value *string) *StatementCreate {
+	if value != nil {
+		return s.SetRemark(*value)
+	}
+	return s
+}

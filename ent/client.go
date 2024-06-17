@@ -27,6 +27,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 
 	stdsql "database/sql"
 )
@@ -58,6 +59,8 @@ type Client struct {
 	RoundLambFold *RoundLambFoldClient
 	// Setting is the client for interacting with the Setting builders.
 	Setting *SettingClient
+	// Statement is the client for interacting with the Statement builders.
+	Statement *StatementClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -80,6 +83,7 @@ func (c *Client) init() {
 	c.RoundInvest = NewRoundInvestClient(c.config)
 	c.RoundLambFold = NewRoundLambFoldClient(c.config)
 	c.Setting = NewSettingClient(c.config)
+	c.Statement = NewStatementClient(c.config)
 }
 
 type (
@@ -183,6 +187,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		RoundInvest:      NewRoundInvestClient(cfg),
 		RoundLambFold:    NewRoundLambFoldClient(cfg),
 		Setting:          NewSettingClient(cfg),
+		Statement:        NewStatementClient(cfg),
 	}, nil
 }
 
@@ -213,6 +218,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		RoundInvest:      NewRoundInvestClient(cfg),
 		RoundLambFold:    NewRoundLambFoldClient(cfg),
 		Setting:          NewSettingClient(cfg),
+		Statement:        NewStatementClient(cfg),
 	}, nil
 }
 
@@ -243,7 +249,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Reward,
-		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting,
+		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
 	} {
 		n.Use(hooks...)
 	}
@@ -254,7 +260,7 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Reward,
-		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting,
+		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -285,6 +291,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.RoundLambFold.mutate(ctx, m)
 	case *SettingMutation:
 		return c.Setting.mutate(ctx, m)
+	case *StatementMutation:
+		return c.Statement.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -1881,15 +1889,148 @@ func (c *SettingClient) mutate(ctx context.Context, m *SettingMutation) (Value, 
 	}
 }
 
+// StatementClient is a client for the Statement schema.
+type StatementClient struct {
+	config
+}
+
+// NewStatementClient returns a client for the Statement from the given config.
+func NewStatementClient(c config) *StatementClient {
+	return &StatementClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `statement.Hooks(f(g(h())))`.
+func (c *StatementClient) Use(hooks ...Hook) {
+	c.hooks.Statement = append(c.hooks.Statement, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `statement.Intercept(f(g(h())))`.
+func (c *StatementClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Statement = append(c.inters.Statement, interceptors...)
+}
+
+// Create returns a builder for creating a Statement entity.
+func (c *StatementClient) Create() *StatementCreate {
+	mutation := newStatementMutation(c.config, OpCreate)
+	return &StatementCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Statement entities.
+func (c *StatementClient) CreateBulk(builders ...*StatementCreate) *StatementCreateBulk {
+	return &StatementCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *StatementClient) MapCreateBulk(slice any, setFunc func(*StatementCreate, int)) *StatementCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &StatementCreateBulk{err: fmt.Errorf("calling to StatementClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*StatementCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &StatementCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Statement.
+func (c *StatementClient) Update() *StatementUpdate {
+	mutation := newStatementMutation(c.config, OpUpdate)
+	return &StatementUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *StatementClient) UpdateOne(s *Statement) *StatementUpdateOne {
+	mutation := newStatementMutation(c.config, OpUpdateOne, withStatement(s))
+	return &StatementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *StatementClient) UpdateOneID(id uint64) *StatementUpdateOne {
+	mutation := newStatementMutation(c.config, OpUpdateOne, withStatementID(id))
+	return &StatementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Statement.
+func (c *StatementClient) Delete() *StatementDelete {
+	mutation := newStatementMutation(c.config, OpDelete)
+	return &StatementDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *StatementClient) DeleteOne(s *Statement) *StatementDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *StatementClient) DeleteOneID(id uint64) *StatementDeleteOne {
+	builder := c.Delete().Where(statement.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &StatementDeleteOne{builder}
+}
+
+// Query returns a query builder for Statement.
+func (c *StatementClient) Query() *StatementQuery {
+	return &StatementQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeStatement},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Statement entity by its id.
+func (c *StatementClient) Get(ctx context.Context, id uint64) (*Statement, error) {
+	return c.Query().Where(statement.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *StatementClient) GetX(ctx context.Context, id uint64) *Statement {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *StatementClient) Hooks() []Hook {
+	return c.hooks.Statement
+}
+
+// Interceptors returns the client interceptors.
+func (c *StatementClient) Interceptors() []Interceptor {
+	return c.inters.Statement
+}
+
+func (c *StatementClient) mutate(ctx context.Context, m *StatementMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&StatementCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&StatementUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&StatementUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&StatementDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Statement mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
 		Banner, Exchange, File, Order, OriginInviteCode, Player, Reward, Round,
-		RoundInvest, RoundLambFold, Setting []ent.Hook
+		RoundInvest, RoundLambFold, Setting, Statement []ent.Hook
 	}
 	inters struct {
 		Banner, Exchange, File, Order, OriginInviteCode, Player, Reward, Round,
-		RoundInvest, RoundLambFold, Setting []ent.Interceptor
+		RoundInvest, RoundLambFold, Setting, Statement []ent.Interceptor
 	}
 )
 

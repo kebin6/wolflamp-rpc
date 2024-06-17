@@ -24,6 +24,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 )
 
 const (
@@ -46,6 +47,7 @@ const (
 	TypeRoundInvest      = "RoundInvest"
 	TypeRoundLambFold    = "RoundLambFold"
 	TypeSetting          = "Setting"
+	TypeStatement        = "Statement"
 )
 
 // BannerMutation represents an operation that mutates the Banner nodes in the graph.
@@ -11184,4 +11186,1013 @@ func (m *SettingMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *SettingMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Setting edge %s", name)
+}
+
+// StatementMutation represents an operation that mutates the Statement nodes in the graph.
+type StatementMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uint64
+	created_at    *time.Time
+	updated_at    *time.Time
+	status        *uint8
+	addstatus     *int8
+	player_id     *uint64
+	addplayer_id  *int64
+	module        *uint32
+	addmodule     *int32
+	code          *string
+	inout_type    *uint32
+	addinout_type *int32
+	amount        *float64
+	addamount     *float64
+	refer_id      *string
+	remark        *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Statement, error)
+	predicates    []predicate.Statement
+}
+
+var _ ent.Mutation = (*StatementMutation)(nil)
+
+// statementOption allows management of the mutation configuration using functional options.
+type statementOption func(*StatementMutation)
+
+// newStatementMutation creates new mutation for the Statement entity.
+func newStatementMutation(c config, op Op, opts ...statementOption) *StatementMutation {
+	m := &StatementMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeStatement,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withStatementID sets the ID field of the mutation.
+func withStatementID(id uint64) statementOption {
+	return func(m *StatementMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Statement
+		)
+		m.oldValue = func(ctx context.Context) (*Statement, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Statement.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withStatement sets the old Statement of the mutation.
+func withStatement(node *Statement) statementOption {
+	return func(m *StatementMutation) {
+		m.oldValue = func(context.Context) (*Statement, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m StatementMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m StatementMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Statement entities.
+func (m *StatementMutation) SetID(id uint64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *StatementMutation) ID() (id uint64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *StatementMutation) IDs(ctx context.Context) ([]uint64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Statement.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *StatementMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *StatementMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *StatementMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *StatementMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *StatementMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *StatementMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *StatementMutation) SetStatus(u uint8) {
+	m.status = &u
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *StatementMutation) Status() (r uint8, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldStatus(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds u to the "status" field.
+func (m *StatementMutation) AddStatus(u int8) {
+	if m.addstatus != nil {
+		*m.addstatus += u
+	} else {
+		m.addstatus = &u
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *StatementMutation) AddedStatus() (r int8, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearStatus clears the value of the "status" field.
+func (m *StatementMutation) ClearStatus() {
+	m.status = nil
+	m.addstatus = nil
+	m.clearedFields[statement.FieldStatus] = struct{}{}
+}
+
+// StatusCleared returns if the "status" field was cleared in this mutation.
+func (m *StatementMutation) StatusCleared() bool {
+	_, ok := m.clearedFields[statement.FieldStatus]
+	return ok
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *StatementMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+	delete(m.clearedFields, statement.FieldStatus)
+}
+
+// SetPlayerID sets the "player_id" field.
+func (m *StatementMutation) SetPlayerID(u uint64) {
+	m.player_id = &u
+	m.addplayer_id = nil
+}
+
+// PlayerID returns the value of the "player_id" field in the mutation.
+func (m *StatementMutation) PlayerID() (r uint64, exists bool) {
+	v := m.player_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPlayerID returns the old "player_id" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldPlayerID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPlayerID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPlayerID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPlayerID: %w", err)
+	}
+	return oldValue.PlayerID, nil
+}
+
+// AddPlayerID adds u to the "player_id" field.
+func (m *StatementMutation) AddPlayerID(u int64) {
+	if m.addplayer_id != nil {
+		*m.addplayer_id += u
+	} else {
+		m.addplayer_id = &u
+	}
+}
+
+// AddedPlayerID returns the value that was added to the "player_id" field in this mutation.
+func (m *StatementMutation) AddedPlayerID() (r int64, exists bool) {
+	v := m.addplayer_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPlayerID resets all changes to the "player_id" field.
+func (m *StatementMutation) ResetPlayerID() {
+	m.player_id = nil
+	m.addplayer_id = nil
+}
+
+// SetModule sets the "module" field.
+func (m *StatementMutation) SetModule(u uint32) {
+	m.module = &u
+	m.addmodule = nil
+}
+
+// Module returns the value of the "module" field in the mutation.
+func (m *StatementMutation) Module() (r uint32, exists bool) {
+	v := m.module
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModule returns the old "module" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldModule(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModule is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModule requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModule: %w", err)
+	}
+	return oldValue.Module, nil
+}
+
+// AddModule adds u to the "module" field.
+func (m *StatementMutation) AddModule(u int32) {
+	if m.addmodule != nil {
+		*m.addmodule += u
+	} else {
+		m.addmodule = &u
+	}
+}
+
+// AddedModule returns the value that was added to the "module" field in this mutation.
+func (m *StatementMutation) AddedModule() (r int32, exists bool) {
+	v := m.addmodule
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetModule resets all changes to the "module" field.
+func (m *StatementMutation) ResetModule() {
+	m.module = nil
+	m.addmodule = nil
+}
+
+// SetCode sets the "code" field.
+func (m *StatementMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *StatementMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *StatementMutation) ResetCode() {
+	m.code = nil
+}
+
+// SetInoutType sets the "inout_type" field.
+func (m *StatementMutation) SetInoutType(u uint32) {
+	m.inout_type = &u
+	m.addinout_type = nil
+}
+
+// InoutType returns the value of the "inout_type" field in the mutation.
+func (m *StatementMutation) InoutType() (r uint32, exists bool) {
+	v := m.inout_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldInoutType returns the old "inout_type" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldInoutType(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldInoutType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldInoutType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldInoutType: %w", err)
+	}
+	return oldValue.InoutType, nil
+}
+
+// AddInoutType adds u to the "inout_type" field.
+func (m *StatementMutation) AddInoutType(u int32) {
+	if m.addinout_type != nil {
+		*m.addinout_type += u
+	} else {
+		m.addinout_type = &u
+	}
+}
+
+// AddedInoutType returns the value that was added to the "inout_type" field in this mutation.
+func (m *StatementMutation) AddedInoutType() (r int32, exists bool) {
+	v := m.addinout_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetInoutType resets all changes to the "inout_type" field.
+func (m *StatementMutation) ResetInoutType() {
+	m.inout_type = nil
+	m.addinout_type = nil
+}
+
+// SetAmount sets the "amount" field.
+func (m *StatementMutation) SetAmount(f float64) {
+	m.amount = &f
+	m.addamount = nil
+}
+
+// Amount returns the value of the "amount" field in the mutation.
+func (m *StatementMutation) Amount() (r float64, exists bool) {
+	v := m.amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAmount returns the old "amount" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldAmount(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAmount: %w", err)
+	}
+	return oldValue.Amount, nil
+}
+
+// AddAmount adds f to the "amount" field.
+func (m *StatementMutation) AddAmount(f float64) {
+	if m.addamount != nil {
+		*m.addamount += f
+	} else {
+		m.addamount = &f
+	}
+}
+
+// AddedAmount returns the value that was added to the "amount" field in this mutation.
+func (m *StatementMutation) AddedAmount() (r float64, exists bool) {
+	v := m.addamount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAmount resets all changes to the "amount" field.
+func (m *StatementMutation) ResetAmount() {
+	m.amount = nil
+	m.addamount = nil
+}
+
+// SetReferID sets the "refer_id" field.
+func (m *StatementMutation) SetReferID(s string) {
+	m.refer_id = &s
+}
+
+// ReferID returns the value of the "refer_id" field in the mutation.
+func (m *StatementMutation) ReferID() (r string, exists bool) {
+	v := m.refer_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReferID returns the old "refer_id" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldReferID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReferID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReferID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReferID: %w", err)
+	}
+	return oldValue.ReferID, nil
+}
+
+// ResetReferID resets all changes to the "refer_id" field.
+func (m *StatementMutation) ResetReferID() {
+	m.refer_id = nil
+}
+
+// SetRemark sets the "remark" field.
+func (m *StatementMutation) SetRemark(s string) {
+	m.remark = &s
+}
+
+// Remark returns the value of the "remark" field in the mutation.
+func (m *StatementMutation) Remark() (r string, exists bool) {
+	v := m.remark
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRemark returns the old "remark" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldRemark(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRemark requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
+	}
+	return oldValue.Remark, nil
+}
+
+// ResetRemark resets all changes to the "remark" field.
+func (m *StatementMutation) ResetRemark() {
+	m.remark = nil
+}
+
+// Where appends a list predicates to the StatementMutation builder.
+func (m *StatementMutation) Where(ps ...predicate.Statement) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the StatementMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *StatementMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Statement, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *StatementMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *StatementMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Statement).
+func (m *StatementMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *StatementMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.created_at != nil {
+		fields = append(fields, statement.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, statement.FieldUpdatedAt)
+	}
+	if m.status != nil {
+		fields = append(fields, statement.FieldStatus)
+	}
+	if m.player_id != nil {
+		fields = append(fields, statement.FieldPlayerID)
+	}
+	if m.module != nil {
+		fields = append(fields, statement.FieldModule)
+	}
+	if m.code != nil {
+		fields = append(fields, statement.FieldCode)
+	}
+	if m.inout_type != nil {
+		fields = append(fields, statement.FieldInoutType)
+	}
+	if m.amount != nil {
+		fields = append(fields, statement.FieldAmount)
+	}
+	if m.refer_id != nil {
+		fields = append(fields, statement.FieldReferID)
+	}
+	if m.remark != nil {
+		fields = append(fields, statement.FieldRemark)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *StatementMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case statement.FieldCreatedAt:
+		return m.CreatedAt()
+	case statement.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case statement.FieldStatus:
+		return m.Status()
+	case statement.FieldPlayerID:
+		return m.PlayerID()
+	case statement.FieldModule:
+		return m.Module()
+	case statement.FieldCode:
+		return m.Code()
+	case statement.FieldInoutType:
+		return m.InoutType()
+	case statement.FieldAmount:
+		return m.Amount()
+	case statement.FieldReferID:
+		return m.ReferID()
+	case statement.FieldRemark:
+		return m.Remark()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *StatementMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case statement.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case statement.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case statement.FieldStatus:
+		return m.OldStatus(ctx)
+	case statement.FieldPlayerID:
+		return m.OldPlayerID(ctx)
+	case statement.FieldModule:
+		return m.OldModule(ctx)
+	case statement.FieldCode:
+		return m.OldCode(ctx)
+	case statement.FieldInoutType:
+		return m.OldInoutType(ctx)
+	case statement.FieldAmount:
+		return m.OldAmount(ctx)
+	case statement.FieldReferID:
+		return m.OldReferID(ctx)
+	case statement.FieldRemark:
+		return m.OldRemark(ctx)
+	}
+	return nil, fmt.Errorf("unknown Statement field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *StatementMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case statement.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case statement.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case statement.FieldStatus:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case statement.FieldPlayerID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPlayerID(v)
+		return nil
+	case statement.FieldModule:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModule(v)
+		return nil
+	case statement.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	case statement.FieldInoutType:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetInoutType(v)
+		return nil
+	case statement.FieldAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAmount(v)
+		return nil
+	case statement.FieldReferID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReferID(v)
+		return nil
+	case statement.FieldRemark:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRemark(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Statement field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *StatementMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, statement.FieldStatus)
+	}
+	if m.addplayer_id != nil {
+		fields = append(fields, statement.FieldPlayerID)
+	}
+	if m.addmodule != nil {
+		fields = append(fields, statement.FieldModule)
+	}
+	if m.addinout_type != nil {
+		fields = append(fields, statement.FieldInoutType)
+	}
+	if m.addamount != nil {
+		fields = append(fields, statement.FieldAmount)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *StatementMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case statement.FieldStatus:
+		return m.AddedStatus()
+	case statement.FieldPlayerID:
+		return m.AddedPlayerID()
+	case statement.FieldModule:
+		return m.AddedModule()
+	case statement.FieldInoutType:
+		return m.AddedInoutType()
+	case statement.FieldAmount:
+		return m.AddedAmount()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *StatementMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case statement.FieldStatus:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	case statement.FieldPlayerID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPlayerID(v)
+		return nil
+	case statement.FieldModule:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddModule(v)
+		return nil
+	case statement.FieldInoutType:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddInoutType(v)
+		return nil
+	case statement.FieldAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAmount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Statement numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *StatementMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(statement.FieldStatus) {
+		fields = append(fields, statement.FieldStatus)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *StatementMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *StatementMutation) ClearField(name string) error {
+	switch name {
+	case statement.FieldStatus:
+		m.ClearStatus()
+		return nil
+	}
+	return fmt.Errorf("unknown Statement nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *StatementMutation) ResetField(name string) error {
+	switch name {
+	case statement.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case statement.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case statement.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case statement.FieldPlayerID:
+		m.ResetPlayerID()
+		return nil
+	case statement.FieldModule:
+		m.ResetModule()
+		return nil
+	case statement.FieldCode:
+		m.ResetCode()
+		return nil
+	case statement.FieldInoutType:
+		m.ResetInoutType()
+		return nil
+	case statement.FieldAmount:
+		m.ResetAmount()
+		return nil
+	case statement.FieldReferID:
+		m.ResetReferID()
+		return nil
+	case statement.FieldRemark:
+		m.ResetRemark()
+		return nil
+	}
+	return fmt.Errorf("unknown Statement field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *StatementMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *StatementMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *StatementMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *StatementMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *StatementMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *StatementMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *StatementMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Statement unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *StatementMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Statement edge %s", name)
 }

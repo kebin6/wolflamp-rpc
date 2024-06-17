@@ -36,6 +36,8 @@ type Tx struct {
 	RoundLambFold *RoundLambFoldClient
 	// Setting is the client for interacting with the Setting builders.
 	Setting *SettingClient
+	// Statement is the client for interacting with the Statement builders.
+	Statement *StatementClient
 
 	// lazily loaded.
 	client     *Client
@@ -178,6 +180,7 @@ func (tx *Tx) init() {
 	tx.RoundInvest = NewRoundInvestClient(tx.config)
 	tx.RoundLambFold = NewRoundLambFoldClient(tx.config)
 	tx.Setting = NewSettingClient(tx.config)
+	tx.Statement = NewStatementClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

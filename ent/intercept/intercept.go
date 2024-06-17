@@ -20,6 +20,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 )
 
 // The Query interface represents an operation that queries a graph.
@@ -375,6 +376,33 @@ func (f TraverseSetting) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.SettingQuery", q)
 }
 
+// The StatementFunc type is an adapter to allow the use of ordinary function as a Querier.
+type StatementFunc func(context.Context, *ent.StatementQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f StatementFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.StatementQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.StatementQuery", q)
+}
+
+// The TraverseStatement type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseStatement func(context.Context, *ent.StatementQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseStatement) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseStatement) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.StatementQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.StatementQuery", q)
+}
+
 // NewQuery returns the generic Query interface for the given typed query.
 func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
@@ -400,6 +428,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.RoundLambFoldQuery, predicate.RoundLambFold, roundlambfold.OrderOption]{typ: ent.TypeRoundLambFold, tq: q}, nil
 	case *ent.SettingQuery:
 		return &query[*ent.SettingQuery, predicate.Setting, setting.OrderOption]{typ: ent.TypeSetting, tq: q}, nil
+	case *ent.StatementQuery:
+		return &query[*ent.StatementQuery, predicate.Statement, statement.OrderOption]{typ: ent.TypeStatement, tq: q}, nil
 	default:
 		return nil, fmt.Errorf("unknown query type %T", q)
 	}

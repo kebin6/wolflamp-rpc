@@ -18,6 +18,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/ent/schema"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
+	"github.com/kebin6/wolflamp-rpc/ent/statement"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -499,4 +500,53 @@ func init() {
 	settingDescValue := settingFields[2].Descriptor()
 	// setting.DefaultValue holds the default value on creation for the value field.
 	setting.DefaultValue = settingDescValue.Default.(string)
+	statementMixin := schema.Statement{}.Mixin()
+	statementMixinFields0 := statementMixin[0].Fields()
+	_ = statementMixinFields0
+	statementMixinFields1 := statementMixin[1].Fields()
+	_ = statementMixinFields1
+	statementFields := schema.Statement{}.Fields()
+	_ = statementFields
+	// statementDescCreatedAt is the schema descriptor for created_at field.
+	statementDescCreatedAt := statementMixinFields0[1].Descriptor()
+	// statement.DefaultCreatedAt holds the default value on creation for the created_at field.
+	statement.DefaultCreatedAt = statementDescCreatedAt.Default.(func() time.Time)
+	// statementDescUpdatedAt is the schema descriptor for updated_at field.
+	statementDescUpdatedAt := statementMixinFields0[2].Descriptor()
+	// statement.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	statement.DefaultUpdatedAt = statementDescUpdatedAt.Default.(func() time.Time)
+	// statement.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	statement.UpdateDefaultUpdatedAt = statementDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// statementDescStatus is the schema descriptor for status field.
+	statementDescStatus := statementMixinFields1[0].Descriptor()
+	// statement.DefaultStatus holds the default value on creation for the status field.
+	statement.DefaultStatus = statementDescStatus.Default.(uint8)
+	// statementDescPlayerID is the schema descriptor for player_id field.
+	statementDescPlayerID := statementFields[0].Descriptor()
+	// statement.DefaultPlayerID holds the default value on creation for the player_id field.
+	statement.DefaultPlayerID = statementDescPlayerID.Default.(uint64)
+	// statementDescModule is the schema descriptor for module field.
+	statementDescModule := statementFields[1].Descriptor()
+	// statement.DefaultModule holds the default value on creation for the module field.
+	statement.DefaultModule = statementDescModule.Default.(uint32)
+	// statementDescCode is the schema descriptor for code field.
+	statementDescCode := statementFields[2].Descriptor()
+	// statement.DefaultCode holds the default value on creation for the code field.
+	statement.DefaultCode = statementDescCode.Default.(string)
+	// statementDescInoutType is the schema descriptor for inout_type field.
+	statementDescInoutType := statementFields[3].Descriptor()
+	// statement.DefaultInoutType holds the default value on creation for the inout_type field.
+	statement.DefaultInoutType = statementDescInoutType.Default.(uint32)
+	// statementDescAmount is the schema descriptor for amount field.
+	statementDescAmount := statementFields[4].Descriptor()
+	// statement.DefaultAmount holds the default value on creation for the amount field.
+	statement.DefaultAmount = statementDescAmount.Default.(float64)
+	// statementDescReferID is the schema descriptor for refer_id field.
+	statementDescReferID := statementFields[5].Descriptor()
+	// statement.DefaultReferID holds the default value on creation for the refer_id field.
+	statement.DefaultReferID = statementDescReferID.Default.(string)
+	// statementDescRemark is the schema descriptor for remark field.
+	statementDescRemark := statementFields[6].Descriptor()
+	// statement.DefaultRemark holds the default value on creation for the remark field.
+	statement.DefaultRemark = statementDescRemark.Default.(string)
 }

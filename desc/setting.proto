@@ -47,6 +47,10 @@ message RobotNumResp {
   uint32 max = 2;
 }
 
+message GameCommissionResp {
+  float gameCommission = 1;
+}
+
 service Wolflamp {
   // group: setting
   //rpc createSetting (CreateSettingReq) returns (BaseIDResp);
@@ -84,4 +88,6 @@ service Wolflamp {
   // group: setting
   rpc getRobotNum (Empty) returns (RobotNumResp);
 
+  // group: setting
+  rpc getGameCommission (Empty) returns (GameCommissionResp);
 }
