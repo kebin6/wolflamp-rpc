@@ -58,7 +58,7 @@ func (l *FindRoundLogic) GetCurrentRoundId() (uint64, error) {
 	if err == nil {
 		return currentIdCached, err
 	}
-	listResp, err := l.svcCtx.DB.Round.Query().Order(ent.Desc(round.FieldID)).Page(l.ctx, 1, 2)
+	listResp, err := l.svcCtx.DB.Round.Query().WithFold().Order(ent.Desc(round.FieldID)).Page(l.ctx, 1, 2)
 	if err != nil {
 		return 0, err
 	}

@@ -261,13 +261,22 @@ message GetByInviteCodeReq {
   string invite_code = 1;
 }
 
+message GetInvestByRoundIdResp {
+  repeated InvestInfo data = 1;
+}
+
 message GetInvestInfoByPlayerIdReq {
   uint64 player_id = 1;
   optional uint64 round_id = 2;
+  repeated uint64 round_ids = 3;
 }
 
 message GetInvestInfoByPlayerIdResp {
   repeated InvestInfo data = 1;
+}
+
+message GetInvestsByRoundIdReq {
+  uint64 round_id = 1;
 }
 
 message GetInvitorListByIdsReq {
@@ -394,6 +403,17 @@ message ListFoldReq {
 message ListFoldResp {
   uint64 total = 1;
   repeated FoldInfo data = 2;
+}
+
+message ListHistoryInvestReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 player_id = 3;
+}
+
+message ListHistoryInvestResp {
+  uint64 total = 1;
+  repeated InvestInfo data = 2;
 }
 
 message ListOrderReq {
@@ -567,6 +587,7 @@ message RoundInfo {
   repeated FoldInfo folds = 9;
   uint32 round_count = 10;
   uint64 total_round_count = 11;
+  repeated InvestInfo invests = 12;
 }
 
 message StatementInfo {
@@ -719,11 +740,15 @@ service Wolflamp {
   //  group: game
   rpc previousRound(Empty) returns (PreviousRoundResp);
   //  group: game
+  rpc listHistoryInvest(ListHistoryInvestReq) returns (ListHistoryInvestResp);
+  //  group: game
   rpc listFold(ListFoldReq) returns (ListFoldResp);
   //  group: game
   rpc invest(CreateInvestReq) returns (BaseIDResp);
   //  group: game
   rpc getInvestInfoByPlayerId(GetInvestInfoByPlayerIdReq) returns (GetInvestInfoByPlayerIdResp);
+  //  group: game
+  rpc getInvestByRoundId(GetInvestsByRoundIdReq) returns (GetInvestByRoundIdResp);
   //  group: game
   rpc getLambFoldAggregate(GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
   //  group: game

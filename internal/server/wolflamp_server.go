@@ -105,6 +105,11 @@ func (s *WolflampServer) PreviousRound(ctx context.Context, in *wolflamp.Empty) 
 	return l.PreviousRound(in)
 }
 
+func (s *WolflampServer) ListHistoryInvest(ctx context.Context, in *wolflamp.ListHistoryInvestReq) (*wolflamp.ListHistoryInvestResp, error) {
+	l := game.NewListHistoryInvestLogic(ctx, s.svcCtx)
+	return l.ListHistoryInvest(in)
+}
+
 func (s *WolflampServer) ListFold(ctx context.Context, in *wolflamp.ListFoldReq) (*wolflamp.ListFoldResp, error) {
 	l := game.NewListFoldLogic(ctx, s.svcCtx)
 	return l.ListFold(in)
@@ -118,6 +123,11 @@ func (s *WolflampServer) Invest(ctx context.Context, in *wolflamp.CreateInvestRe
 func (s *WolflampServer) GetInvestInfoByPlayerId(ctx context.Context, in *wolflamp.GetInvestInfoByPlayerIdReq) (*wolflamp.GetInvestInfoByPlayerIdResp, error) {
 	l := game.NewGetInvestInfoByPlayerIdLogic(ctx, s.svcCtx)
 	return l.GetInvestInfoByPlayerId(in)
+}
+
+func (s *WolflampServer) GetInvestByRoundId(ctx context.Context, in *wolflamp.GetInvestsByRoundIdReq) (*wolflamp.GetInvestByRoundIdResp, error) {
+	l := game.NewGetInvestByRoundIdLogic(ctx, s.svcCtx)
+	return l.GetInvestByRoundId(in)
 }
 
 func (s *WolflampServer) GetLambFoldAggregate(ctx context.Context, in *wolflamp.GetLambFoldAggregateReq) (*wolflamp.GetLambFoldAggregateResp, error) {

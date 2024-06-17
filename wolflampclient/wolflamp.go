@@ -55,8 +55,10 @@ type (
 	GameRuleResp                = wolflamp.GameRuleResp
 	GetByEmailReq               = wolflamp.GetByEmailReq
 	GetByInviteCodeReq          = wolflamp.GetByInviteCodeReq
+	GetInvestByRoundIdResp      = wolflamp.GetInvestByRoundIdResp
 	GetInvestInfoByPlayerIdReq  = wolflamp.GetInvestInfoByPlayerIdReq
 	GetInvestInfoByPlayerIdResp = wolflamp.GetInvestInfoByPlayerIdResp
+	GetInvestsByRoundIdReq      = wolflamp.GetInvestsByRoundIdReq
 	GetInvitorListByIdsReq      = wolflamp.GetInvitorListByIdsReq
 	GetInvitorListByIdsResp     = wolflamp.GetInvitorListByIdsResp
 	GetLambFoldAggregateReq     = wolflamp.GetLambFoldAggregateReq
@@ -79,6 +81,8 @@ type (
 	ListExchangeResp            = wolflamp.ListExchangeResp
 	ListFoldReq                 = wolflamp.ListFoldReq
 	ListFoldResp                = wolflamp.ListFoldResp
+	ListHistoryInvestReq        = wolflamp.ListHistoryInvestReq
+	ListHistoryInvestResp       = wolflamp.ListHistoryInvestResp
 	ListOrderReq                = wolflamp.ListOrderReq
 	ListOrderResp               = wolflamp.ListOrderResp
 	ListPlayerReq               = wolflamp.ListPlayerReq
@@ -128,9 +132,11 @@ type (
 		CreateRound(ctx context.Context, in *CreateRoundReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error)
 		PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error)
+		ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error)
 		ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
+		GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -256,6 +262,11 @@ func (m *defaultWolflamp) PreviousRound(ctx context.Context, in *Empty, opts ...
 	return client.PreviousRound(ctx, in, opts...)
 }
 
+func (m *defaultWolflamp) ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.ListHistoryInvest(ctx, in, opts...)
+}
+
 func (m *defaultWolflamp) ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.ListFold(ctx, in, opts...)
@@ -269,6 +280,11 @@ func (m *defaultWolflamp) Invest(ctx context.Context, in *CreateInvestReq, opts 
 func (m *defaultWolflamp) GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetInvestInfoByPlayerId(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetInvestByRoundId(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {

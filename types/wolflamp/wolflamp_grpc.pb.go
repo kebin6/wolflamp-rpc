@@ -53,11 +53,15 @@ type WolflampClient interface {
 	// group: game
 	PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error)
 	// group: game
+	ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error)
+	// group: game
 	ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 	// group: game
 	Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: game
 	GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
+	// group: game
+	GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
 	// group: game
 	GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 	// group: game
@@ -277,6 +281,15 @@ func (c *wolflampClient) PreviousRound(ctx context.Context, in *Empty, opts ...g
 	return out, nil
 }
 
+func (c *wolflampClient) ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error) {
+	out := new(ListHistoryInvestResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/listHistoryInvest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error) {
 	out := new(ListFoldResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/listFold", in, out, opts...)
@@ -298,6 +311,15 @@ func (c *wolflampClient) Invest(ctx context.Context, in *CreateInvestReq, opts .
 func (c *wolflampClient) GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error) {
 	out := new(GetInvestInfoByPlayerIdResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getInvestInfoByPlayerId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error) {
+	out := new(GetInvestByRoundIdResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getInvestByRoundId", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -672,11 +694,15 @@ type WolflampServer interface {
 	// group: game
 	PreviousRound(context.Context, *Empty) (*PreviousRoundResp, error)
 	// group: game
+	ListHistoryInvest(context.Context, *ListHistoryInvestReq) (*ListHistoryInvestResp, error)
+	// group: game
 	ListFold(context.Context, *ListFoldReq) (*ListFoldResp, error)
 	// group: game
 	Invest(context.Context, *CreateInvestReq) (*BaseIDResp, error)
 	// group: game
 	GetInvestInfoByPlayerId(context.Context, *GetInvestInfoByPlayerIdReq) (*GetInvestInfoByPlayerIdResp, error)
+	// group: game
+	GetInvestByRoundId(context.Context, *GetInvestsByRoundIdReq) (*GetInvestByRoundIdResp, error)
 	// group: game
 	GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error)
 	// group: game
@@ -803,6 +829,9 @@ func (UnimplementedWolflampServer) FindRound(context.Context, *FindRoundReq) (*R
 func (UnimplementedWolflampServer) PreviousRound(context.Context, *Empty) (*PreviousRoundResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PreviousRound not implemented")
 }
+func (UnimplementedWolflampServer) ListHistoryInvest(context.Context, *ListHistoryInvestReq) (*ListHistoryInvestResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListHistoryInvest not implemented")
+}
 func (UnimplementedWolflampServer) ListFold(context.Context, *ListFoldReq) (*ListFoldResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFold not implemented")
 }
@@ -811,6 +840,9 @@ func (UnimplementedWolflampServer) Invest(context.Context, *CreateInvestReq) (*B
 }
 func (UnimplementedWolflampServer) GetInvestInfoByPlayerId(context.Context, *GetInvestInfoByPlayerIdReq) (*GetInvestInfoByPlayerIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInvestInfoByPlayerId not implemented")
+}
+func (UnimplementedWolflampServer) GetInvestByRoundId(context.Context, *GetInvestsByRoundIdReq) (*GetInvestByRoundIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInvestByRoundId not implemented")
 }
 func (UnimplementedWolflampServer) GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLambFoldAggregate not implemented")
@@ -1206,6 +1238,24 @@ func _Wolflamp_PreviousRound_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_ListHistoryInvest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListHistoryInvestReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).ListHistoryInvest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/listHistoryInvest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).ListHistoryInvest(ctx, req.(*ListHistoryInvestReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_ListFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListFoldReq)
 	if err := dec(in); err != nil {
@@ -1256,6 +1306,24 @@ func _Wolflamp_GetInvestInfoByPlayerId_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).GetInvestInfoByPlayerId(ctx, req.(*GetInvestInfoByPlayerIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetInvestByRoundId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInvestsByRoundIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetInvestByRoundId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getInvestByRoundId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetInvestByRoundId(ctx, req.(*GetInvestsByRoundIdReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1994,6 +2062,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wolflamp_PreviousRound_Handler,
 		},
 		{
+			MethodName: "listHistoryInvest",
+			Handler:    _Wolflamp_ListHistoryInvest_Handler,
+		},
+		{
 			MethodName: "listFold",
 			Handler:    _Wolflamp_ListFold_Handler,
 		},
@@ -2004,6 +2076,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getInvestInfoByPlayerId",
 			Handler:    _Wolflamp_GetInvestInfoByPlayerId_Handler,
+		},
+		{
+			MethodName: "getInvestByRoundId",
+			Handler:    _Wolflamp_GetInvestByRoundId_Handler,
 		},
 		{
 			MethodName: "getLambFoldAggregate",

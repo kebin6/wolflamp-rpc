@@ -2,49 +2,40 @@ package game
 
 import (
 	"context"
-	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/predicate"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
-	"github.com/kebin6/wolflamp-rpc/internal/svc"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
+
+	"github.com/kebin6/wolflamp-rpc/internal/svc"
 	"github.com/kebin6/wolflamp-rpc/types/wolflamp"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetInvestInfoByPlayerIdLogic struct {
+type GetInvestByRoundIdLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetInvestInfoByPlayerIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetInvestInfoByPlayerIdLogic {
-	return &GetInvestInfoByPlayerIdLogic{
+func NewGetInvestByRoundIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetInvestByRoundIdLogic {
+	return &GetInvestByRoundIdLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetInvestInfoByPlayerIdLogic) GetInvestInfoByPlayerId(in *wolflamp.GetInvestInfoByPlayerIdReq) (*wolflamp.GetInvestInfoByPlayerIdResp, error) {
+func (l *GetInvestByRoundIdLogic) GetInvestByRoundId(in *wolflamp.GetInvestsByRoundIdReq) (*wolflamp.GetInvestByRoundIdResp, error) {
 
 	var predicates []predicate.RoundInvest
-	predicates = append(predicates, roundinvest.PlayerID(in.PlayerId))
-	if in.RoundId != nil {
-		predicates = append(predicates, roundinvest.RoundID(*in.RoundId))
-	}
-	if in.RoundIds != nil && len(in.RoundIds) > 0 {
-		predicates = append(predicates, roundinvest.RoundIDIn(in.RoundIds...))
-	}
-
-	result, err := l.svcCtx.DB.RoundInvest.Query().Where(predicates...).
-		Order(ent.Desc("id")).
-		All(l.ctx)
+	predicates = append(predicates, roundinvest.RoundID(in.RoundId))
+	result, err := l.svcCtx.DB.RoundInvest.Query().Where(predicates...).All(l.ctx)
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
 
-	resp := &wolflamp.GetInvestInfoByPlayerIdResp{}
+	resp := &wolflamp.GetInvestByRoundIdResp{}
 
 	for _, v := range result {
 		resp.Data = append(resp.Data, &wolflamp.InvestInfo{
@@ -59,7 +50,6 @@ func (l *GetInvestInfoByPlayerIdLogic) GetInvestInfoByPlayerId(in *wolflamp.GetI
 			ProfitAndLoss: v.ProfitAndLoss,
 		})
 	}
-
 	return resp, nil
 
 }
