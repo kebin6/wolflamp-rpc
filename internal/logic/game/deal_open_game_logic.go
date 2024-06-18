@@ -167,17 +167,20 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			}
 			if util.IsRealPlayer(investInfo.PlayerId) {
 				// 真实用户将收益及投注本金加回账户
-				if investInfo.ProfitAndLoss > 0 {
+				if investInfo.ProfitAndLoss >= 0 {
 					err := l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddLamp(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
 					if err != nil {
 						return err
 					}
-					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
-						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
-						Remark: pointy.GetPointer(fmt.Sprintf("%f*%f=%f", float32(totalLoserInvestNum), investInfo.Proportion, investInfo.ProfitAndLoss)),
-					})
+					// 赢亏为正的，则记录流水账单
+					if investInfo.ProfitAndLoss > 0 {
+						_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+							PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
+							Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
+							ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
+							Remark: pointy.GetPointer(fmt.Sprintf("%f*%f=%f", float32(totalLoserInvestNum), investInfo.Proportion, investInfo.ProfitAndLoss)),
+						})
+					}
 				} else if investInfo.ProfitAndLoss < 0 {
 					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
 						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
