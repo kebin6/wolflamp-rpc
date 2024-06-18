@@ -35,6 +35,7 @@ func (l *GetLambFoldAggregateLogic) GetLambFoldAggregate(in *wolflamp.GetLambFol
 	}
 	// 统计每个玩家的盈亏数&胜率
 	// 玩家盈亏数=玩家每场盈亏累加
+	// 统计纬度：羊圈+玩家+回合ID=投注信息
 	lambFoldPlayerSorts := make(map[uint32]map[uint64]map[uint64]*ent.RoundInvest)
 	for _, v := range allInvests {
 		if _, ok := lambFoldPlayerSorts[v.FoldNo]; !ok {
@@ -64,12 +65,9 @@ func (l *GetLambFoldAggregateLogic) GetLambFoldAggregate(in *wolflamp.GetLambFol
 	for _, playerSorts := range lambFoldPlayerSorts {
 		// 遍历每个玩家投注情况
 		for _, roundSorts := range playerSorts {
+			// 遍历每个玩家参与的回合投注情况
 			for _, v := range roundSorts {
-				if v.ProfitAndLoss > 0 {
-					lambFoldAggregates[v.FoldNo-1].ProfitAndLossCount += 1
-				} else {
-					lambFoldAggregates[v.FoldNo-1].ProfitAndLossCount -= 1
-				}
+				lambFoldAggregates[v.FoldNo-1].ProfitAndLossCount += v.ProfitAndLoss
 				lambFoldAggregates[v.FoldNo-1].TotalRoundCount++
 				if v.ProfitAndLoss > 0 {
 					lambFoldAggregates[v.FoldNo-1].WinCount++
