@@ -140,6 +140,7 @@ type (
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
 		GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
+		GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateOrder(ctx context.Context, in *UpdateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -297,6 +298,11 @@ func (m *defaultWolflamp) GetInvestByRoundId(ctx context.Context, in *GetInvests
 func (m *defaultWolflamp) GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetLambFoldAggregate(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetLambFoldAggregateV2(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

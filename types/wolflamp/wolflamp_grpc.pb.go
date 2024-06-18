@@ -67,6 +67,8 @@ type WolflampClient interface {
 	// group: game
 	GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 	// group: game
+	GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
+	// group: game
 	DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: order
 	CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -340,6 +342,15 @@ func (c *wolflampClient) GetInvestByRoundId(ctx context.Context, in *GetInvestsB
 func (c *wolflampClient) GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
 	out := new(GetLambFoldAggregateResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getLambFoldAggregate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
+	out := new(GetLambFoldAggregateResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getLambFoldAggregateV2", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -719,6 +730,8 @@ type WolflampServer interface {
 	// group: game
 	GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error)
 	// group: game
+	GetLambFoldAggregateV2(context.Context, *Empty) (*GetLambFoldAggregateResp, error)
+	// group: game
 	DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error)
 	// group: order
 	CreateOrder(context.Context, *CreateOrderReq) (*BaseIDResp, error)
@@ -862,6 +875,9 @@ func (UnimplementedWolflampServer) GetInvestByRoundId(context.Context, *GetInves
 }
 func (UnimplementedWolflampServer) GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLambFoldAggregate not implemented")
+}
+func (UnimplementedWolflampServer) GetLambFoldAggregateV2(context.Context, *Empty) (*GetLambFoldAggregateResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLambFoldAggregateV2 not implemented")
 }
 func (UnimplementedWolflampServer) DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DealOpenGame not implemented")
@@ -1376,6 +1392,24 @@ func _Wolflamp_GetLambFoldAggregate_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).GetLambFoldAggregate(ctx, req.(*GetLambFoldAggregateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetLambFoldAggregateV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetLambFoldAggregateV2(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getLambFoldAggregateV2",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetLambFoldAggregateV2(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2122,6 +2156,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getLambFoldAggregate",
 			Handler:    _Wolflamp_GetLambFoldAggregate_Handler,
+		},
+		{
+			MethodName: "getLambFoldAggregateV2",
+			Handler:    _Wolflamp_GetLambFoldAggregateV2_Handler,
 		},
 		{
 			MethodName: "dealOpenGame",

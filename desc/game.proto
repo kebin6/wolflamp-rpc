@@ -173,5 +173,8 @@ service Wolflamp {
   rpc getLambFoldAggregate (GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
 
   // group: game
+  rpc getLambFoldAggregateV2 (Empty) returns (GetLambFoldAggregateResp);
+
+  // group: game
   rpc dealOpenGame (dealOpenGameReq) returns (BaseIDResp);
 }
