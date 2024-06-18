@@ -38,7 +38,7 @@ func (l *GetGameCommissionLogic) GetGameCommission(in *wolflamp.Empty) (*wolflam
 		if err := json.Unmarshal([]byte(setting.JsonString), &platformSetting); err != nil {
 			return nil, err
 		}
-		_ = l.svcCtx.Redis.Set(l.ctx, enum.GameCommission.CacheKey(), platformSetting.IdleTime, 0)
+		_ = l.svcCtx.Redis.Set(l.ctx, enum.GameCommission.CacheKey(), platformSetting.GameCommission, 0)
 	}
 
 	cached, err := l.svcCtx.Redis.Get(l.ctx, enum.GameCommission.CacheKey()).Result()
