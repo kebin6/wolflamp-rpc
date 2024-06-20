@@ -35,7 +35,7 @@ func NewGetOverviewLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOv
 func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.GetOverviewResp, error) {
 
 	// 统计今日参与玩家数
-	todayParticipates, err := l.svcCtx.DB.RoundInvest.Query().
+	players, err := l.svcCtx.DB.RoundInvest.Query().
 		Select(roundinvest.FieldPlayerID).
 		Where(func(s *sql.Selector) {
 			roundTable := sql.Table(round.Table)
@@ -44,6 +44,11 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		}).Where(roundinvest.PlayerIDLT(util.PlayerMaxId)).All(l.ctx)
 	if err != nil {
 		return nil, err
+	}
+	// 去重
+	todayParticipates := make(map[uint64]bool)
+	for _, v := range players {
+		todayParticipates[v.PlayerID] = true
 	}
 	todayParticipateCount := len(todayParticipates)
 
