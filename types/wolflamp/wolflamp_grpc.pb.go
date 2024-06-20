@@ -82,6 +82,8 @@ type WolflampClient interface {
 	ListOrder(ctx context.Context, in *ListOrderReq, opts ...grpc.CallOption) (*ListOrderResp, error)
 	// group: order
 	CalculateWithdrawFee(ctx context.Context, in *CalculateWithdrawFeeReq, opts ...grpc.CallOption) (*CalculateWithdrawFeeResp, error)
+	// group: overview
+	GetOverview(ctx context.Context, in *GetOverviewReq, opts ...grpc.CallOption) (*GetOverviewResp, error)
 	// group: player
 	CreatePlayer(ctx context.Context, in *CreatePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: player
@@ -420,6 +422,15 @@ func (c *wolflampClient) CalculateWithdrawFee(ctx context.Context, in *Calculate
 	return out, nil
 }
 
+func (c *wolflampClient) GetOverview(ctx context.Context, in *GetOverviewReq, opts ...grpc.CallOption) (*GetOverviewResp, error) {
+	out := new(GetOverviewResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getOverview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreatePlayer(ctx context.Context, in *CreatePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createPlayer", in, out, opts...)
@@ -745,6 +756,8 @@ type WolflampServer interface {
 	ListOrder(context.Context, *ListOrderReq) (*ListOrderResp, error)
 	// group: order
 	CalculateWithdrawFee(context.Context, *CalculateWithdrawFeeReq) (*CalculateWithdrawFeeResp, error)
+	// group: overview
+	GetOverview(context.Context, *GetOverviewReq) (*GetOverviewResp, error)
 	// group: player
 	CreatePlayer(context.Context, *CreatePlayerReq) (*BaseIDResp, error)
 	// group: player
@@ -899,6 +912,9 @@ func (UnimplementedWolflampServer) ListOrder(context.Context, *ListOrderReq) (*L
 }
 func (UnimplementedWolflampServer) CalculateWithdrawFee(context.Context, *CalculateWithdrawFeeReq) (*CalculateWithdrawFeeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CalculateWithdrawFee not implemented")
+}
+func (UnimplementedWolflampServer) GetOverview(context.Context, *GetOverviewReq) (*GetOverviewResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOverview not implemented")
 }
 func (UnimplementedWolflampServer) CreatePlayer(context.Context, *CreatePlayerReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePlayer not implemented")
@@ -1536,6 +1552,24 @@ func _Wolflamp_CalculateWithdrawFee_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).CalculateWithdrawFee(ctx, req.(*CalculateWithdrawFeeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetOverview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOverviewReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetOverview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getOverview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetOverview(ctx, req.(*GetOverviewReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2188,6 +2222,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "calculateWithdrawFee",
 			Handler:    _Wolflamp_CalculateWithdrawFee_Handler,
+		},
+		{
+			MethodName: "getOverview",
+			Handler:    _Wolflamp_GetOverview_Handler,
 		},
 		{
 			MethodName: "createPlayer",

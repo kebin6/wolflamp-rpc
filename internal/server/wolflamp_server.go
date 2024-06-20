@@ -11,6 +11,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/internal/logic/exchange"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/game"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/order"
+	"github.com/kebin6/wolflamp-rpc/internal/logic/overview"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/player"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/reward"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
@@ -178,6 +179,11 @@ func (s *WolflampServer) ListOrder(ctx context.Context, in *wolflamp.ListOrderRe
 func (s *WolflampServer) CalculateWithdrawFee(ctx context.Context, in *wolflamp.CalculateWithdrawFeeReq) (*wolflamp.CalculateWithdrawFeeResp, error) {
 	l := order.NewCalculateWithdrawFeeLogic(ctx, s.svcCtx)
 	return l.CalculateWithdrawFee(in)
+}
+
+func (s *WolflampServer) GetOverview(ctx context.Context, in *wolflamp.GetOverviewReq) (*wolflamp.GetOverviewResp, error) {
+	l := overview.NewGetOverviewLogic(ctx, s.svcCtx)
+	return l.GetOverview(in)
 }
 
 func (s *WolflampServer) CreatePlayer(ctx context.Context, in *wolflamp.CreatePlayerReq) (*wolflamp.BaseIDResp, error) {

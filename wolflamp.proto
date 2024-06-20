@@ -301,6 +301,15 @@ message GetLambFoldAggregateResp {
   repeated LambFoldAggregateInfo data = 1;
 }
 
+message GetOverviewReq {
+  optional int64 start_time = 1;
+  optional int64 end_time = 2;
+}
+
+message GetOverviewResp {
+  OverviewInfo data = 1;
+}
+
 message IDInt32Req {
   int32 id = 1;
 }
@@ -511,6 +520,16 @@ message OrderInfo {
   double handling_fee = 12;
   string network = 13;
   string remark = 14;
+}
+
+message OverviewInfo {
+  uint64 today_participate_count = 1;
+  uint64 today_new_player_count = 2;
+  uint64 today_round_count = 3;
+  uint64 today_eat_count = 4;
+  uint64 today_platform_profit = 5;
+  uint64 total_platform_profit = 6;
+  uint64 total_player_count = 7;
 }
 
 message PageInfoReq {
@@ -774,6 +793,8 @@ service Wolflamp {
   rpc listOrder(ListOrderReq) returns (ListOrderResp);
   //  group: order
   rpc calculateWithdrawFee(CalculateWithdrawFeeReq) returns (CalculateWithdrawFeeResp);
+  //  group: overview
+  rpc getOverview(GetOverviewReq) returns (GetOverviewResp);
   //  group: player
   rpc createPlayer(CreatePlayerReq) returns (BaseIDResp);
   //  group: player

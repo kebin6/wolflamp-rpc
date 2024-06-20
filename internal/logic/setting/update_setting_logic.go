@@ -2,6 +2,7 @@ package setting
 
 import (
 	"context"
+	"github.com/kebin6/wolflamp-rpc/common/enum/cachekey"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
@@ -31,7 +32,7 @@ func (l *UpdateSettingLogic) UpdateSetting(in *wolflamp.UpdateSettingReq) (*wolf
 		Where(setting.Module(in.Module)).
 		SetValue(in.JsonString).
 		Exec(l.ctx)
-
+	l.svcCtx.Redis.Del(l.ctx, cachekey.CurrentGameRound.Val())
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}

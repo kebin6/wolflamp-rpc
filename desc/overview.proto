@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message OverviewInfo {
+  uint64 today_participate_count = 1;
+  uint64 today_new_player_count = 2;
+  uint64 today_round_count = 3;
+  uint64 today_eat_count = 4;
+  uint64 today_platform_profit = 5;
+  uint64 total_platform_profit = 6;
+  uint64 total_player_count = 7;
+}
+
+message GetOverviewReq {
+  optional int64 start_time = 1;
+  optional int64 end_time = 2;
+}
+
+message GetOverviewResp {
+  OverviewInfo data = 1;
+}
+
+service Wolflamp {
+  // group: overview
+  rpc getOverview(GetOverviewReq) returns (GetOverviewResp);
+}

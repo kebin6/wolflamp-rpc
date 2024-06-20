@@ -46,7 +46,10 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 	totalRoundCount := uint64(1)
 	if roundInfo != nil {
 		// 如果当天有记录，则继续累加
-		if roundInfo.StartAt >= now.BeginningOfDay().Unix() {
+		// 当前回合的开始时间在今天，新增的记录开始时间在下一天，则新增记录重置
+		if roundInfo.StartAt <= now.EndOfDay().Unix() && in.StartAt > now.EndOfDay().Unix() {
+			roundCount = uint32(1)
+		} else {
 			roundCount = uint32(roundInfo.RoundCount) + 1
 		}
 		totalRoundCount = uint64(roundInfo.TotalRoundCount) + 1

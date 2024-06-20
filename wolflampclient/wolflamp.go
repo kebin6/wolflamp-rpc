@@ -64,6 +64,8 @@ type (
 	GetInvitorListByIdsResp     = wolflamp.GetInvitorListByIdsResp
 	GetLambFoldAggregateReq     = wolflamp.GetLambFoldAggregateReq
 	GetLambFoldAggregateResp    = wolflamp.GetLambFoldAggregateResp
+	GetOverviewReq              = wolflamp.GetOverviewReq
+	GetOverviewResp             = wolflamp.GetOverviewResp
 	IDInt32Req                  = wolflamp.IDInt32Req
 	IDInt64Req                  = wolflamp.IDInt64Req
 	IDReq                       = wolflamp.IDReq
@@ -94,6 +96,7 @@ type (
 	ListStatementResp           = wolflamp.ListStatementResp
 	MinWithdrawNumResp          = wolflamp.MinWithdrawNumResp
 	OrderInfo                   = wolflamp.OrderInfo
+	OverviewInfo                = wolflamp.OverviewInfo
 	PageInfoReq                 = wolflamp.PageInfoReq
 	PlayerInfo                  = wolflamp.PlayerInfo
 	PreviousRoundResp           = wolflamp.PreviousRoundResp
@@ -148,6 +151,7 @@ type (
 		FindOrder(ctx context.Context, in *FindOrderReq, opts ...grpc.CallOption) (*OrderInfo, error)
 		ListOrder(ctx context.Context, in *ListOrderReq, opts ...grpc.CallOption) (*ListOrderResp, error)
 		CalculateWithdrawFee(ctx context.Context, in *CalculateWithdrawFeeReq, opts ...grpc.CallOption) (*CalculateWithdrawFeeResp, error)
+		GetOverview(ctx context.Context, in *GetOverviewReq, opts ...grpc.CallOption) (*GetOverviewResp, error)
 		CreatePlayer(ctx context.Context, in *CreatePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdatePlayer(ctx context.Context, in *UpdatePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeletePlayer(ctx context.Context, in *DeletePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -338,6 +342,11 @@ func (m *defaultWolflamp) ListOrder(ctx context.Context, in *ListOrderReq, opts 
 func (m *defaultWolflamp) CalculateWithdrawFee(ctx context.Context, in *CalculateWithdrawFeeReq, opts ...grpc.CallOption) (*CalculateWithdrawFeeResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.CalculateWithdrawFee(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetOverview(ctx context.Context, in *GetOverviewReq, opts ...grpc.CallOption) (*GetOverviewResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetOverview(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreatePlayer(ctx context.Context, in *CreatePlayerReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
