@@ -2,7 +2,7 @@ package setting
 
 import (
 	"context"
-	"github.com/kebin6/wolflamp-rpc/common/enum/cachekey"
+	"github.com/kebin6/wolflamp-rpc/common/enum"
 	"github.com/kebin6/wolflamp-rpc/ent/setting"
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
@@ -32,7 +32,14 @@ func (l *UpdateSettingLogic) UpdateSetting(in *wolflamp.UpdateSettingReq) (*wolf
 		Where(setting.Module(in.Module)).
 		SetValue(in.JsonString).
 		Exec(l.ctx)
-	l.svcCtx.Redis.Del(l.ctx, cachekey.CurrentGameRound.Val())
+	l.svcCtx.Redis.Del(l.ctx, enum.GameRule.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.WithdrawCommission.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.MinWithdrawNum.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.RobotNum.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.RobotLampNum.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.IdleTime.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.WithdrawThreshold.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.GameCommission.CacheKey())
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
