@@ -76,4 +76,5 @@ service Wolflamp {
 
   // group: banner
   rpc listBanner (ListBannerReq) returns (ListBannerResp);
+
 }
