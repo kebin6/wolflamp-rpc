@@ -55,7 +55,8 @@ func (l *CreatePlayerLogic) CreatePlayer(in *wolflamp.CreatePlayerReq) (*wolflam
 	}
 
 	// 邀请码
-	inviteCode := random.RandString(5) + time.Now().Format("15")
+	// 随机选择10~30随机数，作为查询值N
+	inviteCode := time.Now().Format("15") + time.Now().Format("05") + random.RandUpper(3)
 	result, err := l.svcCtx.DB.Player.Create().
 		SetStatus(uint8(in.Status)).
 		SetEmail(in.Email).
