@@ -168,7 +168,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			if util.IsRealPlayer(investInfo.PlayerId) {
 				// 真实用户将收益及投注本金加回账户
 				if investInfo.ProfitAndLoss >= 0 {
-					err := l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddLamp(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
+					err := l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddCoinLamb(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
 					if err != nil {
 						return err
 					}

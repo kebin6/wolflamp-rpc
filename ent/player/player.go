@@ -28,8 +28,10 @@ const (
 	FieldPassword = "password"
 	// FieldTransactionPassword holds the string denoting the transaction_password field in the database.
 	FieldTransactionPassword = "transaction_password"
-	// FieldLamp holds the string denoting the lamp field in the database.
-	FieldLamp = "lamp"
+	// FieldCoinLamb holds the string denoting the coin_lamb field in the database.
+	FieldCoinLamb = "coin_lamb"
+	// FieldTokenLamb holds the string denoting the token_lamb field in the database.
+	FieldTokenLamb = "token_lamb"
 	// FieldRank holds the string denoting the rank field in the database.
 	FieldRank = "rank"
 	// FieldAmount holds the string denoting the amount field in the database.
@@ -42,8 +44,6 @@ const (
 	FieldTotalIncome = "total_income"
 	// FieldProfitAndLoss holds the string denoting the profit_and_loss field in the database.
 	FieldProfitAndLoss = "profit_and_loss"
-	// FieldRecent100WinPercent holds the string denoting the recent_100_win_percent field in the database.
-	FieldRecent100WinPercent = "recent_100_win_percent"
 	// FieldInviteCode holds the string denoting the invite_code field in the database.
 	FieldInviteCode = "invite_code"
 	// FieldInviterID holds the string denoting the inviter_id field in the database.
@@ -52,6 +52,10 @@ const (
 	FieldInvitedCode = "invited_code"
 	// FieldSystemCommission holds the string denoting the system_commission field in the database.
 	FieldSystemCommission = "system_commission"
+	// FieldGcicsUserID holds the string denoting the gcics_user_id field in the database.
+	FieldGcicsUserID = "gcics_user_id"
+	// FieldGcicsToken holds the string denoting the gcics_token field in the database.
+	FieldGcicsToken = "gcics_token"
 	// EdgeInviter holds the string denoting the inviter edge name in mutations.
 	EdgeInviter = "inviter"
 	// EdgeInvitees holds the string denoting the invitees edge name in mutations.
@@ -78,18 +82,20 @@ var Columns = []string{
 	FieldEmail,
 	FieldPassword,
 	FieldTransactionPassword,
-	FieldLamp,
+	FieldCoinLamb,
+	FieldTokenLamb,
 	FieldRank,
 	FieldAmount,
 	FieldDepositAddress,
 	FieldInvitedNum,
 	FieldTotalIncome,
 	FieldProfitAndLoss,
-	FieldRecent100WinPercent,
 	FieldInviteCode,
 	FieldInviterID,
 	FieldInvitedCode,
 	FieldSystemCommission,
+	FieldGcicsUserID,
+	FieldGcicsToken,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -119,8 +125,10 @@ var (
 	DefaultPassword string
 	// DefaultTransactionPassword holds the default value on creation for the "transaction_password" field.
 	DefaultTransactionPassword string
-	// DefaultLamp holds the default value on creation for the "lamp" field.
-	DefaultLamp float32
+	// DefaultCoinLamb holds the default value on creation for the "coin_lamb" field.
+	DefaultCoinLamb float32
+	// DefaultTokenLamb holds the default value on creation for the "token_lamb" field.
+	DefaultTokenLamb float32
 	// DefaultRank holds the default value on creation for the "rank" field.
 	DefaultRank uint32
 	// DefaultAmount holds the default value on creation for the "amount" field.
@@ -133,8 +141,6 @@ var (
 	DefaultTotalIncome float64
 	// DefaultProfitAndLoss holds the default value on creation for the "profit_and_loss" field.
 	DefaultProfitAndLoss float32
-	// DefaultRecent100WinPercent holds the default value on creation for the "recent_100_win_percent" field.
-	DefaultRecent100WinPercent float32
 	// DefaultInviteCode holds the default value on creation for the "invite_code" field.
 	DefaultInviteCode string
 	// DefaultInviterID holds the default value on creation for the "inviter_id" field.
@@ -143,6 +149,10 @@ var (
 	DefaultInvitedCode string
 	// DefaultSystemCommission holds the default value on creation for the "system_commission" field.
 	DefaultSystemCommission float32
+	// DefaultGcicsUserID holds the default value on creation for the "gcics_user_id" field.
+	DefaultGcicsUserID uint64
+	// DefaultGcicsToken holds the default value on creation for the "gcics_token" field.
+	DefaultGcicsToken string
 )
 
 // OrderOption defines the ordering options for the Player queries.
@@ -188,9 +198,14 @@ func ByTransactionPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTransactionPassword, opts...).ToFunc()
 }
 
-// ByLamp orders the results by the lamp field.
-func ByLamp(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldLamp, opts...).ToFunc()
+// ByCoinLamb orders the results by the coin_lamb field.
+func ByCoinLamb(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCoinLamb, opts...).ToFunc()
+}
+
+// ByTokenLamb orders the results by the token_lamb field.
+func ByTokenLamb(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTokenLamb, opts...).ToFunc()
 }
 
 // ByRank orders the results by the rank field.
@@ -223,11 +238,6 @@ func ByProfitAndLoss(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldProfitAndLoss, opts...).ToFunc()
 }
 
-// ByRecent100WinPercent orders the results by the recent_100_win_percent field.
-func ByRecent100WinPercent(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRecent100WinPercent, opts...).ToFunc()
-}
-
 // ByInviteCode orders the results by the invite_code field.
 func ByInviteCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldInviteCode, opts...).ToFunc()
@@ -246,6 +256,16 @@ func ByInvitedCode(opts ...sql.OrderTermOption) OrderOption {
 // BySystemCommission orders the results by the system_commission field.
 func BySystemCommission(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSystemCommission, opts...).ToFunc()
+}
+
+// ByGcicsUserID orders the results by the gcics_user_id field.
+func ByGcicsUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGcicsUserID, opts...).ToFunc()
+}
+
+// ByGcicsToken orders the results by the gcics_token field.
+func ByGcicsToken(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGcicsToken, opts...).ToFunc()
 }
 
 // ByInviterField orders the results by inviter field.

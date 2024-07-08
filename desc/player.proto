@@ -9,9 +9,10 @@ message PlayerInfo {
   int64 updated_at = 3;
   uint32 status = 4;
   string name = 5;
-  float lamp = 6;
-  uint32 rank = 7;
-  double amount = 8;
+  float coin_lamb = 6;
+  float token_lamb = 7;
+  uint32 rank = 8;
+  double amount = 9;
   uint32 invited_num = 10;
   double total_income = 11;
   float profit_and_loss = 12;
@@ -24,6 +25,8 @@ message PlayerInfo {
   string password = 19;
   string transaction_password = 20;
   string deposit_address = 21;
+  uint64 gcics_user_id = 22;
+  string gcics_token = 23;
 }
 
 message CreatePlayerReq {
@@ -31,16 +34,18 @@ message CreatePlayerReq {
   string password = 2;
   uint32 status = 4;
   string name = 5;
-  float lamp = 6;
+  float coin_lamb = 6;
+  float token_lamb = 17;
   uint32 rank = 7;
   double amount = 8;
   uint32 invited_num = 10;
   double total_income = 11;
   float profit_and_loss = 12;
-  float recent_100_win_percent = 13;
   string invited_code = 14;
   float system_commission = 15;
   string deposit_address = 16;
+  uint64 gcics_user_id = 18;
+  string gcics_token = 19;
 }
 
 message UpdatePlayerReq {
@@ -49,7 +54,8 @@ message UpdatePlayerReq {
   optional string password = 3;
   optional uint32 status = 4;
   optional string name = 5;
-  optional float lamp = 6;
+  optional float coin_lamb = 6;
+  optional float token_lamb = 19;
   optional uint32 rank = 7;
   optional double amount = 8;
   optional uint32 invited_num = 10;
@@ -61,6 +67,7 @@ message UpdatePlayerReq {
   optional float system_commission = 16;
   optional string transaction_password = 17;
   optional string deposit_address = 18;
+  optional string gcics_token = 21;
 }
 
 message DeletePlayerReq {
@@ -68,7 +75,8 @@ message DeletePlayerReq {
 }
 
 message FindPlayerReq {
-  uint64 id = 1;
+  optional uint64 id = 1;
+  optional uint64 gcics_user_id = 2;
 }
 
 message ListPlayerReq {
@@ -77,16 +85,16 @@ message ListPlayerReq {
   optional string email = 3;
   optional uint32 status = 4;
   optional string name = 5;
-  optional float lamp = 6;
   optional uint32 rank = 7;
   optional double amount = 8;
   optional uint32 invited_num = 10;
   optional double total_income = 11;
   optional float profit_and_loss = 12;
-  optional float recent_100_win_percent = 13;
   optional string invite_code = 14;
   optional uint64 inviter_id = 15;
   optional string invited_code = 16;
+  optional uint64 gcics_user_id = 18;
+  optional string gcics_token = 19;
 }
 
 message ListPlayerResp {

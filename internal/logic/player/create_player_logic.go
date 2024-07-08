@@ -62,18 +62,20 @@ func (l *CreatePlayerLogic) CreatePlayer(in *wolflamp.CreatePlayerReq) (*wolflam
 		SetEmail(in.Email).
 		SetPassword(in.Password).
 		SetName(in.Name).
-		SetLamp(in.Lamp).
+		SetCoinLamb(in.CoinLamb).
+		SetTokenLamb(in.TokenLamb).
 		SetRank(in.Rank).
 		SetAmount(in.Amount).
 		SetInvitedNum(0).
 		SetTotalIncome(0).
 		SetProfitAndLoss(0).
-		SetRecent100WinPercent(0).
 		SetInviteCode(inviteCode).
 		SetInviterID(inviterId).
 		SetInvitedCode(in.InvitedCode).
 		SetDepositAddress(in.DepositAddress).
 		SetSystemCommission(in.SystemCommission).
+		SetGcicsUserID(in.GcicsUserId).
+		SetGcicsToken(in.GcicsToken).
 		Save(l.ctx)
 
 	if err != nil {

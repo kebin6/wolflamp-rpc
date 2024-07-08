@@ -49,7 +49,7 @@ func (l *ExchangeLogic) Exchange(in *wolflamp.ExchangeReq) (*wolflamp.BaseIDResp
 		return nil, err
 	}
 
-	lambNum := info.Lamp
+	lambNum := info.CoinLamb
 	coinNum := info.Amount
 	switch in.Type {
 	// 币兑羊
@@ -60,7 +60,7 @@ func (l *ExchangeLogic) Exchange(in *wolflamp.ExchangeReq) (*wolflamp.BaseIDResp
 		lambNum += float32(in.CoinAmount * 10)
 		coinNum -= float64(in.CoinAmount)
 	case 2:
-		if info.Lamp < float32(in.LampAmount) {
+		if info.CoinLamb < float32(in.LampAmount) {
 			return nil, errorx.NewInvalidArgumentError("wallet.insufficientLamb")
 		}
 		lambNum -= float32(in.LampAmount)
@@ -72,7 +72,7 @@ func (l *ExchangeLogic) Exchange(in *wolflamp.ExchangeReq) (*wolflamp.BaseIDResp
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		// 更新用户表数据
 		_, err := l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
-			SetLamp(lambNum).
+			SetCoinLamb(lambNum).
 			SetAmount(coinNum).
 			Save(l.ctx)
 		if err != nil {

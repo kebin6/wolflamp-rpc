@@ -255,38 +255,38 @@ func init() {
 	playerDescTransactionPassword := playerFields[3].Descriptor()
 	// player.DefaultTransactionPassword holds the default value on creation for the transaction_password field.
 	player.DefaultTransactionPassword = playerDescTransactionPassword.Default.(string)
-	// playerDescLamp is the schema descriptor for lamp field.
-	playerDescLamp := playerFields[4].Descriptor()
-	// player.DefaultLamp holds the default value on creation for the lamp field.
-	player.DefaultLamp = playerDescLamp.Default.(float32)
+	// playerDescCoinLamb is the schema descriptor for coin_lamb field.
+	playerDescCoinLamb := playerFields[4].Descriptor()
+	// player.DefaultCoinLamb holds the default value on creation for the coin_lamb field.
+	player.DefaultCoinLamb = playerDescCoinLamb.Default.(float32)
+	// playerDescTokenLamb is the schema descriptor for token_lamb field.
+	playerDescTokenLamb := playerFields[5].Descriptor()
+	// player.DefaultTokenLamb holds the default value on creation for the token_lamb field.
+	player.DefaultTokenLamb = playerDescTokenLamb.Default.(float32)
 	// playerDescRank is the schema descriptor for rank field.
-	playerDescRank := playerFields[5].Descriptor()
+	playerDescRank := playerFields[6].Descriptor()
 	// player.DefaultRank holds the default value on creation for the rank field.
 	player.DefaultRank = playerDescRank.Default.(uint32)
 	// playerDescAmount is the schema descriptor for amount field.
-	playerDescAmount := playerFields[6].Descriptor()
+	playerDescAmount := playerFields[7].Descriptor()
 	// player.DefaultAmount holds the default value on creation for the amount field.
 	player.DefaultAmount = playerDescAmount.Default.(float64)
 	// playerDescDepositAddress is the schema descriptor for deposit_address field.
-	playerDescDepositAddress := playerFields[7].Descriptor()
+	playerDescDepositAddress := playerFields[8].Descriptor()
 	// player.DefaultDepositAddress holds the default value on creation for the deposit_address field.
 	player.DefaultDepositAddress = playerDescDepositAddress.Default.(string)
 	// playerDescInvitedNum is the schema descriptor for invited_num field.
-	playerDescInvitedNum := playerFields[8].Descriptor()
+	playerDescInvitedNum := playerFields[9].Descriptor()
 	// player.DefaultInvitedNum holds the default value on creation for the invited_num field.
 	player.DefaultInvitedNum = playerDescInvitedNum.Default.(uint32)
 	// playerDescTotalIncome is the schema descriptor for total_income field.
-	playerDescTotalIncome := playerFields[9].Descriptor()
+	playerDescTotalIncome := playerFields[10].Descriptor()
 	// player.DefaultTotalIncome holds the default value on creation for the total_income field.
 	player.DefaultTotalIncome = playerDescTotalIncome.Default.(float64)
 	// playerDescProfitAndLoss is the schema descriptor for profit_and_loss field.
-	playerDescProfitAndLoss := playerFields[10].Descriptor()
+	playerDescProfitAndLoss := playerFields[11].Descriptor()
 	// player.DefaultProfitAndLoss holds the default value on creation for the profit_and_loss field.
 	player.DefaultProfitAndLoss = playerDescProfitAndLoss.Default.(float32)
-	// playerDescRecent100WinPercent is the schema descriptor for recent_100_win_percent field.
-	playerDescRecent100WinPercent := playerFields[11].Descriptor()
-	// player.DefaultRecent100WinPercent holds the default value on creation for the recent_100_win_percent field.
-	player.DefaultRecent100WinPercent = playerDescRecent100WinPercent.Default.(float32)
 	// playerDescInviteCode is the schema descriptor for invite_code field.
 	playerDescInviteCode := playerFields[12].Descriptor()
 	// player.DefaultInviteCode holds the default value on creation for the invite_code field.
@@ -303,6 +303,14 @@ func init() {
 	playerDescSystemCommission := playerFields[15].Descriptor()
 	// player.DefaultSystemCommission holds the default value on creation for the system_commission field.
 	player.DefaultSystemCommission = playerDescSystemCommission.Default.(float32)
+	// playerDescGcicsUserID is the schema descriptor for gcics_user_id field.
+	playerDescGcicsUserID := playerFields[16].Descriptor()
+	// player.DefaultGcicsUserID holds the default value on creation for the gcics_user_id field.
+	player.DefaultGcicsUserID = playerDescGcicsUserID.Default.(uint64)
+	// playerDescGcicsToken is the schema descriptor for gcics_token field.
+	playerDescGcicsToken := playerFields[17].Descriptor()
+	// player.DefaultGcicsToken holds the default value on creation for the gcics_token field.
+	player.DefaultGcicsToken = playerDescGcicsToken.Default.(string)
 	rewardMixin := schema.Reward{}.Mixin()
 	rewardMixinFields0 := rewardMixin[0].Fields()
 	_ = rewardMixinFields0

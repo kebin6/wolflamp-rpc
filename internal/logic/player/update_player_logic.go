@@ -33,15 +33,14 @@ func (l *UpdatePlayerLogic) UpdatePlayer(in *wolflamp.UpdatePlayerReq) (*wolflam
 		SetNotNilPassword(in.Password).
 		SetNotNilStatus(pointy.GetStatusPointer(in.Status)).
 		SetNotNilName(in.Name).
-		SetNotNilLamp(in.Lamp).
+		SetNotNilCoinLamb(in.CoinLamb).
+		SetNotNilTokenLamb(in.TokenLamb).
 		SetNotNilRank(in.Rank).
 		SetNotNilAmount(in.Amount).
 		SetNotNilInvitedNum(in.InvitedNum).
 		SetNotNilTotalIncome(in.TotalIncome).
 		SetNotNilProfitAndLoss(in.ProfitAndLoss).
-		SetNotNilRecent100WinPercent(in.Recent_100WinPercent).
 		SetNotNilTransactionPassword(in.TransactionPassword).
-		SetNotNilLamp(in.Lamp).
 		SetNotNilDepositAddress(in.DepositAddress).
 		SetNotNilSystemCommission(in.SystemCommission).
 		Exec(l.ctx)

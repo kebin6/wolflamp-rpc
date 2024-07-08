@@ -34,9 +34,13 @@ func (Player) Fields() []ent.Field {
 			Default("").
 			Comment("transaction password | 交易密码").
 			Annotations(entsql.WithComments(true)),
-		field.Float32("lamp").
+		field.Float32("coin_lamb").
 			Default(0).
-			Comment("lamp | 小羊余额").
+			Comment("coin lamb | 小羊余额").
+			Annotations(entsql.WithComments(true)),
+		field.Float32("token_lamb").
+			Default(0).
+			Comment("token lamb | 小羊余额").
 			Annotations(entsql.WithComments(true)),
 		field.Uint32("rank").
 			Default(0).
@@ -62,10 +66,6 @@ func (Player) Fields() []ent.Field {
 			Default(0).
 			Comment("profit and loss | 总盈亏数").
 			Annotations(entsql.WithComments(true)),
-		field.Float32("recent_100_win_percent").
-			Default(0).
-			Comment("recent 100 win percent | 近100场胜率").
-			Annotations(entsql.WithComments(true)),
 		field.String("invite_code").
 			Default("").
 			Comment("invite code | 邀请码").
@@ -82,11 +82,19 @@ func (Player) Fields() []ent.Field {
 			Default(0).
 			Comment("system commission percent | 平台收益分成比例").
 			Annotations(entsql.WithComments(true)),
+		field.Uint64("gcics_user_id").
+			Default(0).Comment("the user id of gcics system").
+			Annotations(entsql.WithComments(true)),
+		field.String("gcics_token").
+			Default("").Comment("user game token from gcics system").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 
 func (Player) Indexes() []ent.Index {
 	return []ent.Index{
+		index.Fields("gcics_user_id").Unique().StorageKey("uniq_user_id").
+			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("GCICS用户ID")),
 		index.Fields("email").Unique().StorageKey("uniq_email").
 			Annotations(entsql.Annotation{WithComments: &withComment}, schema.Comment("邮箱")),
 		index.Fields("invite_code").Unique().StorageKey("uniq_invite_code").

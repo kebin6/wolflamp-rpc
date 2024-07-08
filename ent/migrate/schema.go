@@ -150,17 +150,19 @@ var (
 		{Name: "email", Type: field.TypeString, Comment: "email | 邮箱", Default: ""},
 		{Name: "password", Type: field.TypeString, Comment: "password | 密码", Default: ""},
 		{Name: "transaction_password", Type: field.TypeString, Comment: "transaction password | 交易密码", Default: ""},
-		{Name: "lamp", Type: field.TypeFloat32, Comment: "lamp | 小羊余额", Default: 0},
+		{Name: "coin_lamb", Type: field.TypeFloat32, Comment: "coin lamb | 小羊余额", Default: 0},
+		{Name: "token_lamb", Type: field.TypeFloat32, Comment: "token lamb | 小羊余额", Default: 0},
 		{Name: "rank", Type: field.TypeUint32, Comment: "rank | 代理等级", Default: 0},
 		{Name: "amount", Type: field.TypeFloat64, Comment: "amount | 账户余额", Default: 0},
 		{Name: "deposit_address", Type: field.TypeString, Comment: "deposit address | 充值地址", Default: ""},
 		{Name: "invited_num", Type: field.TypeUint32, Comment: "invite people | 代理发展人数", Default: 0},
 		{Name: "total_income", Type: field.TypeFloat64, Comment: "total income | 代理总收益", Default: 0},
 		{Name: "profit_and_loss", Type: field.TypeFloat32, Comment: "profit and loss | 总盈亏数", Default: 0},
-		{Name: "recent_100_win_percent", Type: field.TypeFloat32, Comment: "recent 100 win percent | 近100场胜率", Default: 0},
 		{Name: "invite_code", Type: field.TypeString, Comment: "invite code | 邀请码", Default: ""},
 		{Name: "invited_code", Type: field.TypeString, Comment: "the inviter 's invite code | 邀请人邀请码", Default: ""},
 		{Name: "system_commission", Type: field.TypeFloat32, Comment: "system commission percent | 平台收益分成比例", Default: 0},
+		{Name: "gcics_user_id", Type: field.TypeUint64, Comment: "the user id of gcics system", Default: 0},
+		{Name: "gcics_token", Type: field.TypeString, Comment: "user game token from gcics system", Default: ""},
 		{Name: "inviter_id", Type: field.TypeUint64, Nullable: true, Comment: "the inviter id | 邀请人ID", Default: 0},
 	}
 	// WlPlayerTable holds the schema information for the "wl_player" table.
@@ -172,12 +174,17 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_player_wl_player_invitees",
-				Columns:    []*schema.Column{WlPlayerColumns[19]},
+				Columns:    []*schema.Column{WlPlayerColumns[21]},
 				RefColumns: []*schema.Column{WlPlayerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
+			{
+				Name:    "uniq_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{WlPlayerColumns[19]},
+			},
 			{
 				Name:    "uniq_email",
 				Unique:  true,
@@ -191,7 +198,7 @@ var (
 			{
 				Name:    "idx_inviter_id",
 				Unique:  false,
-				Columns: []*schema.Column{WlPlayerColumns[19]},
+				Columns: []*schema.Column{WlPlayerColumns[21]},
 			},
 			{
 				Name:    "idx_invited_code",

@@ -43,7 +43,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		if err != nil {
 			return nil, err
 		}
-		if playerInfo.Lamp < float32(in.LambNum) {
+		if playerInfo.CoinLamb < float32(in.LambNum) {
 			return nil, errorx.NewInvalidArgumentError("game.lambNotEnough")
 		}
 		player = playerInfo
@@ -78,7 +78,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		if player != nil {
 			playerEmail = player.Email
 			err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
-				AddLamp(-float32(in.LambNum)).
+				AddCoinLamb(-float32(in.LambNum)).
 				Exec(l.ctx)
 			if err != nil {
 				return err

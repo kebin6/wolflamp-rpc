@@ -117,24 +117,45 @@ func (pu *PlayerUpdate) SetNillableTransactionPassword(s *string) *PlayerUpdate 
 	return pu
 }
 
-// SetLamp sets the "lamp" field.
-func (pu *PlayerUpdate) SetLamp(f float32) *PlayerUpdate {
-	pu.mutation.ResetLamp()
-	pu.mutation.SetLamp(f)
+// SetCoinLamb sets the "coin_lamb" field.
+func (pu *PlayerUpdate) SetCoinLamb(f float32) *PlayerUpdate {
+	pu.mutation.ResetCoinLamb()
+	pu.mutation.SetCoinLamb(f)
 	return pu
 }
 
-// SetNillableLamp sets the "lamp" field if the given value is not nil.
-func (pu *PlayerUpdate) SetNillableLamp(f *float32) *PlayerUpdate {
+// SetNillableCoinLamb sets the "coin_lamb" field if the given value is not nil.
+func (pu *PlayerUpdate) SetNillableCoinLamb(f *float32) *PlayerUpdate {
 	if f != nil {
-		pu.SetLamp(*f)
+		pu.SetCoinLamb(*f)
 	}
 	return pu
 }
 
-// AddLamp adds f to the "lamp" field.
-func (pu *PlayerUpdate) AddLamp(f float32) *PlayerUpdate {
-	pu.mutation.AddLamp(f)
+// AddCoinLamb adds f to the "coin_lamb" field.
+func (pu *PlayerUpdate) AddCoinLamb(f float32) *PlayerUpdate {
+	pu.mutation.AddCoinLamb(f)
+	return pu
+}
+
+// SetTokenLamb sets the "token_lamb" field.
+func (pu *PlayerUpdate) SetTokenLamb(f float32) *PlayerUpdate {
+	pu.mutation.ResetTokenLamb()
+	pu.mutation.SetTokenLamb(f)
+	return pu
+}
+
+// SetNillableTokenLamb sets the "token_lamb" field if the given value is not nil.
+func (pu *PlayerUpdate) SetNillableTokenLamb(f *float32) *PlayerUpdate {
+	if f != nil {
+		pu.SetTokenLamb(*f)
+	}
+	return pu
+}
+
+// AddTokenLamb adds f to the "token_lamb" field.
+func (pu *PlayerUpdate) AddTokenLamb(f float32) *PlayerUpdate {
+	pu.mutation.AddTokenLamb(f)
 	return pu
 }
 
@@ -257,27 +278,6 @@ func (pu *PlayerUpdate) AddProfitAndLoss(f float32) *PlayerUpdate {
 	return pu
 }
 
-// SetRecent100WinPercent sets the "recent_100_win_percent" field.
-func (pu *PlayerUpdate) SetRecent100WinPercent(f float32) *PlayerUpdate {
-	pu.mutation.ResetRecent100WinPercent()
-	pu.mutation.SetRecent100WinPercent(f)
-	return pu
-}
-
-// SetNillableRecent100WinPercent sets the "recent_100_win_percent" field if the given value is not nil.
-func (pu *PlayerUpdate) SetNillableRecent100WinPercent(f *float32) *PlayerUpdate {
-	if f != nil {
-		pu.SetRecent100WinPercent(*f)
-	}
-	return pu
-}
-
-// AddRecent100WinPercent adds f to the "recent_100_win_percent" field.
-func (pu *PlayerUpdate) AddRecent100WinPercent(f float32) *PlayerUpdate {
-	pu.mutation.AddRecent100WinPercent(f)
-	return pu
-}
-
 // SetInviteCode sets the "invite_code" field.
 func (pu *PlayerUpdate) SetInviteCode(s string) *PlayerUpdate {
 	pu.mutation.SetInviteCode(s)
@@ -344,6 +344,41 @@ func (pu *PlayerUpdate) SetNillableSystemCommission(f *float32) *PlayerUpdate {
 // AddSystemCommission adds f to the "system_commission" field.
 func (pu *PlayerUpdate) AddSystemCommission(f float32) *PlayerUpdate {
 	pu.mutation.AddSystemCommission(f)
+	return pu
+}
+
+// SetGcicsUserID sets the "gcics_user_id" field.
+func (pu *PlayerUpdate) SetGcicsUserID(u uint64) *PlayerUpdate {
+	pu.mutation.ResetGcicsUserID()
+	pu.mutation.SetGcicsUserID(u)
+	return pu
+}
+
+// SetNillableGcicsUserID sets the "gcics_user_id" field if the given value is not nil.
+func (pu *PlayerUpdate) SetNillableGcicsUserID(u *uint64) *PlayerUpdate {
+	if u != nil {
+		pu.SetGcicsUserID(*u)
+	}
+	return pu
+}
+
+// AddGcicsUserID adds u to the "gcics_user_id" field.
+func (pu *PlayerUpdate) AddGcicsUserID(u int64) *PlayerUpdate {
+	pu.mutation.AddGcicsUserID(u)
+	return pu
+}
+
+// SetGcicsToken sets the "gcics_token" field.
+func (pu *PlayerUpdate) SetGcicsToken(s string) *PlayerUpdate {
+	pu.mutation.SetGcicsToken(s)
+	return pu
+}
+
+// SetNillableGcicsToken sets the "gcics_token" field if the given value is not nil.
+func (pu *PlayerUpdate) SetNillableGcicsToken(s *string) *PlayerUpdate {
+	if s != nil {
+		pu.SetGcicsToken(*s)
+	}
 	return pu
 }
 
@@ -468,11 +503,17 @@ func (pu *PlayerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.TransactionPassword(); ok {
 		_spec.SetField(player.FieldTransactionPassword, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.Lamp(); ok {
-		_spec.SetField(player.FieldLamp, field.TypeFloat32, value)
+	if value, ok := pu.mutation.CoinLamb(); ok {
+		_spec.SetField(player.FieldCoinLamb, field.TypeFloat32, value)
 	}
-	if value, ok := pu.mutation.AddedLamp(); ok {
-		_spec.AddField(player.FieldLamp, field.TypeFloat32, value)
+	if value, ok := pu.mutation.AddedCoinLamb(); ok {
+		_spec.AddField(player.FieldCoinLamb, field.TypeFloat32, value)
+	}
+	if value, ok := pu.mutation.TokenLamb(); ok {
+		_spec.SetField(player.FieldTokenLamb, field.TypeFloat32, value)
+	}
+	if value, ok := pu.mutation.AddedTokenLamb(); ok {
+		_spec.AddField(player.FieldTokenLamb, field.TypeFloat32, value)
 	}
 	if value, ok := pu.mutation.Rank(); ok {
 		_spec.SetField(player.FieldRank, field.TypeUint32, value)
@@ -507,12 +548,6 @@ func (pu *PlayerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.AddedProfitAndLoss(); ok {
 		_spec.AddField(player.FieldProfitAndLoss, field.TypeFloat32, value)
 	}
-	if value, ok := pu.mutation.Recent100WinPercent(); ok {
-		_spec.SetField(player.FieldRecent100WinPercent, field.TypeFloat32, value)
-	}
-	if value, ok := pu.mutation.AddedRecent100WinPercent(); ok {
-		_spec.AddField(player.FieldRecent100WinPercent, field.TypeFloat32, value)
-	}
 	if value, ok := pu.mutation.InviteCode(); ok {
 		_spec.SetField(player.FieldInviteCode, field.TypeString, value)
 	}
@@ -524,6 +559,15 @@ func (pu *PlayerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.AddedSystemCommission(); ok {
 		_spec.AddField(player.FieldSystemCommission, field.TypeFloat32, value)
+	}
+	if value, ok := pu.mutation.GcicsUserID(); ok {
+		_spec.SetField(player.FieldGcicsUserID, field.TypeUint64, value)
+	}
+	if value, ok := pu.mutation.AddedGcicsUserID(); ok {
+		_spec.AddField(player.FieldGcicsUserID, field.TypeUint64, value)
+	}
+	if value, ok := pu.mutation.GcicsToken(); ok {
+		_spec.SetField(player.FieldGcicsToken, field.TypeString, value)
 	}
 	if pu.mutation.InviterCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -708,24 +752,45 @@ func (puo *PlayerUpdateOne) SetNillableTransactionPassword(s *string) *PlayerUpd
 	return puo
 }
 
-// SetLamp sets the "lamp" field.
-func (puo *PlayerUpdateOne) SetLamp(f float32) *PlayerUpdateOne {
-	puo.mutation.ResetLamp()
-	puo.mutation.SetLamp(f)
+// SetCoinLamb sets the "coin_lamb" field.
+func (puo *PlayerUpdateOne) SetCoinLamb(f float32) *PlayerUpdateOne {
+	puo.mutation.ResetCoinLamb()
+	puo.mutation.SetCoinLamb(f)
 	return puo
 }
 
-// SetNillableLamp sets the "lamp" field if the given value is not nil.
-func (puo *PlayerUpdateOne) SetNillableLamp(f *float32) *PlayerUpdateOne {
+// SetNillableCoinLamb sets the "coin_lamb" field if the given value is not nil.
+func (puo *PlayerUpdateOne) SetNillableCoinLamb(f *float32) *PlayerUpdateOne {
 	if f != nil {
-		puo.SetLamp(*f)
+		puo.SetCoinLamb(*f)
 	}
 	return puo
 }
 
-// AddLamp adds f to the "lamp" field.
-func (puo *PlayerUpdateOne) AddLamp(f float32) *PlayerUpdateOne {
-	puo.mutation.AddLamp(f)
+// AddCoinLamb adds f to the "coin_lamb" field.
+func (puo *PlayerUpdateOne) AddCoinLamb(f float32) *PlayerUpdateOne {
+	puo.mutation.AddCoinLamb(f)
+	return puo
+}
+
+// SetTokenLamb sets the "token_lamb" field.
+func (puo *PlayerUpdateOne) SetTokenLamb(f float32) *PlayerUpdateOne {
+	puo.mutation.ResetTokenLamb()
+	puo.mutation.SetTokenLamb(f)
+	return puo
+}
+
+// SetNillableTokenLamb sets the "token_lamb" field if the given value is not nil.
+func (puo *PlayerUpdateOne) SetNillableTokenLamb(f *float32) *PlayerUpdateOne {
+	if f != nil {
+		puo.SetTokenLamb(*f)
+	}
+	return puo
+}
+
+// AddTokenLamb adds f to the "token_lamb" field.
+func (puo *PlayerUpdateOne) AddTokenLamb(f float32) *PlayerUpdateOne {
+	puo.mutation.AddTokenLamb(f)
 	return puo
 }
 
@@ -848,27 +913,6 @@ func (puo *PlayerUpdateOne) AddProfitAndLoss(f float32) *PlayerUpdateOne {
 	return puo
 }
 
-// SetRecent100WinPercent sets the "recent_100_win_percent" field.
-func (puo *PlayerUpdateOne) SetRecent100WinPercent(f float32) *PlayerUpdateOne {
-	puo.mutation.ResetRecent100WinPercent()
-	puo.mutation.SetRecent100WinPercent(f)
-	return puo
-}
-
-// SetNillableRecent100WinPercent sets the "recent_100_win_percent" field if the given value is not nil.
-func (puo *PlayerUpdateOne) SetNillableRecent100WinPercent(f *float32) *PlayerUpdateOne {
-	if f != nil {
-		puo.SetRecent100WinPercent(*f)
-	}
-	return puo
-}
-
-// AddRecent100WinPercent adds f to the "recent_100_win_percent" field.
-func (puo *PlayerUpdateOne) AddRecent100WinPercent(f float32) *PlayerUpdateOne {
-	puo.mutation.AddRecent100WinPercent(f)
-	return puo
-}
-
 // SetInviteCode sets the "invite_code" field.
 func (puo *PlayerUpdateOne) SetInviteCode(s string) *PlayerUpdateOne {
 	puo.mutation.SetInviteCode(s)
@@ -935,6 +979,41 @@ func (puo *PlayerUpdateOne) SetNillableSystemCommission(f *float32) *PlayerUpdat
 // AddSystemCommission adds f to the "system_commission" field.
 func (puo *PlayerUpdateOne) AddSystemCommission(f float32) *PlayerUpdateOne {
 	puo.mutation.AddSystemCommission(f)
+	return puo
+}
+
+// SetGcicsUserID sets the "gcics_user_id" field.
+func (puo *PlayerUpdateOne) SetGcicsUserID(u uint64) *PlayerUpdateOne {
+	puo.mutation.ResetGcicsUserID()
+	puo.mutation.SetGcicsUserID(u)
+	return puo
+}
+
+// SetNillableGcicsUserID sets the "gcics_user_id" field if the given value is not nil.
+func (puo *PlayerUpdateOne) SetNillableGcicsUserID(u *uint64) *PlayerUpdateOne {
+	if u != nil {
+		puo.SetGcicsUserID(*u)
+	}
+	return puo
+}
+
+// AddGcicsUserID adds u to the "gcics_user_id" field.
+func (puo *PlayerUpdateOne) AddGcicsUserID(u int64) *PlayerUpdateOne {
+	puo.mutation.AddGcicsUserID(u)
+	return puo
+}
+
+// SetGcicsToken sets the "gcics_token" field.
+func (puo *PlayerUpdateOne) SetGcicsToken(s string) *PlayerUpdateOne {
+	puo.mutation.SetGcicsToken(s)
+	return puo
+}
+
+// SetNillableGcicsToken sets the "gcics_token" field if the given value is not nil.
+func (puo *PlayerUpdateOne) SetNillableGcicsToken(s *string) *PlayerUpdateOne {
+	if s != nil {
+		puo.SetGcicsToken(*s)
+	}
 	return puo
 }
 
@@ -1089,11 +1168,17 @@ func (puo *PlayerUpdateOne) sqlSave(ctx context.Context) (_node *Player, err err
 	if value, ok := puo.mutation.TransactionPassword(); ok {
 		_spec.SetField(player.FieldTransactionPassword, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.Lamp(); ok {
-		_spec.SetField(player.FieldLamp, field.TypeFloat32, value)
+	if value, ok := puo.mutation.CoinLamb(); ok {
+		_spec.SetField(player.FieldCoinLamb, field.TypeFloat32, value)
 	}
-	if value, ok := puo.mutation.AddedLamp(); ok {
-		_spec.AddField(player.FieldLamp, field.TypeFloat32, value)
+	if value, ok := puo.mutation.AddedCoinLamb(); ok {
+		_spec.AddField(player.FieldCoinLamb, field.TypeFloat32, value)
+	}
+	if value, ok := puo.mutation.TokenLamb(); ok {
+		_spec.SetField(player.FieldTokenLamb, field.TypeFloat32, value)
+	}
+	if value, ok := puo.mutation.AddedTokenLamb(); ok {
+		_spec.AddField(player.FieldTokenLamb, field.TypeFloat32, value)
 	}
 	if value, ok := puo.mutation.Rank(); ok {
 		_spec.SetField(player.FieldRank, field.TypeUint32, value)
@@ -1128,12 +1213,6 @@ func (puo *PlayerUpdateOne) sqlSave(ctx context.Context) (_node *Player, err err
 	if value, ok := puo.mutation.AddedProfitAndLoss(); ok {
 		_spec.AddField(player.FieldProfitAndLoss, field.TypeFloat32, value)
 	}
-	if value, ok := puo.mutation.Recent100WinPercent(); ok {
-		_spec.SetField(player.FieldRecent100WinPercent, field.TypeFloat32, value)
-	}
-	if value, ok := puo.mutation.AddedRecent100WinPercent(); ok {
-		_spec.AddField(player.FieldRecent100WinPercent, field.TypeFloat32, value)
-	}
 	if value, ok := puo.mutation.InviteCode(); ok {
 		_spec.SetField(player.FieldInviteCode, field.TypeString, value)
 	}
@@ -1145,6 +1224,15 @@ func (puo *PlayerUpdateOne) sqlSave(ctx context.Context) (_node *Player, err err
 	}
 	if value, ok := puo.mutation.AddedSystemCommission(); ok {
 		_spec.AddField(player.FieldSystemCommission, field.TypeFloat32, value)
+	}
+	if value, ok := puo.mutation.GcicsUserID(); ok {
+		_spec.SetField(player.FieldGcicsUserID, field.TypeUint64, value)
+	}
+	if value, ok := puo.mutation.AddedGcicsUserID(); ok {
+		_spec.AddField(player.FieldGcicsUserID, field.TypeUint64, value)
+	}
+	if value, ok := puo.mutation.GcicsToken(); ok {
+		_spec.SetField(player.FieldGcicsToken, field.TypeString, value)
 	}
 	if puo.mutation.InviterCleared() {
 		edge := &sqlgraph.EdgeSpec{

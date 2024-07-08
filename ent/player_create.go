@@ -118,16 +118,30 @@ func (pc *PlayerCreate) SetNillableTransactionPassword(s *string) *PlayerCreate 
 	return pc
 }
 
-// SetLamp sets the "lamp" field.
-func (pc *PlayerCreate) SetLamp(f float32) *PlayerCreate {
-	pc.mutation.SetLamp(f)
+// SetCoinLamb sets the "coin_lamb" field.
+func (pc *PlayerCreate) SetCoinLamb(f float32) *PlayerCreate {
+	pc.mutation.SetCoinLamb(f)
 	return pc
 }
 
-// SetNillableLamp sets the "lamp" field if the given value is not nil.
-func (pc *PlayerCreate) SetNillableLamp(f *float32) *PlayerCreate {
+// SetNillableCoinLamb sets the "coin_lamb" field if the given value is not nil.
+func (pc *PlayerCreate) SetNillableCoinLamb(f *float32) *PlayerCreate {
 	if f != nil {
-		pc.SetLamp(*f)
+		pc.SetCoinLamb(*f)
+	}
+	return pc
+}
+
+// SetTokenLamb sets the "token_lamb" field.
+func (pc *PlayerCreate) SetTokenLamb(f float32) *PlayerCreate {
+	pc.mutation.SetTokenLamb(f)
+	return pc
+}
+
+// SetNillableTokenLamb sets the "token_lamb" field if the given value is not nil.
+func (pc *PlayerCreate) SetNillableTokenLamb(f *float32) *PlayerCreate {
+	if f != nil {
+		pc.SetTokenLamb(*f)
 	}
 	return pc
 }
@@ -216,20 +230,6 @@ func (pc *PlayerCreate) SetNillableProfitAndLoss(f *float32) *PlayerCreate {
 	return pc
 }
 
-// SetRecent100WinPercent sets the "recent_100_win_percent" field.
-func (pc *PlayerCreate) SetRecent100WinPercent(f float32) *PlayerCreate {
-	pc.mutation.SetRecent100WinPercent(f)
-	return pc
-}
-
-// SetNillableRecent100WinPercent sets the "recent_100_win_percent" field if the given value is not nil.
-func (pc *PlayerCreate) SetNillableRecent100WinPercent(f *float32) *PlayerCreate {
-	if f != nil {
-		pc.SetRecent100WinPercent(*f)
-	}
-	return pc
-}
-
 // SetInviteCode sets the "invite_code" field.
 func (pc *PlayerCreate) SetInviteCode(s string) *PlayerCreate {
 	pc.mutation.SetInviteCode(s)
@@ -282,6 +282,34 @@ func (pc *PlayerCreate) SetSystemCommission(f float32) *PlayerCreate {
 func (pc *PlayerCreate) SetNillableSystemCommission(f *float32) *PlayerCreate {
 	if f != nil {
 		pc.SetSystemCommission(*f)
+	}
+	return pc
+}
+
+// SetGcicsUserID sets the "gcics_user_id" field.
+func (pc *PlayerCreate) SetGcicsUserID(u uint64) *PlayerCreate {
+	pc.mutation.SetGcicsUserID(u)
+	return pc
+}
+
+// SetNillableGcicsUserID sets the "gcics_user_id" field if the given value is not nil.
+func (pc *PlayerCreate) SetNillableGcicsUserID(u *uint64) *PlayerCreate {
+	if u != nil {
+		pc.SetGcicsUserID(*u)
+	}
+	return pc
+}
+
+// SetGcicsToken sets the "gcics_token" field.
+func (pc *PlayerCreate) SetGcicsToken(s string) *PlayerCreate {
+	pc.mutation.SetGcicsToken(s)
+	return pc
+}
+
+// SetNillableGcicsToken sets the "gcics_token" field if the given value is not nil.
+func (pc *PlayerCreate) SetNillableGcicsToken(s *string) *PlayerCreate {
+	if s != nil {
+		pc.SetGcicsToken(*s)
 	}
 	return pc
 }
@@ -375,9 +403,13 @@ func (pc *PlayerCreate) defaults() {
 		v := player.DefaultTransactionPassword
 		pc.mutation.SetTransactionPassword(v)
 	}
-	if _, ok := pc.mutation.Lamp(); !ok {
-		v := player.DefaultLamp
-		pc.mutation.SetLamp(v)
+	if _, ok := pc.mutation.CoinLamb(); !ok {
+		v := player.DefaultCoinLamb
+		pc.mutation.SetCoinLamb(v)
+	}
+	if _, ok := pc.mutation.TokenLamb(); !ok {
+		v := player.DefaultTokenLamb
+		pc.mutation.SetTokenLamb(v)
 	}
 	if _, ok := pc.mutation.Rank(); !ok {
 		v := player.DefaultRank
@@ -403,10 +435,6 @@ func (pc *PlayerCreate) defaults() {
 		v := player.DefaultProfitAndLoss
 		pc.mutation.SetProfitAndLoss(v)
 	}
-	if _, ok := pc.mutation.Recent100WinPercent(); !ok {
-		v := player.DefaultRecent100WinPercent
-		pc.mutation.SetRecent100WinPercent(v)
-	}
 	if _, ok := pc.mutation.InviteCode(); !ok {
 		v := player.DefaultInviteCode
 		pc.mutation.SetInviteCode(v)
@@ -422,6 +450,14 @@ func (pc *PlayerCreate) defaults() {
 	if _, ok := pc.mutation.SystemCommission(); !ok {
 		v := player.DefaultSystemCommission
 		pc.mutation.SetSystemCommission(v)
+	}
+	if _, ok := pc.mutation.GcicsUserID(); !ok {
+		v := player.DefaultGcicsUserID
+		pc.mutation.SetGcicsUserID(v)
+	}
+	if _, ok := pc.mutation.GcicsToken(); !ok {
+		v := player.DefaultGcicsToken
+		pc.mutation.SetGcicsToken(v)
 	}
 }
 
@@ -445,8 +481,11 @@ func (pc *PlayerCreate) check() error {
 	if _, ok := pc.mutation.TransactionPassword(); !ok {
 		return &ValidationError{Name: "transaction_password", err: errors.New(`ent: missing required field "Player.transaction_password"`)}
 	}
-	if _, ok := pc.mutation.Lamp(); !ok {
-		return &ValidationError{Name: "lamp", err: errors.New(`ent: missing required field "Player.lamp"`)}
+	if _, ok := pc.mutation.CoinLamb(); !ok {
+		return &ValidationError{Name: "coin_lamb", err: errors.New(`ent: missing required field "Player.coin_lamb"`)}
+	}
+	if _, ok := pc.mutation.TokenLamb(); !ok {
+		return &ValidationError{Name: "token_lamb", err: errors.New(`ent: missing required field "Player.token_lamb"`)}
 	}
 	if _, ok := pc.mutation.Rank(); !ok {
 		return &ValidationError{Name: "rank", err: errors.New(`ent: missing required field "Player.rank"`)}
@@ -466,9 +505,6 @@ func (pc *PlayerCreate) check() error {
 	if _, ok := pc.mutation.ProfitAndLoss(); !ok {
 		return &ValidationError{Name: "profit_and_loss", err: errors.New(`ent: missing required field "Player.profit_and_loss"`)}
 	}
-	if _, ok := pc.mutation.Recent100WinPercent(); !ok {
-		return &ValidationError{Name: "recent_100_win_percent", err: errors.New(`ent: missing required field "Player.recent_100_win_percent"`)}
-	}
 	if _, ok := pc.mutation.InviteCode(); !ok {
 		return &ValidationError{Name: "invite_code", err: errors.New(`ent: missing required field "Player.invite_code"`)}
 	}
@@ -477,6 +513,12 @@ func (pc *PlayerCreate) check() error {
 	}
 	if _, ok := pc.mutation.SystemCommission(); !ok {
 		return &ValidationError{Name: "system_commission", err: errors.New(`ent: missing required field "Player.system_commission"`)}
+	}
+	if _, ok := pc.mutation.GcicsUserID(); !ok {
+		return &ValidationError{Name: "gcics_user_id", err: errors.New(`ent: missing required field "Player.gcics_user_id"`)}
+	}
+	if _, ok := pc.mutation.GcicsToken(); !ok {
+		return &ValidationError{Name: "gcics_token", err: errors.New(`ent: missing required field "Player.gcics_token"`)}
 	}
 	return nil
 }
@@ -538,9 +580,13 @@ func (pc *PlayerCreate) createSpec() (*Player, *sqlgraph.CreateSpec) {
 		_spec.SetField(player.FieldTransactionPassword, field.TypeString, value)
 		_node.TransactionPassword = value
 	}
-	if value, ok := pc.mutation.Lamp(); ok {
-		_spec.SetField(player.FieldLamp, field.TypeFloat32, value)
-		_node.Lamp = value
+	if value, ok := pc.mutation.CoinLamb(); ok {
+		_spec.SetField(player.FieldCoinLamb, field.TypeFloat32, value)
+		_node.CoinLamb = value
+	}
+	if value, ok := pc.mutation.TokenLamb(); ok {
+		_spec.SetField(player.FieldTokenLamb, field.TypeFloat32, value)
+		_node.TokenLamb = value
 	}
 	if value, ok := pc.mutation.Rank(); ok {
 		_spec.SetField(player.FieldRank, field.TypeUint32, value)
@@ -566,10 +612,6 @@ func (pc *PlayerCreate) createSpec() (*Player, *sqlgraph.CreateSpec) {
 		_spec.SetField(player.FieldProfitAndLoss, field.TypeFloat32, value)
 		_node.ProfitAndLoss = value
 	}
-	if value, ok := pc.mutation.Recent100WinPercent(); ok {
-		_spec.SetField(player.FieldRecent100WinPercent, field.TypeFloat32, value)
-		_node.Recent100WinPercent = value
-	}
 	if value, ok := pc.mutation.InviteCode(); ok {
 		_spec.SetField(player.FieldInviteCode, field.TypeString, value)
 		_node.InviteCode = value
@@ -581,6 +623,14 @@ func (pc *PlayerCreate) createSpec() (*Player, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.SystemCommission(); ok {
 		_spec.SetField(player.FieldSystemCommission, field.TypeFloat32, value)
 		_node.SystemCommission = value
+	}
+	if value, ok := pc.mutation.GcicsUserID(); ok {
+		_spec.SetField(player.FieldGcicsUserID, field.TypeUint64, value)
+		_node.GcicsUserID = value
+	}
+	if value, ok := pc.mutation.GcicsToken(); ok {
+		_spec.SetField(player.FieldGcicsToken, field.TypeString, value)
+		_node.GcicsToken = value
 	}
 	if nodes := pc.mutation.InviterIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

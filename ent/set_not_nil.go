@@ -1037,25 +1037,49 @@ func (pl *PlayerCreate) SetNotNilTransactionPassword(value *string) *PlayerCreat
 }
 
 // set field if value's pointer is not nil.
-func (pl *PlayerUpdate) SetNotNilLamp(value *float32) *PlayerUpdate {
+func (pl *PlayerUpdate) SetNotNilCoinLamb(value *float32) *PlayerUpdate {
 	if value != nil {
-		return pl.SetLamp(*value)
+		return pl.SetCoinLamb(*value)
 	}
 	return pl
 }
 
 // set field if value's pointer is not nil.
-func (pl *PlayerUpdateOne) SetNotNilLamp(value *float32) *PlayerUpdateOne {
+func (pl *PlayerUpdateOne) SetNotNilCoinLamb(value *float32) *PlayerUpdateOne {
 	if value != nil {
-		return pl.SetLamp(*value)
+		return pl.SetCoinLamb(*value)
 	}
 	return pl
 }
 
 // set field if value's pointer is not nil.
-func (pl *PlayerCreate) SetNotNilLamp(value *float32) *PlayerCreate {
+func (pl *PlayerCreate) SetNotNilCoinLamb(value *float32) *PlayerCreate {
 	if value != nil {
-		return pl.SetLamp(*value)
+		return pl.SetCoinLamb(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdate) SetNotNilTokenLamb(value *float32) *PlayerUpdate {
+	if value != nil {
+		return pl.SetTokenLamb(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdateOne) SetNotNilTokenLamb(value *float32) *PlayerUpdateOne {
+	if value != nil {
+		return pl.SetTokenLamb(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerCreate) SetNotNilTokenLamb(value *float32) *PlayerCreate {
+	if value != nil {
+		return pl.SetTokenLamb(*value)
 	}
 	return pl
 }
@@ -1205,30 +1229,6 @@ func (pl *PlayerCreate) SetNotNilProfitAndLoss(value *float32) *PlayerCreate {
 }
 
 // set field if value's pointer is not nil.
-func (pl *PlayerUpdate) SetNotNilRecent100WinPercent(value *float32) *PlayerUpdate {
-	if value != nil {
-		return pl.SetRecent100WinPercent(*value)
-	}
-	return pl
-}
-
-// set field if value's pointer is not nil.
-func (pl *PlayerUpdateOne) SetNotNilRecent100WinPercent(value *float32) *PlayerUpdateOne {
-	if value != nil {
-		return pl.SetRecent100WinPercent(*value)
-	}
-	return pl
-}
-
-// set field if value's pointer is not nil.
-func (pl *PlayerCreate) SetNotNilRecent100WinPercent(value *float32) *PlayerCreate {
-	if value != nil {
-		return pl.SetRecent100WinPercent(*value)
-	}
-	return pl
-}
-
-// set field if value's pointer is not nil.
 func (pl *PlayerUpdate) SetNotNilInviteCode(value *string) *PlayerUpdate {
 	if value != nil {
 		return pl.SetInviteCode(*value)
@@ -1320,6 +1320,54 @@ func (pl *PlayerUpdateOne) SetNotNilSystemCommission(value *float32) *PlayerUpda
 func (pl *PlayerCreate) SetNotNilSystemCommission(value *float32) *PlayerCreate {
 	if value != nil {
 		return pl.SetSystemCommission(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdate) SetNotNilGcicsUserID(value *uint64) *PlayerUpdate {
+	if value != nil {
+		return pl.SetGcicsUserID(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdateOne) SetNotNilGcicsUserID(value *uint64) *PlayerUpdateOne {
+	if value != nil {
+		return pl.SetGcicsUserID(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerCreate) SetNotNilGcicsUserID(value *uint64) *PlayerCreate {
+	if value != nil {
+		return pl.SetGcicsUserID(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdate) SetNotNilGcicsToken(value *string) *PlayerUpdate {
+	if value != nil {
+		return pl.SetGcicsToken(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdateOne) SetNotNilGcicsToken(value *string) *PlayerUpdateOne {
+	if value != nil {
+		return pl.SetGcicsToken(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerCreate) SetNotNilGcicsToken(value *string) *PlayerCreate {
+	if value != nil {
+		return pl.SetGcicsToken(*value)
 	}
 	return pl
 }

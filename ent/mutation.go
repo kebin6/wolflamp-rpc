@@ -4489,45 +4489,48 @@ func (m *OriginInviteCodeMutation) ResetEdge(name string) error {
 // PlayerMutation represents an operation that mutates the Player nodes in the graph.
 type PlayerMutation struct {
 	config
-	op                        Op
-	typ                       string
-	id                        *uint64
-	created_at                *time.Time
-	updated_at                *time.Time
-	status                    *uint8
-	addstatus                 *int8
-	name                      *string
-	email                     *string
-	password                  *string
-	transaction_password      *string
-	lamp                      *float32
-	addlamp                   *float32
-	rank                      *uint32
-	addrank                   *int32
-	amount                    *float64
-	addamount                 *float64
-	deposit_address           *string
-	invited_num               *uint32
-	addinvited_num            *int32
-	total_income              *float64
-	addtotal_income           *float64
-	profit_and_loss           *float32
-	addprofit_and_loss        *float32
-	recent_100_win_percent    *float32
-	addrecent_100_win_percent *float32
-	invite_code               *string
-	invited_code              *string
-	system_commission         *float32
-	addsystem_commission      *float32
-	clearedFields             map[string]struct{}
-	inviter                   *uint64
-	clearedinviter            bool
-	invitees                  map[uint64]struct{}
-	removedinvitees           map[uint64]struct{}
-	clearedinvitees           bool
-	done                      bool
-	oldValue                  func(context.Context) (*Player, error)
-	predicates                []predicate.Player
+	op                   Op
+	typ                  string
+	id                   *uint64
+	created_at           *time.Time
+	updated_at           *time.Time
+	status               *uint8
+	addstatus            *int8
+	name                 *string
+	email                *string
+	password             *string
+	transaction_password *string
+	coin_lamb            *float32
+	addcoin_lamb         *float32
+	token_lamb           *float32
+	addtoken_lamb        *float32
+	rank                 *uint32
+	addrank              *int32
+	amount               *float64
+	addamount            *float64
+	deposit_address      *string
+	invited_num          *uint32
+	addinvited_num       *int32
+	total_income         *float64
+	addtotal_income      *float64
+	profit_and_loss      *float32
+	addprofit_and_loss   *float32
+	invite_code          *string
+	invited_code         *string
+	system_commission    *float32
+	addsystem_commission *float32
+	gcics_user_id        *uint64
+	addgcics_user_id     *int64
+	gcics_token          *string
+	clearedFields        map[string]struct{}
+	inviter              *uint64
+	clearedinviter       bool
+	invitees             map[uint64]struct{}
+	removedinvitees      map[uint64]struct{}
+	clearedinvitees      bool
+	done                 bool
+	oldValue             func(context.Context) (*Player, error)
+	predicates           []predicate.Player
 }
 
 var _ ent.Mutation = (*PlayerMutation)(nil)
@@ -4920,60 +4923,116 @@ func (m *PlayerMutation) ResetTransactionPassword() {
 	m.transaction_password = nil
 }
 
-// SetLamp sets the "lamp" field.
-func (m *PlayerMutation) SetLamp(f float32) {
-	m.lamp = &f
-	m.addlamp = nil
+// SetCoinLamb sets the "coin_lamb" field.
+func (m *PlayerMutation) SetCoinLamb(f float32) {
+	m.coin_lamb = &f
+	m.addcoin_lamb = nil
 }
 
-// Lamp returns the value of the "lamp" field in the mutation.
-func (m *PlayerMutation) Lamp() (r float32, exists bool) {
-	v := m.lamp
+// CoinLamb returns the value of the "coin_lamb" field in the mutation.
+func (m *PlayerMutation) CoinLamb() (r float32, exists bool) {
+	v := m.coin_lamb
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLamp returns the old "lamp" field's value of the Player entity.
+// OldCoinLamb returns the old "coin_lamb" field's value of the Player entity.
 // If the Player object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PlayerMutation) OldLamp(ctx context.Context) (v float32, err error) {
+func (m *PlayerMutation) OldCoinLamb(ctx context.Context) (v float32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLamp is only allowed on UpdateOne operations")
+		return v, errors.New("OldCoinLamb is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLamp requires an ID field in the mutation")
+		return v, errors.New("OldCoinLamb requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLamp: %w", err)
+		return v, fmt.Errorf("querying old value for OldCoinLamb: %w", err)
 	}
-	return oldValue.Lamp, nil
+	return oldValue.CoinLamb, nil
 }
 
-// AddLamp adds f to the "lamp" field.
-func (m *PlayerMutation) AddLamp(f float32) {
-	if m.addlamp != nil {
-		*m.addlamp += f
+// AddCoinLamb adds f to the "coin_lamb" field.
+func (m *PlayerMutation) AddCoinLamb(f float32) {
+	if m.addcoin_lamb != nil {
+		*m.addcoin_lamb += f
 	} else {
-		m.addlamp = &f
+		m.addcoin_lamb = &f
 	}
 }
 
-// AddedLamp returns the value that was added to the "lamp" field in this mutation.
-func (m *PlayerMutation) AddedLamp() (r float32, exists bool) {
-	v := m.addlamp
+// AddedCoinLamb returns the value that was added to the "coin_lamb" field in this mutation.
+func (m *PlayerMutation) AddedCoinLamb() (r float32, exists bool) {
+	v := m.addcoin_lamb
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetLamp resets all changes to the "lamp" field.
-func (m *PlayerMutation) ResetLamp() {
-	m.lamp = nil
-	m.addlamp = nil
+// ResetCoinLamb resets all changes to the "coin_lamb" field.
+func (m *PlayerMutation) ResetCoinLamb() {
+	m.coin_lamb = nil
+	m.addcoin_lamb = nil
+}
+
+// SetTokenLamb sets the "token_lamb" field.
+func (m *PlayerMutation) SetTokenLamb(f float32) {
+	m.token_lamb = &f
+	m.addtoken_lamb = nil
+}
+
+// TokenLamb returns the value of the "token_lamb" field in the mutation.
+func (m *PlayerMutation) TokenLamb() (r float32, exists bool) {
+	v := m.token_lamb
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTokenLamb returns the old "token_lamb" field's value of the Player entity.
+// If the Player object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlayerMutation) OldTokenLamb(ctx context.Context) (v float32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTokenLamb is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTokenLamb requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTokenLamb: %w", err)
+	}
+	return oldValue.TokenLamb, nil
+}
+
+// AddTokenLamb adds f to the "token_lamb" field.
+func (m *PlayerMutation) AddTokenLamb(f float32) {
+	if m.addtoken_lamb != nil {
+		*m.addtoken_lamb += f
+	} else {
+		m.addtoken_lamb = &f
+	}
+}
+
+// AddedTokenLamb returns the value that was added to the "token_lamb" field in this mutation.
+func (m *PlayerMutation) AddedTokenLamb() (r float32, exists bool) {
+	v := m.addtoken_lamb
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetTokenLamb resets all changes to the "token_lamb" field.
+func (m *PlayerMutation) ResetTokenLamb() {
+	m.token_lamb = nil
+	m.addtoken_lamb = nil
 }
 
 // SetRank sets the "rank" field.
@@ -5292,62 +5351,6 @@ func (m *PlayerMutation) ResetProfitAndLoss() {
 	m.addprofit_and_loss = nil
 }
 
-// SetRecent100WinPercent sets the "recent_100_win_percent" field.
-func (m *PlayerMutation) SetRecent100WinPercent(f float32) {
-	m.recent_100_win_percent = &f
-	m.addrecent_100_win_percent = nil
-}
-
-// Recent100WinPercent returns the value of the "recent_100_win_percent" field in the mutation.
-func (m *PlayerMutation) Recent100WinPercent() (r float32, exists bool) {
-	v := m.recent_100_win_percent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldRecent100WinPercent returns the old "recent_100_win_percent" field's value of the Player entity.
-// If the Player object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PlayerMutation) OldRecent100WinPercent(ctx context.Context) (v float32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRecent100WinPercent is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRecent100WinPercent requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRecent100WinPercent: %w", err)
-	}
-	return oldValue.Recent100WinPercent, nil
-}
-
-// AddRecent100WinPercent adds f to the "recent_100_win_percent" field.
-func (m *PlayerMutation) AddRecent100WinPercent(f float32) {
-	if m.addrecent_100_win_percent != nil {
-		*m.addrecent_100_win_percent += f
-	} else {
-		m.addrecent_100_win_percent = &f
-	}
-}
-
-// AddedRecent100WinPercent returns the value that was added to the "recent_100_win_percent" field in this mutation.
-func (m *PlayerMutation) AddedRecent100WinPercent() (r float32, exists bool) {
-	v := m.addrecent_100_win_percent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetRecent100WinPercent resets all changes to the "recent_100_win_percent" field.
-func (m *PlayerMutation) ResetRecent100WinPercent() {
-	m.recent_100_win_percent = nil
-	m.addrecent_100_win_percent = nil
-}
-
 // SetInviteCode sets the "invite_code" field.
 func (m *PlayerMutation) SetInviteCode(s string) {
 	m.invite_code = &s
@@ -5525,6 +5528,98 @@ func (m *PlayerMutation) ResetSystemCommission() {
 	m.addsystem_commission = nil
 }
 
+// SetGcicsUserID sets the "gcics_user_id" field.
+func (m *PlayerMutation) SetGcicsUserID(u uint64) {
+	m.gcics_user_id = &u
+	m.addgcics_user_id = nil
+}
+
+// GcicsUserID returns the value of the "gcics_user_id" field in the mutation.
+func (m *PlayerMutation) GcicsUserID() (r uint64, exists bool) {
+	v := m.gcics_user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGcicsUserID returns the old "gcics_user_id" field's value of the Player entity.
+// If the Player object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlayerMutation) OldGcicsUserID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGcicsUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGcicsUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGcicsUserID: %w", err)
+	}
+	return oldValue.GcicsUserID, nil
+}
+
+// AddGcicsUserID adds u to the "gcics_user_id" field.
+func (m *PlayerMutation) AddGcicsUserID(u int64) {
+	if m.addgcics_user_id != nil {
+		*m.addgcics_user_id += u
+	} else {
+		m.addgcics_user_id = &u
+	}
+}
+
+// AddedGcicsUserID returns the value that was added to the "gcics_user_id" field in this mutation.
+func (m *PlayerMutation) AddedGcicsUserID() (r int64, exists bool) {
+	v := m.addgcics_user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetGcicsUserID resets all changes to the "gcics_user_id" field.
+func (m *PlayerMutation) ResetGcicsUserID() {
+	m.gcics_user_id = nil
+	m.addgcics_user_id = nil
+}
+
+// SetGcicsToken sets the "gcics_token" field.
+func (m *PlayerMutation) SetGcicsToken(s string) {
+	m.gcics_token = &s
+}
+
+// GcicsToken returns the value of the "gcics_token" field in the mutation.
+func (m *PlayerMutation) GcicsToken() (r string, exists bool) {
+	v := m.gcics_token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGcicsToken returns the old "gcics_token" field's value of the Player entity.
+// If the Player object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlayerMutation) OldGcicsToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGcicsToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGcicsToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGcicsToken: %w", err)
+	}
+	return oldValue.GcicsToken, nil
+}
+
+// ResetGcicsToken resets all changes to the "gcics_token" field.
+func (m *PlayerMutation) ResetGcicsToken() {
+	m.gcics_token = nil
+}
+
 // ClearInviter clears the "inviter" edge to the Player entity.
 func (m *PlayerMutation) ClearInviter() {
 	m.clearedinviter = true
@@ -5640,7 +5735,7 @@ func (m *PlayerMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlayerMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 21)
 	if m.created_at != nil {
 		fields = append(fields, player.FieldCreatedAt)
 	}
@@ -5662,8 +5757,11 @@ func (m *PlayerMutation) Fields() []string {
 	if m.transaction_password != nil {
 		fields = append(fields, player.FieldTransactionPassword)
 	}
-	if m.lamp != nil {
-		fields = append(fields, player.FieldLamp)
+	if m.coin_lamb != nil {
+		fields = append(fields, player.FieldCoinLamb)
+	}
+	if m.token_lamb != nil {
+		fields = append(fields, player.FieldTokenLamb)
 	}
 	if m.rank != nil {
 		fields = append(fields, player.FieldRank)
@@ -5683,9 +5781,6 @@ func (m *PlayerMutation) Fields() []string {
 	if m.profit_and_loss != nil {
 		fields = append(fields, player.FieldProfitAndLoss)
 	}
-	if m.recent_100_win_percent != nil {
-		fields = append(fields, player.FieldRecent100WinPercent)
-	}
 	if m.invite_code != nil {
 		fields = append(fields, player.FieldInviteCode)
 	}
@@ -5697,6 +5792,12 @@ func (m *PlayerMutation) Fields() []string {
 	}
 	if m.system_commission != nil {
 		fields = append(fields, player.FieldSystemCommission)
+	}
+	if m.gcics_user_id != nil {
+		fields = append(fields, player.FieldGcicsUserID)
+	}
+	if m.gcics_token != nil {
+		fields = append(fields, player.FieldGcicsToken)
 	}
 	return fields
 }
@@ -5720,8 +5821,10 @@ func (m *PlayerMutation) Field(name string) (ent.Value, bool) {
 		return m.Password()
 	case player.FieldTransactionPassword:
 		return m.TransactionPassword()
-	case player.FieldLamp:
-		return m.Lamp()
+	case player.FieldCoinLamb:
+		return m.CoinLamb()
+	case player.FieldTokenLamb:
+		return m.TokenLamb()
 	case player.FieldRank:
 		return m.Rank()
 	case player.FieldAmount:
@@ -5734,8 +5837,6 @@ func (m *PlayerMutation) Field(name string) (ent.Value, bool) {
 		return m.TotalIncome()
 	case player.FieldProfitAndLoss:
 		return m.ProfitAndLoss()
-	case player.FieldRecent100WinPercent:
-		return m.Recent100WinPercent()
 	case player.FieldInviteCode:
 		return m.InviteCode()
 	case player.FieldInviterID:
@@ -5744,6 +5845,10 @@ func (m *PlayerMutation) Field(name string) (ent.Value, bool) {
 		return m.InvitedCode()
 	case player.FieldSystemCommission:
 		return m.SystemCommission()
+	case player.FieldGcicsUserID:
+		return m.GcicsUserID()
+	case player.FieldGcicsToken:
+		return m.GcicsToken()
 	}
 	return nil, false
 }
@@ -5767,8 +5872,10 @@ func (m *PlayerMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldPassword(ctx)
 	case player.FieldTransactionPassword:
 		return m.OldTransactionPassword(ctx)
-	case player.FieldLamp:
-		return m.OldLamp(ctx)
+	case player.FieldCoinLamb:
+		return m.OldCoinLamb(ctx)
+	case player.FieldTokenLamb:
+		return m.OldTokenLamb(ctx)
 	case player.FieldRank:
 		return m.OldRank(ctx)
 	case player.FieldAmount:
@@ -5781,8 +5888,6 @@ func (m *PlayerMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldTotalIncome(ctx)
 	case player.FieldProfitAndLoss:
 		return m.OldProfitAndLoss(ctx)
-	case player.FieldRecent100WinPercent:
-		return m.OldRecent100WinPercent(ctx)
 	case player.FieldInviteCode:
 		return m.OldInviteCode(ctx)
 	case player.FieldInviterID:
@@ -5791,6 +5896,10 @@ func (m *PlayerMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldInvitedCode(ctx)
 	case player.FieldSystemCommission:
 		return m.OldSystemCommission(ctx)
+	case player.FieldGcicsUserID:
+		return m.OldGcicsUserID(ctx)
+	case player.FieldGcicsToken:
+		return m.OldGcicsToken(ctx)
 	}
 	return nil, fmt.Errorf("unknown Player field %s", name)
 }
@@ -5849,12 +5958,19 @@ func (m *PlayerMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetTransactionPassword(v)
 		return nil
-	case player.FieldLamp:
+	case player.FieldCoinLamb:
 		v, ok := value.(float32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLamp(v)
+		m.SetCoinLamb(v)
+		return nil
+	case player.FieldTokenLamb:
+		v, ok := value.(float32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTokenLamb(v)
 		return nil
 	case player.FieldRank:
 		v, ok := value.(uint32)
@@ -5898,13 +6014,6 @@ func (m *PlayerMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetProfitAndLoss(v)
 		return nil
-	case player.FieldRecent100WinPercent:
-		v, ok := value.(float32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetRecent100WinPercent(v)
-		return nil
 	case player.FieldInviteCode:
 		v, ok := value.(string)
 		if !ok {
@@ -5933,6 +6042,20 @@ func (m *PlayerMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSystemCommission(v)
 		return nil
+	case player.FieldGcicsUserID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGcicsUserID(v)
+		return nil
+	case player.FieldGcicsToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGcicsToken(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)
 }
@@ -5944,8 +6067,11 @@ func (m *PlayerMutation) AddedFields() []string {
 	if m.addstatus != nil {
 		fields = append(fields, player.FieldStatus)
 	}
-	if m.addlamp != nil {
-		fields = append(fields, player.FieldLamp)
+	if m.addcoin_lamb != nil {
+		fields = append(fields, player.FieldCoinLamb)
+	}
+	if m.addtoken_lamb != nil {
+		fields = append(fields, player.FieldTokenLamb)
 	}
 	if m.addrank != nil {
 		fields = append(fields, player.FieldRank)
@@ -5962,11 +6088,11 @@ func (m *PlayerMutation) AddedFields() []string {
 	if m.addprofit_and_loss != nil {
 		fields = append(fields, player.FieldProfitAndLoss)
 	}
-	if m.addrecent_100_win_percent != nil {
-		fields = append(fields, player.FieldRecent100WinPercent)
-	}
 	if m.addsystem_commission != nil {
 		fields = append(fields, player.FieldSystemCommission)
+	}
+	if m.addgcics_user_id != nil {
+		fields = append(fields, player.FieldGcicsUserID)
 	}
 	return fields
 }
@@ -5978,8 +6104,10 @@ func (m *PlayerMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case player.FieldStatus:
 		return m.AddedStatus()
-	case player.FieldLamp:
-		return m.AddedLamp()
+	case player.FieldCoinLamb:
+		return m.AddedCoinLamb()
+	case player.FieldTokenLamb:
+		return m.AddedTokenLamb()
 	case player.FieldRank:
 		return m.AddedRank()
 	case player.FieldAmount:
@@ -5990,10 +6118,10 @@ func (m *PlayerMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedTotalIncome()
 	case player.FieldProfitAndLoss:
 		return m.AddedProfitAndLoss()
-	case player.FieldRecent100WinPercent:
-		return m.AddedRecent100WinPercent()
 	case player.FieldSystemCommission:
 		return m.AddedSystemCommission()
+	case player.FieldGcicsUserID:
+		return m.AddedGcicsUserID()
 	}
 	return nil, false
 }
@@ -6010,12 +6138,19 @@ func (m *PlayerMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddStatus(v)
 		return nil
-	case player.FieldLamp:
+	case player.FieldCoinLamb:
 		v, ok := value.(float32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddLamp(v)
+		m.AddCoinLamb(v)
+		return nil
+	case player.FieldTokenLamb:
+		v, ok := value.(float32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTokenLamb(v)
 		return nil
 	case player.FieldRank:
 		v, ok := value.(int32)
@@ -6052,19 +6187,19 @@ func (m *PlayerMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddProfitAndLoss(v)
 		return nil
-	case player.FieldRecent100WinPercent:
-		v, ok := value.(float32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddRecent100WinPercent(v)
-		return nil
 	case player.FieldSystemCommission:
 		v, ok := value.(float32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddSystemCommission(v)
+		return nil
+	case player.FieldGcicsUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddGcicsUserID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Player numeric field %s", name)
@@ -6129,8 +6264,11 @@ func (m *PlayerMutation) ResetField(name string) error {
 	case player.FieldTransactionPassword:
 		m.ResetTransactionPassword()
 		return nil
-	case player.FieldLamp:
-		m.ResetLamp()
+	case player.FieldCoinLamb:
+		m.ResetCoinLamb()
+		return nil
+	case player.FieldTokenLamb:
+		m.ResetTokenLamb()
 		return nil
 	case player.FieldRank:
 		m.ResetRank()
@@ -6150,9 +6288,6 @@ func (m *PlayerMutation) ResetField(name string) error {
 	case player.FieldProfitAndLoss:
 		m.ResetProfitAndLoss()
 		return nil
-	case player.FieldRecent100WinPercent:
-		m.ResetRecent100WinPercent()
-		return nil
 	case player.FieldInviteCode:
 		m.ResetInviteCode()
 		return nil
@@ -6164,6 +6299,12 @@ func (m *PlayerMutation) ResetField(name string) error {
 		return nil
 	case player.FieldSystemCommission:
 		m.ResetSystemCommission()
+		return nil
+	case player.FieldGcicsUserID:
+		m.ResetGcicsUserID()
+		return nil
+	case player.FieldGcicsToken:
+		m.ResetGcicsToken()
 		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)

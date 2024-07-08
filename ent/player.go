@@ -31,8 +31,10 @@ type Player struct {
 	Password string `json:"password,omitempty"`
 	// transaction password | 交易密码
 	TransactionPassword string `json:"transaction_password,omitempty"`
-	// lamp | 小羊余额
-	Lamp float32 `json:"lamp,omitempty"`
+	// coin lamb | 小羊余额
+	CoinLamb float32 `json:"coin_lamb,omitempty"`
+	// token lamb | 小羊余额
+	TokenLamb float32 `json:"token_lamb,omitempty"`
 	// rank | 代理等级
 	Rank uint32 `json:"rank,omitempty"`
 	// amount | 账户余额
@@ -45,8 +47,6 @@ type Player struct {
 	TotalIncome float64 `json:"total_income,omitempty"`
 	// profit and loss | 总盈亏数
 	ProfitAndLoss float32 `json:"profit_and_loss,omitempty"`
-	// recent 100 win percent | 近100场胜率
-	Recent100WinPercent float32 `json:"recent_100_win_percent,omitempty"`
 	// invite code | 邀请码
 	InviteCode string `json:"invite_code,omitempty"`
 	// the inviter id | 邀请人ID
@@ -55,6 +55,10 @@ type Player struct {
 	InvitedCode string `json:"invited_code,omitempty"`
 	// system commission percent | 平台收益分成比例
 	SystemCommission float32 `json:"system_commission,omitempty"`
+	// the user id of gcics system
+	GcicsUserID uint64 `json:"gcics_user_id,omitempty"`
+	// user game token from gcics system
+	GcicsToken string `json:"gcics_token,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlayerQuery when eager-loading is set.
 	Edges        PlayerEdges `json:"edges"`
@@ -97,11 +101,11 @@ func (*Player) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case player.FieldLamp, player.FieldAmount, player.FieldTotalIncome, player.FieldProfitAndLoss, player.FieldRecent100WinPercent, player.FieldSystemCommission:
+		case player.FieldCoinLamb, player.FieldTokenLamb, player.FieldAmount, player.FieldTotalIncome, player.FieldProfitAndLoss, player.FieldSystemCommission:
 			values[i] = new(sql.NullFloat64)
-		case player.FieldID, player.FieldStatus, player.FieldRank, player.FieldInvitedNum, player.FieldInviterID:
+		case player.FieldID, player.FieldStatus, player.FieldRank, player.FieldInvitedNum, player.FieldInviterID, player.FieldGcicsUserID:
 			values[i] = new(sql.NullInt64)
-		case player.FieldName, player.FieldEmail, player.FieldPassword, player.FieldTransactionPassword, player.FieldDepositAddress, player.FieldInviteCode, player.FieldInvitedCode:
+		case player.FieldName, player.FieldEmail, player.FieldPassword, player.FieldTransactionPassword, player.FieldDepositAddress, player.FieldInviteCode, player.FieldInvitedCode, player.FieldGcicsToken:
 			values[i] = new(sql.NullString)
 		case player.FieldCreatedAt, player.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -168,11 +172,17 @@ func (pl *Player) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pl.TransactionPassword = value.String
 			}
-		case player.FieldLamp:
+		case player.FieldCoinLamb:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field lamp", values[i])
+				return fmt.Errorf("unexpected type %T for field coin_lamb", values[i])
 			} else if value.Valid {
-				pl.Lamp = float32(value.Float64)
+				pl.CoinLamb = float32(value.Float64)
+			}
+		case player.FieldTokenLamb:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field token_lamb", values[i])
+			} else if value.Valid {
+				pl.TokenLamb = float32(value.Float64)
 			}
 		case player.FieldRank:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -210,12 +220,6 @@ func (pl *Player) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pl.ProfitAndLoss = float32(value.Float64)
 			}
-		case player.FieldRecent100WinPercent:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field recent_100_win_percent", values[i])
-			} else if value.Valid {
-				pl.Recent100WinPercent = float32(value.Float64)
-			}
 		case player.FieldInviteCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field invite_code", values[i])
@@ -239,6 +243,18 @@ func (pl *Player) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field system_commission", values[i])
 			} else if value.Valid {
 				pl.SystemCommission = float32(value.Float64)
+			}
+		case player.FieldGcicsUserID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field gcics_user_id", values[i])
+			} else if value.Valid {
+				pl.GcicsUserID = uint64(value.Int64)
+			}
+		case player.FieldGcicsToken:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gcics_token", values[i])
+			} else if value.Valid {
+				pl.GcicsToken = value.String
 			}
 		default:
 			pl.selectValues.Set(columns[i], values[i])
@@ -307,8 +323,11 @@ func (pl *Player) String() string {
 	builder.WriteString("transaction_password=")
 	builder.WriteString(pl.TransactionPassword)
 	builder.WriteString(", ")
-	builder.WriteString("lamp=")
-	builder.WriteString(fmt.Sprintf("%v", pl.Lamp))
+	builder.WriteString("coin_lamb=")
+	builder.WriteString(fmt.Sprintf("%v", pl.CoinLamb))
+	builder.WriteString(", ")
+	builder.WriteString("token_lamb=")
+	builder.WriteString(fmt.Sprintf("%v", pl.TokenLamb))
 	builder.WriteString(", ")
 	builder.WriteString("rank=")
 	builder.WriteString(fmt.Sprintf("%v", pl.Rank))
@@ -328,9 +347,6 @@ func (pl *Player) String() string {
 	builder.WriteString("profit_and_loss=")
 	builder.WriteString(fmt.Sprintf("%v", pl.ProfitAndLoss))
 	builder.WriteString(", ")
-	builder.WriteString("recent_100_win_percent=")
-	builder.WriteString(fmt.Sprintf("%v", pl.Recent100WinPercent))
-	builder.WriteString(", ")
 	builder.WriteString("invite_code=")
 	builder.WriteString(pl.InviteCode)
 	builder.WriteString(", ")
@@ -342,6 +358,12 @@ func (pl *Player) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("system_commission=")
 	builder.WriteString(fmt.Sprintf("%v", pl.SystemCommission))
+	builder.WriteString(", ")
+	builder.WriteString("gcics_user_id=")
+	builder.WriteString(fmt.Sprintf("%v", pl.GcicsUserID))
+	builder.WriteString(", ")
+	builder.WriteString("gcics_token=")
+	builder.WriteString(pl.GcicsToken)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -90,9 +90,14 @@ func TransactionPassword(v string) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldTransactionPassword, v))
 }
 
-// Lamp applies equality check predicate on the "lamp" field. It's identical to LampEQ.
-func Lamp(v float32) predicate.Player {
-	return predicate.Player(sql.FieldEQ(FieldLamp, v))
+// CoinLamb applies equality check predicate on the "coin_lamb" field. It's identical to CoinLambEQ.
+func CoinLamb(v float32) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldCoinLamb, v))
+}
+
+// TokenLamb applies equality check predicate on the "token_lamb" field. It's identical to TokenLambEQ.
+func TokenLamb(v float32) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldTokenLamb, v))
 }
 
 // Rank applies equality check predicate on the "rank" field. It's identical to RankEQ.
@@ -125,11 +130,6 @@ func ProfitAndLoss(v float32) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldProfitAndLoss, v))
 }
 
-// Recent100WinPercent applies equality check predicate on the "recent_100_win_percent" field. It's identical to Recent100WinPercentEQ.
-func Recent100WinPercent(v float32) predicate.Player {
-	return predicate.Player(sql.FieldEQ(FieldRecent100WinPercent, v))
-}
-
 // InviteCode applies equality check predicate on the "invite_code" field. It's identical to InviteCodeEQ.
 func InviteCode(v string) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldInviteCode, v))
@@ -148,6 +148,16 @@ func InvitedCode(v string) predicate.Player {
 // SystemCommission applies equality check predicate on the "system_commission" field. It's identical to SystemCommissionEQ.
 func SystemCommission(v float32) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldSystemCommission, v))
+}
+
+// GcicsUserID applies equality check predicate on the "gcics_user_id" field. It's identical to GcicsUserIDEQ.
+func GcicsUserID(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsUserID, v))
+}
+
+// GcicsToken applies equality check predicate on the "gcics_token" field. It's identical to GcicsTokenEQ.
+func GcicsToken(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsToken, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -540,44 +550,84 @@ func TransactionPasswordContainsFold(v string) predicate.Player {
 	return predicate.Player(sql.FieldContainsFold(FieldTransactionPassword, v))
 }
 
-// LampEQ applies the EQ predicate on the "lamp" field.
-func LampEQ(v float32) predicate.Player {
-	return predicate.Player(sql.FieldEQ(FieldLamp, v))
+// CoinLambEQ applies the EQ predicate on the "coin_lamb" field.
+func CoinLambEQ(v float32) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldCoinLamb, v))
 }
 
-// LampNEQ applies the NEQ predicate on the "lamp" field.
-func LampNEQ(v float32) predicate.Player {
-	return predicate.Player(sql.FieldNEQ(FieldLamp, v))
+// CoinLambNEQ applies the NEQ predicate on the "coin_lamb" field.
+func CoinLambNEQ(v float32) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldCoinLamb, v))
 }
 
-// LampIn applies the In predicate on the "lamp" field.
-func LampIn(vs ...float32) predicate.Player {
-	return predicate.Player(sql.FieldIn(FieldLamp, vs...))
+// CoinLambIn applies the In predicate on the "coin_lamb" field.
+func CoinLambIn(vs ...float32) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldCoinLamb, vs...))
 }
 
-// LampNotIn applies the NotIn predicate on the "lamp" field.
-func LampNotIn(vs ...float32) predicate.Player {
-	return predicate.Player(sql.FieldNotIn(FieldLamp, vs...))
+// CoinLambNotIn applies the NotIn predicate on the "coin_lamb" field.
+func CoinLambNotIn(vs ...float32) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldCoinLamb, vs...))
 }
 
-// LampGT applies the GT predicate on the "lamp" field.
-func LampGT(v float32) predicate.Player {
-	return predicate.Player(sql.FieldGT(FieldLamp, v))
+// CoinLambGT applies the GT predicate on the "coin_lamb" field.
+func CoinLambGT(v float32) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldCoinLamb, v))
 }
 
-// LampGTE applies the GTE predicate on the "lamp" field.
-func LampGTE(v float32) predicate.Player {
-	return predicate.Player(sql.FieldGTE(FieldLamp, v))
+// CoinLambGTE applies the GTE predicate on the "coin_lamb" field.
+func CoinLambGTE(v float32) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldCoinLamb, v))
 }
 
-// LampLT applies the LT predicate on the "lamp" field.
-func LampLT(v float32) predicate.Player {
-	return predicate.Player(sql.FieldLT(FieldLamp, v))
+// CoinLambLT applies the LT predicate on the "coin_lamb" field.
+func CoinLambLT(v float32) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldCoinLamb, v))
 }
 
-// LampLTE applies the LTE predicate on the "lamp" field.
-func LampLTE(v float32) predicate.Player {
-	return predicate.Player(sql.FieldLTE(FieldLamp, v))
+// CoinLambLTE applies the LTE predicate on the "coin_lamb" field.
+func CoinLambLTE(v float32) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldCoinLamb, v))
+}
+
+// TokenLambEQ applies the EQ predicate on the "token_lamb" field.
+func TokenLambEQ(v float32) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldTokenLamb, v))
+}
+
+// TokenLambNEQ applies the NEQ predicate on the "token_lamb" field.
+func TokenLambNEQ(v float32) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldTokenLamb, v))
+}
+
+// TokenLambIn applies the In predicate on the "token_lamb" field.
+func TokenLambIn(vs ...float32) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldTokenLamb, vs...))
+}
+
+// TokenLambNotIn applies the NotIn predicate on the "token_lamb" field.
+func TokenLambNotIn(vs ...float32) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldTokenLamb, vs...))
+}
+
+// TokenLambGT applies the GT predicate on the "token_lamb" field.
+func TokenLambGT(v float32) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldTokenLamb, v))
+}
+
+// TokenLambGTE applies the GTE predicate on the "token_lamb" field.
+func TokenLambGTE(v float32) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldTokenLamb, v))
+}
+
+// TokenLambLT applies the LT predicate on the "token_lamb" field.
+func TokenLambLT(v float32) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldTokenLamb, v))
+}
+
+// TokenLambLTE applies the LTE predicate on the "token_lamb" field.
+func TokenLambLTE(v float32) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldTokenLamb, v))
 }
 
 // RankEQ applies the EQ predicate on the "rank" field.
@@ -845,46 +895,6 @@ func ProfitAndLossLTE(v float32) predicate.Player {
 	return predicate.Player(sql.FieldLTE(FieldProfitAndLoss, v))
 }
 
-// Recent100WinPercentEQ applies the EQ predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentEQ(v float32) predicate.Player {
-	return predicate.Player(sql.FieldEQ(FieldRecent100WinPercent, v))
-}
-
-// Recent100WinPercentNEQ applies the NEQ predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentNEQ(v float32) predicate.Player {
-	return predicate.Player(sql.FieldNEQ(FieldRecent100WinPercent, v))
-}
-
-// Recent100WinPercentIn applies the In predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentIn(vs ...float32) predicate.Player {
-	return predicate.Player(sql.FieldIn(FieldRecent100WinPercent, vs...))
-}
-
-// Recent100WinPercentNotIn applies the NotIn predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentNotIn(vs ...float32) predicate.Player {
-	return predicate.Player(sql.FieldNotIn(FieldRecent100WinPercent, vs...))
-}
-
-// Recent100WinPercentGT applies the GT predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentGT(v float32) predicate.Player {
-	return predicate.Player(sql.FieldGT(FieldRecent100WinPercent, v))
-}
-
-// Recent100WinPercentGTE applies the GTE predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentGTE(v float32) predicate.Player {
-	return predicate.Player(sql.FieldGTE(FieldRecent100WinPercent, v))
-}
-
-// Recent100WinPercentLT applies the LT predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentLT(v float32) predicate.Player {
-	return predicate.Player(sql.FieldLT(FieldRecent100WinPercent, v))
-}
-
-// Recent100WinPercentLTE applies the LTE predicate on the "recent_100_win_percent" field.
-func Recent100WinPercentLTE(v float32) predicate.Player {
-	return predicate.Player(sql.FieldLTE(FieldRecent100WinPercent, v))
-}
-
 // InviteCodeEQ applies the EQ predicate on the "invite_code" field.
 func InviteCodeEQ(v string) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldInviteCode, v))
@@ -1083,6 +1093,111 @@ func SystemCommissionLT(v float32) predicate.Player {
 // SystemCommissionLTE applies the LTE predicate on the "system_commission" field.
 func SystemCommissionLTE(v float32) predicate.Player {
 	return predicate.Player(sql.FieldLTE(FieldSystemCommission, v))
+}
+
+// GcicsUserIDEQ applies the EQ predicate on the "gcics_user_id" field.
+func GcicsUserIDEQ(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsUserID, v))
+}
+
+// GcicsUserIDNEQ applies the NEQ predicate on the "gcics_user_id" field.
+func GcicsUserIDNEQ(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldGcicsUserID, v))
+}
+
+// GcicsUserIDIn applies the In predicate on the "gcics_user_id" field.
+func GcicsUserIDIn(vs ...uint64) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldGcicsUserID, vs...))
+}
+
+// GcicsUserIDNotIn applies the NotIn predicate on the "gcics_user_id" field.
+func GcicsUserIDNotIn(vs ...uint64) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldGcicsUserID, vs...))
+}
+
+// GcicsUserIDGT applies the GT predicate on the "gcics_user_id" field.
+func GcicsUserIDGT(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldGcicsUserID, v))
+}
+
+// GcicsUserIDGTE applies the GTE predicate on the "gcics_user_id" field.
+func GcicsUserIDGTE(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldGcicsUserID, v))
+}
+
+// GcicsUserIDLT applies the LT predicate on the "gcics_user_id" field.
+func GcicsUserIDLT(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldGcicsUserID, v))
+}
+
+// GcicsUserIDLTE applies the LTE predicate on the "gcics_user_id" field.
+func GcicsUserIDLTE(v uint64) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldGcicsUserID, v))
+}
+
+// GcicsTokenEQ applies the EQ predicate on the "gcics_token" field.
+func GcicsTokenEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsToken, v))
+}
+
+// GcicsTokenNEQ applies the NEQ predicate on the "gcics_token" field.
+func GcicsTokenNEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldGcicsToken, v))
+}
+
+// GcicsTokenIn applies the In predicate on the "gcics_token" field.
+func GcicsTokenIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldGcicsToken, vs...))
+}
+
+// GcicsTokenNotIn applies the NotIn predicate on the "gcics_token" field.
+func GcicsTokenNotIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldGcicsToken, vs...))
+}
+
+// GcicsTokenGT applies the GT predicate on the "gcics_token" field.
+func GcicsTokenGT(v string) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldGcicsToken, v))
+}
+
+// GcicsTokenGTE applies the GTE predicate on the "gcics_token" field.
+func GcicsTokenGTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldGcicsToken, v))
+}
+
+// GcicsTokenLT applies the LT predicate on the "gcics_token" field.
+func GcicsTokenLT(v string) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldGcicsToken, v))
+}
+
+// GcicsTokenLTE applies the LTE predicate on the "gcics_token" field.
+func GcicsTokenLTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldGcicsToken, v))
+}
+
+// GcicsTokenContains applies the Contains predicate on the "gcics_token" field.
+func GcicsTokenContains(v string) predicate.Player {
+	return predicate.Player(sql.FieldContains(FieldGcicsToken, v))
+}
+
+// GcicsTokenHasPrefix applies the HasPrefix predicate on the "gcics_token" field.
+func GcicsTokenHasPrefix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasPrefix(FieldGcicsToken, v))
+}
+
+// GcicsTokenHasSuffix applies the HasSuffix predicate on the "gcics_token" field.
+func GcicsTokenHasSuffix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasSuffix(FieldGcicsToken, v))
+}
+
+// GcicsTokenEqualFold applies the EqualFold predicate on the "gcics_token" field.
+func GcicsTokenEqualFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldEqualFold(FieldGcicsToken, v))
+}
+
+// GcicsTokenContainsFold applies the ContainsFold predicate on the "gcics_token" field.
+func GcicsTokenContainsFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldContainsFold(FieldGcicsToken, v))
 }
 
 // HasInviter applies the HasEdge predicate on the "inviter" edge.
