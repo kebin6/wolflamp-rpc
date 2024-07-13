@@ -27,12 +27,18 @@ type Exchange struct {
 	PlayerID uint64 `json:"player_id,omitempty"`
 	// transaction id | 交易ID
 	TransactionID string `json:"transaction_id,omitempty"`
+	// mode | 交易币种：coin,token
+	Mode string `json:"mode,omitempty"`
 	// type | 兑换类型：1=币兑羊；2=羊兑币
 	Type uint32 `json:"type,omitempty"`
 	// coin amount| 币数量
 	CoinNum uint32 `json:"coin_num,omitempty"`
 	// lamp amount | 羊数量
-	LampNum      uint32 `json:"lamp_num,omitempty"`
+	LampNum uint32 `json:"lamp_num,omitempty"`
+	// GCICS平台订单号
+	GcicsOrderID string `json:"gcics_order_id,omitempty"`
+	// 备注
+	Remark       string `json:"remark,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -43,7 +49,7 @@ func (*Exchange) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case exchange.FieldID, exchange.FieldStatus, exchange.FieldPlayerID, exchange.FieldType, exchange.FieldCoinNum, exchange.FieldLampNum:
 			values[i] = new(sql.NullInt64)
-		case exchange.FieldTransactionID:
+		case exchange.FieldTransactionID, exchange.FieldMode, exchange.FieldGcicsOrderID, exchange.FieldRemark:
 			values[i] = new(sql.NullString)
 		case exchange.FieldCreatedAt, exchange.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -98,6 +104,12 @@ func (e *Exchange) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				e.TransactionID = value.String
 			}
+		case exchange.FieldMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mode", values[i])
+			} else if value.Valid {
+				e.Mode = value.String
+			}
 		case exchange.FieldType:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
@@ -115,6 +127,18 @@ func (e *Exchange) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field lamp_num", values[i])
 			} else if value.Valid {
 				e.LampNum = uint32(value.Int64)
+			}
+		case exchange.FieldGcicsOrderID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gcics_order_id", values[i])
+			} else if value.Valid {
+				e.GcicsOrderID = value.String
+			}
+		case exchange.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
+			} else if value.Valid {
+				e.Remark = value.String
 			}
 		default:
 			e.selectValues.Set(columns[i], values[i])
@@ -167,6 +191,9 @@ func (e *Exchange) String() string {
 	builder.WriteString("transaction_id=")
 	builder.WriteString(e.TransactionID)
 	builder.WriteString(", ")
+	builder.WriteString("mode=")
+	builder.WriteString(e.Mode)
+	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(fmt.Sprintf("%v", e.Type))
 	builder.WriteString(", ")
@@ -175,6 +202,12 @@ func (e *Exchange) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("lamp_num=")
 	builder.WriteString(fmt.Sprintf("%v", e.LampNum))
+	builder.WriteString(", ")
+	builder.WriteString("gcics_order_id=")
+	builder.WriteString(e.GcicsOrderID)
+	builder.WriteString(", ")
+	builder.WriteString("remark=")
+	builder.WriteString(e.Remark)
 	builder.WriteByte(')')
 	return builder.String()
 }

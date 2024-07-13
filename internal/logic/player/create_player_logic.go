@@ -76,6 +76,7 @@ func (l *CreatePlayerLogic) CreatePlayer(in *wolflamp.CreatePlayerReq) (*wolflam
 		SetSystemCommission(in.SystemCommission).
 		SetGcicsUserID(in.GcicsUserId).
 		SetGcicsToken(in.GcicsToken).
+		SetGcicsReturnURL(in.ReturnUrl).
 		Save(l.ctx)
 
 	if err != nil {

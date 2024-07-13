@@ -79,6 +79,11 @@ func TransactionID(v string) predicate.Exchange {
 	return predicate.Exchange(sql.FieldEQ(FieldTransactionID, v))
 }
 
+// Mode applies equality check predicate on the "mode" field. It's identical to ModeEQ.
+func Mode(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldMode, v))
+}
+
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
 func Type(v uint32) predicate.Exchange {
 	return predicate.Exchange(sql.FieldEQ(FieldType, v))
@@ -92,6 +97,16 @@ func CoinNum(v uint32) predicate.Exchange {
 // LampNum applies equality check predicate on the "lamp_num" field. It's identical to LampNumEQ.
 func LampNum(v uint32) predicate.Exchange {
 	return predicate.Exchange(sql.FieldEQ(FieldLampNum, v))
+}
+
+// GcicsOrderID applies equality check predicate on the "gcics_order_id" field. It's identical to GcicsOrderIDEQ.
+func GcicsOrderID(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldGcicsOrderID, v))
+}
+
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldRemark, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -329,6 +344,71 @@ func TransactionIDContainsFold(v string) predicate.Exchange {
 	return predicate.Exchange(sql.FieldContainsFold(FieldTransactionID, v))
 }
 
+// ModeEQ applies the EQ predicate on the "mode" field.
+func ModeEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldMode, v))
+}
+
+// ModeNEQ applies the NEQ predicate on the "mode" field.
+func ModeNEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNEQ(FieldMode, v))
+}
+
+// ModeIn applies the In predicate on the "mode" field.
+func ModeIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldIn(FieldMode, vs...))
+}
+
+// ModeNotIn applies the NotIn predicate on the "mode" field.
+func ModeNotIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNotIn(FieldMode, vs...))
+}
+
+// ModeGT applies the GT predicate on the "mode" field.
+func ModeGT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGT(FieldMode, v))
+}
+
+// ModeGTE applies the GTE predicate on the "mode" field.
+func ModeGTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGTE(FieldMode, v))
+}
+
+// ModeLT applies the LT predicate on the "mode" field.
+func ModeLT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLT(FieldMode, v))
+}
+
+// ModeLTE applies the LTE predicate on the "mode" field.
+func ModeLTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLTE(FieldMode, v))
+}
+
+// ModeContains applies the Contains predicate on the "mode" field.
+func ModeContains(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContains(FieldMode, v))
+}
+
+// ModeHasPrefix applies the HasPrefix predicate on the "mode" field.
+func ModeHasPrefix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasPrefix(FieldMode, v))
+}
+
+// ModeHasSuffix applies the HasSuffix predicate on the "mode" field.
+func ModeHasSuffix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasSuffix(FieldMode, v))
+}
+
+// ModeEqualFold applies the EqualFold predicate on the "mode" field.
+func ModeEqualFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEqualFold(FieldMode, v))
+}
+
+// ModeContainsFold applies the ContainsFold predicate on the "mode" field.
+func ModeContainsFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContainsFold(FieldMode, v))
+}
+
 // TypeEQ applies the EQ predicate on the "type" field.
 func TypeEQ(v uint32) predicate.Exchange {
 	return predicate.Exchange(sql.FieldEQ(FieldType, v))
@@ -447,6 +527,136 @@ func LampNumLT(v uint32) predicate.Exchange {
 // LampNumLTE applies the LTE predicate on the "lamp_num" field.
 func LampNumLTE(v uint32) predicate.Exchange {
 	return predicate.Exchange(sql.FieldLTE(FieldLampNum, v))
+}
+
+// GcicsOrderIDEQ applies the EQ predicate on the "gcics_order_id" field.
+func GcicsOrderIDEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDNEQ applies the NEQ predicate on the "gcics_order_id" field.
+func GcicsOrderIDNEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNEQ(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDIn applies the In predicate on the "gcics_order_id" field.
+func GcicsOrderIDIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldIn(FieldGcicsOrderID, vs...))
+}
+
+// GcicsOrderIDNotIn applies the NotIn predicate on the "gcics_order_id" field.
+func GcicsOrderIDNotIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNotIn(FieldGcicsOrderID, vs...))
+}
+
+// GcicsOrderIDGT applies the GT predicate on the "gcics_order_id" field.
+func GcicsOrderIDGT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGT(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDGTE applies the GTE predicate on the "gcics_order_id" field.
+func GcicsOrderIDGTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGTE(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDLT applies the LT predicate on the "gcics_order_id" field.
+func GcicsOrderIDLT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLT(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDLTE applies the LTE predicate on the "gcics_order_id" field.
+func GcicsOrderIDLTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLTE(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDContains applies the Contains predicate on the "gcics_order_id" field.
+func GcicsOrderIDContains(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContains(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDHasPrefix applies the HasPrefix predicate on the "gcics_order_id" field.
+func GcicsOrderIDHasPrefix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasPrefix(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDHasSuffix applies the HasSuffix predicate on the "gcics_order_id" field.
+func GcicsOrderIDHasSuffix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasSuffix(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDEqualFold applies the EqualFold predicate on the "gcics_order_id" field.
+func GcicsOrderIDEqualFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEqualFold(FieldGcicsOrderID, v))
+}
+
+// GcicsOrderIDContainsFold applies the ContainsFold predicate on the "gcics_order_id" field.
+func GcicsOrderIDContainsFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContainsFold(FieldGcicsOrderID, v))
+}
+
+// RemarkEQ applies the EQ predicate on the "remark" field.
+func RemarkEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEQ(FieldRemark, v))
+}
+
+// RemarkNEQ applies the NEQ predicate on the "remark" field.
+func RemarkNEQ(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNEQ(FieldRemark, v))
+}
+
+// RemarkIn applies the In predicate on the "remark" field.
+func RemarkIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldIn(FieldRemark, vs...))
+}
+
+// RemarkNotIn applies the NotIn predicate on the "remark" field.
+func RemarkNotIn(vs ...string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldNotIn(FieldRemark, vs...))
+}
+
+// RemarkGT applies the GT predicate on the "remark" field.
+func RemarkGT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGT(FieldRemark, v))
+}
+
+// RemarkGTE applies the GTE predicate on the "remark" field.
+func RemarkGTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldGTE(FieldRemark, v))
+}
+
+// RemarkLT applies the LT predicate on the "remark" field.
+func RemarkLT(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLT(FieldRemark, v))
+}
+
+// RemarkLTE applies the LTE predicate on the "remark" field.
+func RemarkLTE(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldLTE(FieldRemark, v))
+}
+
+// RemarkContains applies the Contains predicate on the "remark" field.
+func RemarkContains(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContains(FieldRemark, v))
+}
+
+// RemarkHasPrefix applies the HasPrefix predicate on the "remark" field.
+func RemarkHasPrefix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasPrefix(FieldRemark, v))
+}
+
+// RemarkHasSuffix applies the HasSuffix predicate on the "remark" field.
+func RemarkHasSuffix(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldHasSuffix(FieldRemark, v))
+}
+
+// RemarkEqualFold applies the EqualFold predicate on the "remark" field.
+func RemarkEqualFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldEqualFold(FieldRemark, v))
+}
+
+// RemarkContainsFold applies the ContainsFold predicate on the "remark" field.
+func RemarkContainsFold(v string) predicate.Exchange {
+	return predicate.Exchange(sql.FieldContainsFold(FieldRemark, v))
 }
 
 // And groups predicates with the AND operator between them.

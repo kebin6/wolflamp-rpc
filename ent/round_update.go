@@ -111,6 +111,76 @@ func (ru *RoundUpdate) AddSelectedFold(u int32) *RoundUpdate {
 	return ru
 }
 
+// SetMode sets the "mode" field.
+func (ru *RoundUpdate) SetMode(s string) *RoundUpdate {
+	ru.mutation.SetMode(s)
+	return ru
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableMode(s *string) *RoundUpdate {
+	if s != nil {
+		ru.SetMode(*s)
+	}
+	return ru
+}
+
+// SetComputeAmount sets the "compute_amount" field.
+func (ru *RoundUpdate) SetComputeAmount(f float64) *RoundUpdate {
+	ru.mutation.ResetComputeAmount()
+	ru.mutation.SetComputeAmount(f)
+	return ru
+}
+
+// SetNillableComputeAmount sets the "compute_amount" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableComputeAmount(f *float64) *RoundUpdate {
+	if f != nil {
+		ru.SetComputeAmount(*f)
+	}
+	return ru
+}
+
+// AddComputeAmount adds f to the "compute_amount" field.
+func (ru *RoundUpdate) AddComputeAmount(f float64) *RoundUpdate {
+	ru.mutation.AddComputeAmount(f)
+	return ru
+}
+
+// SetSyncStatus sets the "sync_status" field.
+func (ru *RoundUpdate) SetSyncStatus(u uint32) *RoundUpdate {
+	ru.mutation.ResetSyncStatus()
+	ru.mutation.SetSyncStatus(u)
+	return ru
+}
+
+// SetNillableSyncStatus sets the "sync_status" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableSyncStatus(u *uint32) *RoundUpdate {
+	if u != nil {
+		ru.SetSyncStatus(*u)
+	}
+	return ru
+}
+
+// AddSyncStatus adds u to the "sync_status" field.
+func (ru *RoundUpdate) AddSyncStatus(u int32) *RoundUpdate {
+	ru.mutation.AddSyncStatus(u)
+	return ru
+}
+
+// SetSyncMsg sets the "sync_msg" field.
+func (ru *RoundUpdate) SetSyncMsg(s string) *RoundUpdate {
+	ru.mutation.SetSyncMsg(s)
+	return ru
+}
+
+// SetNillableSyncMsg sets the "sync_msg" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableSyncMsg(s *string) *RoundUpdate {
+	if s != nil {
+		ru.SetSyncMsg(*s)
+	}
+	return ru
+}
+
 // AddFoldIDs adds the "fold" edge to the RoundLambFold entity by IDs.
 func (ru *RoundUpdate) AddFoldIDs(ids ...uint64) *RoundUpdate {
 	ru.mutation.AddFoldIDs(ids...)
@@ -259,6 +329,24 @@ func (ru *RoundUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.AddedSelectedFold(); ok {
 		_spec.AddField(round.FieldSelectedFold, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.Mode(); ok {
+		_spec.SetField(round.FieldMode, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.ComputeAmount(); ok {
+		_spec.SetField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ru.mutation.AddedComputeAmount(); ok {
+		_spec.AddField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ru.mutation.SyncStatus(); ok {
+		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.AddedSyncStatus(); ok {
+		_spec.AddField(round.FieldSyncStatus, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.SyncMsg(); ok {
+		_spec.SetField(round.FieldSyncMsg, field.TypeString, value)
 	}
 	if ru.mutation.FoldCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -451,6 +539,76 @@ func (ruo *RoundUpdateOne) AddSelectedFold(u int32) *RoundUpdateOne {
 	return ruo
 }
 
+// SetMode sets the "mode" field.
+func (ruo *RoundUpdateOne) SetMode(s string) *RoundUpdateOne {
+	ruo.mutation.SetMode(s)
+	return ruo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableMode(s *string) *RoundUpdateOne {
+	if s != nil {
+		ruo.SetMode(*s)
+	}
+	return ruo
+}
+
+// SetComputeAmount sets the "compute_amount" field.
+func (ruo *RoundUpdateOne) SetComputeAmount(f float64) *RoundUpdateOne {
+	ruo.mutation.ResetComputeAmount()
+	ruo.mutation.SetComputeAmount(f)
+	return ruo
+}
+
+// SetNillableComputeAmount sets the "compute_amount" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableComputeAmount(f *float64) *RoundUpdateOne {
+	if f != nil {
+		ruo.SetComputeAmount(*f)
+	}
+	return ruo
+}
+
+// AddComputeAmount adds f to the "compute_amount" field.
+func (ruo *RoundUpdateOne) AddComputeAmount(f float64) *RoundUpdateOne {
+	ruo.mutation.AddComputeAmount(f)
+	return ruo
+}
+
+// SetSyncStatus sets the "sync_status" field.
+func (ruo *RoundUpdateOne) SetSyncStatus(u uint32) *RoundUpdateOne {
+	ruo.mutation.ResetSyncStatus()
+	ruo.mutation.SetSyncStatus(u)
+	return ruo
+}
+
+// SetNillableSyncStatus sets the "sync_status" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableSyncStatus(u *uint32) *RoundUpdateOne {
+	if u != nil {
+		ruo.SetSyncStatus(*u)
+	}
+	return ruo
+}
+
+// AddSyncStatus adds u to the "sync_status" field.
+func (ruo *RoundUpdateOne) AddSyncStatus(u int32) *RoundUpdateOne {
+	ruo.mutation.AddSyncStatus(u)
+	return ruo
+}
+
+// SetSyncMsg sets the "sync_msg" field.
+func (ruo *RoundUpdateOne) SetSyncMsg(s string) *RoundUpdateOne {
+	ruo.mutation.SetSyncMsg(s)
+	return ruo
+}
+
+// SetNillableSyncMsg sets the "sync_msg" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableSyncMsg(s *string) *RoundUpdateOne {
+	if s != nil {
+		ruo.SetSyncMsg(*s)
+	}
+	return ruo
+}
+
 // AddFoldIDs adds the "fold" edge to the RoundLambFold entity by IDs.
 func (ruo *RoundUpdateOne) AddFoldIDs(ids ...uint64) *RoundUpdateOne {
 	ruo.mutation.AddFoldIDs(ids...)
@@ -629,6 +787,24 @@ func (ruo *RoundUpdateOne) sqlSave(ctx context.Context) (_node *Round, err error
 	}
 	if value, ok := ruo.mutation.AddedSelectedFold(); ok {
 		_spec.AddField(round.FieldSelectedFold, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.Mode(); ok {
+		_spec.SetField(round.FieldMode, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.ComputeAmount(); ok {
+		_spec.SetField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ruo.mutation.AddedComputeAmount(); ok {
+		_spec.AddField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ruo.mutation.SyncStatus(); ok {
+		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.AddedSyncStatus(); ok {
+		_spec.AddField(round.FieldSyncStatus, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.SyncMsg(); ok {
+		_spec.SetField(round.FieldSyncMsg, field.TypeString, value)
 	}
 	if ruo.mutation.FoldCleared() {
 		edge := &sqlgraph.EdgeSpec{

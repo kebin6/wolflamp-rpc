@@ -86,9 +86,14 @@ func (s *WolflampServer) ListExchange(ctx context.Context, in *wolflamp.ListExch
 	return l.ListExchange(in)
 }
 
-func (s *WolflampServer) Exchange(ctx context.Context, in *wolflamp.ExchangeReq) (*wolflamp.BaseIDResp, error) {
+func (s *WolflampServer) Exchange(ctx context.Context, in *wolflamp.ExchangeReq) (*wolflamp.ExchangeResp, error) {
 	l := exchange.NewExchangeLogic(ctx, s.svcCtx)
 	return l.Exchange(in)
+}
+
+func (s *WolflampServer) Notify(ctx context.Context, in *wolflamp.NotifyExchangeReq) (*wolflamp.BaseIDResp, error) {
+	l := exchange.NewNotifyLogic(ctx, s.svcCtx)
+	return l.Notify(in)
 }
 
 func (s *WolflampServer) CreateRound(ctx context.Context, in *wolflamp.CreateRoundReq) (*wolflamp.BaseIDResp, error) {
@@ -101,7 +106,7 @@ func (s *WolflampServer) FindRound(ctx context.Context, in *wolflamp.FindRoundRe
 	return l.FindRound(in)
 }
 
-func (s *WolflampServer) PreviousRound(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PreviousRoundResp, error) {
+func (s *WolflampServer) PreviousRound(ctx context.Context, in *wolflamp.PreviousRoundReq) (*wolflamp.PreviousRoundResp, error) {
 	l := game.NewPreviousRoundLogic(ctx, s.svcCtx)
 	return l.PreviousRound(in)
 }
@@ -141,7 +146,7 @@ func (s *WolflampServer) GetLambFoldAggregate(ctx context.Context, in *wolflamp.
 	return l.GetLambFoldAggregate(in)
 }
 
-func (s *WolflampServer) GetLambFoldAggregateV2(ctx context.Context, in *wolflamp.Empty) (*wolflamp.GetLambFoldAggregateResp, error) {
+func (s *WolflampServer) GetLambFoldAggregateV2(ctx context.Context, in *wolflamp.GetLambFoldAggregateV2Req) (*wolflamp.GetLambFoldAggregateResp, error) {
 	l := game.NewGetLambFoldAggregateV2Logic(ctx, s.svcCtx)
 	return l.GetLambFoldAggregateV2(in)
 }
@@ -226,6 +231,16 @@ func (s *WolflampServer) GetInvitorListByIds(ctx context.Context, in *wolflamp.G
 	return l.GetInvitorListByIds(in)
 }
 
+func (s *WolflampServer) ValidateGcicsSign(ctx context.Context, in *wolflamp.ValidateGcicsSignReq) (*wolflamp.ValidateGcicsSignResp, error) {
+	l := player.NewValidateGcicsSignLogic(ctx, s.svcCtx)
+	return l.ValidateGcicsSign(in)
+}
+
+func (s *WolflampServer) GetGcicsBalance(ctx context.Context, in *wolflamp.GetGcicsBalanceReq) (*wolflamp.GetGcicsBalanceResp, error) {
+	l := player.NewGetGcicsBalanceLogic(ctx, s.svcCtx)
+	return l.GetGcicsBalance(in)
+}
+
 func (s *WolflampServer) CreateReward(ctx context.Context, in *wolflamp.CreateRewardReq) (*wolflamp.BaseIDResp, error) {
 	l := reward.NewCreateRewardLogic(ctx, s.svcCtx)
 	return l.CreateReward(in)
@@ -304,6 +319,41 @@ func (s *WolflampServer) GetRobotNum(ctx context.Context, in *wolflamp.Empty) (*
 func (s *WolflampServer) GetGameCommission(ctx context.Context, in *wolflamp.Empty) (*wolflamp.GameCommissionResp, error) {
 	l := setting.NewGetGameCommissionLogic(ctx, s.svcCtx)
 	return l.GetGameCommission(in)
+}
+
+func (s *WolflampServer) GetPoolCommission(ctx context.Context, in *wolflamp.Empty) (*wolflamp.CommissionResp, error) {
+	l := setting.NewGetPoolCommissionLogic(ctx, s.svcCtx)
+	return l.GetPoolCommission(in)
+}
+
+func (s *WolflampServer) GetRobPoolCommission(ctx context.Context, in *wolflamp.Empty) (*wolflamp.CommissionResp, error) {
+	l := setting.NewGetRobPoolCommissionLogic(ctx, s.svcCtx)
+	return l.GetRobPoolCommission(in)
+}
+
+func (s *WolflampServer) GetRewardPoolCommission(ctx context.Context, in *wolflamp.Empty) (*wolflamp.CommissionResp, error) {
+	l := setting.NewGetRewardPoolCommissionLogic(ctx, s.svcCtx)
+	return l.GetRewardPoolCommission(in)
+}
+
+func (s *WolflampServer) GetGoldenLambAllowTime(ctx context.Context, in *wolflamp.Empty) (*wolflamp.HourTimeRangeResp, error) {
+	l := setting.NewGetGoldenLambAllowTimeLogic(ctx, s.svcCtx)
+	return l.GetGoldenLambAllowTime(in)
+}
+
+func (s *WolflampServer) GetGoldenLambNumRange(ctx context.Context, in *wolflamp.Empty) (*wolflamp.NumRangeResp, error) {
+	l := setting.NewGetGoldenLambNumRangeLogic(ctx, s.svcCtx)
+	return l.GetGoldenLambNumRange(in)
+}
+
+func (s *WolflampServer) GetPoolMinNumThenSilver(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PoolMinNumThenSilverResp, error) {
+	l := setting.NewGetPoolMinNumThenSilverLogic(ctx, s.svcCtx)
+	return l.GetPoolMinNumThenSilver(in)
+}
+
+func (s *WolflampServer) GetSliverOccurPercent(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PercentResp, error) {
+	l := setting.NewGetSliverOccurPercentLogic(ctx, s.svcCtx)
+	return l.GetSliverOccurPercent(in)
 }
 
 func (s *WolflampServer) CreateStatement(ctx context.Context, in *wolflamp.CreateStatementReq) (*wolflamp.BaseIDResp, error) {

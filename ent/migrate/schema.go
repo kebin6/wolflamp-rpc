@@ -45,9 +45,12 @@ var (
 		{Name: "status", Type: field.TypeUint8, Nullable: true, Comment: "Status 1: normal 2: ban | 状态 1 正常 2 禁用", Default: 1},
 		{Name: "player_id", Type: field.TypeUint64, Comment: "player 's id | 兑换者ID", Default: 0},
 		{Name: "transaction_id", Type: field.TypeString, Comment: "transaction id | 交易ID", Default: ""},
+		{Name: "mode", Type: field.TypeString, Comment: "mode | 交易币种：coin,token", Default: ""},
 		{Name: "type", Type: field.TypeUint32, Comment: "type | 兑换类型：1=币兑羊；2=羊兑币", Default: 0},
 		{Name: "coin_num", Type: field.TypeUint32, Comment: "coin amount| 币数量", Default: 0},
 		{Name: "lamp_num", Type: field.TypeUint32, Comment: "lamp amount | 羊数量", Default: 0},
+		{Name: "gcics_order_id", Type: field.TypeString, Comment: "GCICS平台订单号 ", Default: ""},
+		{Name: "remark", Type: field.TypeString, Comment: "备注", Default: ""},
 	}
 	// WlExchangeTable holds the schema information for the "wl_exchange" table.
 	WlExchangeTable = &schema.Table{
@@ -163,6 +166,7 @@ var (
 		{Name: "system_commission", Type: field.TypeFloat32, Comment: "system commission percent | 平台收益分成比例", Default: 0},
 		{Name: "gcics_user_id", Type: field.TypeUint64, Comment: "the user id of gcics system", Default: 0},
 		{Name: "gcics_token", Type: field.TypeString, Comment: "user game token from gcics system", Default: ""},
+		{Name: "gcics_return_url", Type: field.TypeString, Comment: "登陆失效后的跳转地址", Default: ""},
 		{Name: "inviter_id", Type: field.TypeUint64, Nullable: true, Comment: "the inviter id | 邀请人ID", Default: 0},
 	}
 	// WlPlayerTable holds the schema information for the "wl_player" table.
@@ -174,7 +178,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_player_wl_player_invitees",
-				Columns:    []*schema.Column{WlPlayerColumns[21]},
+				Columns:    []*schema.Column{WlPlayerColumns[22]},
 				RefColumns: []*schema.Column{WlPlayerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -198,7 +202,7 @@ var (
 			{
 				Name:    "idx_inviter_id",
 				Unique:  false,
-				Columns: []*schema.Column{WlPlayerColumns[21]},
+				Columns: []*schema.Column{WlPlayerColumns[22]},
 			},
 			{
 				Name:    "idx_invited_code",
@@ -206,6 +210,25 @@ var (
 				Columns: []*schema.Column{WlPlayerColumns[17]},
 			},
 		},
+	}
+	// WlPoolColumns holds the columns for the "wl_pool" table.
+	WlPoolColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true},
+		{Name: "created_at", Type: field.TypeTime, Comment: "Create Time | 创建日期"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
+		{Name: "status", Type: field.TypeUint8, Nullable: true, Comment: "Status 1: normal 2: ban | 状态 1 正常 2 禁用", Default: 1},
+		{Name: "round_id", Type: field.TypeUint64, Comment: "回合ID", Default: 0},
+		{Name: "mode", Type: field.TypeString, Comment: "mode | 交易币种：coin,token", Default: ""},
+		{Name: "type", Type: field.TypeUint32, Comment: "type | 池类型：1=机器人资金池；2=奖金蓄水池；3=其他", Default: 0},
+		{Name: "lamb_num", Type: field.TypeFloat64, Comment: "lamp amount | 羊数量", Default: 0},
+		{Name: "remark", Type: field.TypeString, Comment: "备注", Default: ""},
+	}
+	// WlPoolTable holds the schema information for the "wl_pool" table.
+	WlPoolTable = &schema.Table{
+		Name:       "wl_pool",
+		Comment:    "资金池表",
+		Columns:    WlPoolColumns,
+		PrimaryKey: []*schema.Column{WlPoolColumns[0]},
 	}
 	// WlRewardColumns holds the columns for the "wl_reward" table.
 	WlRewardColumns = []*schema.Column{
@@ -219,6 +242,7 @@ var (
 		{Name: "contributor_level", Type: field.TypeUint32, Comment: "contributor level | 贡献者属于奖励对象第几级", Default: 1},
 		{Name: "num", Type: field.TypeFloat32, Comment: "lamb amount | 数量", Default: 0},
 		{Name: "formula", Type: field.TypeString, Comment: "计算公式", Default: ""},
+		{Name: "mode", Type: field.TypeString, Comment: "币种类别：coin/token", Default: ""},
 		{Name: "remark", Type: field.TypeString, Comment: "remark | 备注", Default: ""},
 	}
 	// WlRewardTable holds the schema information for the "wl_reward" table.
@@ -247,6 +271,10 @@ var (
 		{Name: "open_at", Type: field.TypeTime, Comment: "Open Time | 回合开奖时间"},
 		{Name: "end_at", Type: field.TypeTime, Comment: "End Time | 回合结束时间"},
 		{Name: "selected_fold", Type: field.TypeUint32, Comment: "选中的羊圈号码", Default: 0},
+		{Name: "mode", Type: field.TypeString, Comment: "游戏类型：coin,token", Default: ""},
+		{Name: "compute_amount", Type: field.TypeFloat64, Comment: "计算得出用于回传的羊只数量", Default: 0},
+		{Name: "sync_status", Type: field.TypeUint32, Comment: "回传状态", Default: 0},
+		{Name: "sync_msg", Type: field.TypeString, Comment: "回传结果信息", Default: ""},
 	}
 	// WlRoundTable holds the schema information for the "wl_round" table.
 	WlRoundTable = &schema.Table{
@@ -267,6 +295,7 @@ var (
 		{Name: "profit_and_loss", Type: field.TypeFloat32, Comment: "投注盈亏结果", Default: 0},
 		{Name: "round_count", Type: field.TypeUint32, Nullable: true, Comment: "当日第几回合", Default: 0},
 		{Name: "total_round_count", Type: field.TypeUint64, Nullable: true, Comment: "累计第几回合", Default: 0},
+		{Name: "mode", Type: field.TypeString, Comment: "游戏类型：coin,token", Default: ""},
 		{Name: "round_id", Type: field.TypeUint64, Nullable: true, Comment: "所属回合ID", Default: 0},
 	}
 	// WlRoundInvestTable holds the schema information for the "wl_round_invest" table.
@@ -278,7 +307,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_round_invest_wl_round_invest",
-				Columns:    []*schema.Column{WlRoundInvestColumns[10]},
+				Columns:    []*schema.Column{WlRoundInvestColumns[11]},
 				RefColumns: []*schema.Column{WlRoundColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -287,7 +316,7 @@ var (
 			{
 				Name:    "idx_round",
 				Unique:  false,
-				Columns: []*schema.Column{WlRoundInvestColumns[10]},
+				Columns: []*schema.Column{WlRoundInvestColumns[11]},
 			},
 			{
 				Name:    "idx_player",
@@ -311,6 +340,7 @@ var (
 		{Name: "profit_and_loss", Type: field.TypeFloat32, Comment: "投注盈亏结果", Default: 0},
 		{Name: "round_count", Type: field.TypeUint32, Nullable: true, Comment: "当日第几回合", Default: 0},
 		{Name: "total_round_count", Type: field.TypeUint64, Nullable: true, Comment: "累计第几回合", Default: 0},
+		{Name: "mode", Type: field.TypeString, Comment: "游戏类型：coin,token", Default: ""},
 		{Name: "round_id", Type: field.TypeUint64, Nullable: true, Comment: "所属回合ID", Default: 0},
 	}
 	// WlRoundLambFoldTable holds the schema information for the "wl_round_lamb_fold" table.
@@ -322,7 +352,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_round_lamb_fold_wl_round_fold",
-				Columns:    []*schema.Column{WlRoundLambFoldColumns[8]},
+				Columns:    []*schema.Column{WlRoundLambFoldColumns[9]},
 				RefColumns: []*schema.Column{WlRoundColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -331,7 +361,7 @@ var (
 			{
 				Name:    "idx_round",
 				Unique:  false,
-				Columns: []*schema.Column{WlRoundLambFoldColumns[8]},
+				Columns: []*schema.Column{WlRoundLambFoldColumns[9]},
 			},
 			{
 				Name:    "idx_total_count",
@@ -369,6 +399,7 @@ var (
 		{Name: "inout_type", Type: field.TypeUint32, Comment: "input or output | 收支类型：1=入账；2=出账", Default: 1},
 		{Name: "amount", Type: field.TypeFloat64, Comment: "amount | 金额", Default: 0},
 		{Name: "refer_id", Type: field.TypeString, Comment: "refer id | 对应单ID", Default: ""},
+		{Name: "mode", Type: field.TypeString, Comment: "币种类别：coin/token", Default: ""},
 		{Name: "remark", Type: field.TypeString, Comment: "remark | 备注", Default: ""},
 	}
 	// WlStatementTable holds the schema information for the "wl_statement" table.
@@ -403,6 +434,7 @@ var (
 		WlOrderTable,
 		WlOriginInviteCodeTable,
 		WlPlayerTable,
+		WlPoolTable,
 		WlRewardTable,
 		WlRoundTable,
 		WlRoundInvestTable,
@@ -440,6 +472,11 @@ func init() {
 	WlPlayerTable.ForeignKeys[0].RefTable = WlPlayerTable
 	WlPlayerTable.Annotation = &entsql.Annotation{
 		Table:     "wl_player",
+		Charset:   "utf8mb4",
+		Collation: "utf8mb4_general_ci",
+	}
+	WlPoolTable.Annotation = &entsql.Annotation{
+		Table:     "wl_pool",
 		Charset:   "utf8mb4",
 		Collation: "utf8mb4_general_ci",
 	}

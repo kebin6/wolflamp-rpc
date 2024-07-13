@@ -48,6 +48,7 @@ func (l *GetInvestByRoundIdLogic) GetInvestByRoundId(in *wolflamp.GetInvestsByRo
 			FoldNo:        v.FoldNo,
 			LambNum:       v.LambNum,
 			ProfitAndLoss: v.ProfitAndLoss,
+			Mode:          v.Mode,
 		})
 	}
 	return resp, nil

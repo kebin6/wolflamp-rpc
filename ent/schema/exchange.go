@@ -23,6 +23,9 @@ func (Exchange) Fields() []ent.Field {
 		field.String("transaction_id").Default("").
 			Comment("transaction id | 交易ID").
 			Annotations(entsql.WithComments(true)),
+		field.String("mode").Default("").
+			Comment("mode | 交易币种：coin,token").
+			Annotations(entsql.WithComments(true)),
 		field.Uint32("type").Default(0).
 			Comment("type | 兑换类型：1=币兑羊；2=羊兑币").
 			Annotations(entsql.WithComments(true)),
@@ -31,6 +34,12 @@ func (Exchange) Fields() []ent.Field {
 			Annotations(entsql.WithComments(true)),
 		field.Uint32("lamp_num").Default(0).
 			Comment("lamp amount | 羊数量").
+			Annotations(entsql.WithComments(true)),
+		field.String("gcics_order_id").Default("").
+			Comment("GCICS平台订单号 ").
+			Annotations(entsql.WithComments(true)),
+		field.String("remark").Default("").
+			Comment("备注").
 			Annotations(entsql.WithComments(true)),
 	}
 }

@@ -172,6 +172,20 @@ func (rlfu *RoundLambFoldUpdate) ClearTotalRoundCount() *RoundLambFoldUpdate {
 	return rlfu
 }
 
+// SetMode sets the "mode" field.
+func (rlfu *RoundLambFoldUpdate) SetMode(s string) *RoundLambFoldUpdate {
+	rlfu.mutation.SetMode(s)
+	return rlfu
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (rlfu *RoundLambFoldUpdate) SetNillableMode(s *string) *RoundLambFoldUpdate {
+	if s != nil {
+		rlfu.SetMode(*s)
+	}
+	return rlfu
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (rlfu *RoundLambFoldUpdate) SetRound(r *Round) *RoundLambFoldUpdate {
 	return rlfu.SetRoundID(r.ID)
@@ -271,6 +285,9 @@ func (rlfu *RoundLambFoldUpdate) sqlSave(ctx context.Context) (n int, err error)
 	}
 	if rlfu.mutation.TotalRoundCountCleared() {
 		_spec.ClearField(roundlambfold.FieldTotalRoundCount, field.TypeUint64)
+	}
+	if value, ok := rlfu.mutation.Mode(); ok {
+		_spec.SetField(roundlambfold.FieldMode, field.TypeString, value)
 	}
 	if rlfu.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -464,6 +481,20 @@ func (rlfuo *RoundLambFoldUpdateOne) ClearTotalRoundCount() *RoundLambFoldUpdate
 	return rlfuo
 }
 
+// SetMode sets the "mode" field.
+func (rlfuo *RoundLambFoldUpdateOne) SetMode(s string) *RoundLambFoldUpdateOne {
+	rlfuo.mutation.SetMode(s)
+	return rlfuo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (rlfuo *RoundLambFoldUpdateOne) SetNillableMode(s *string) *RoundLambFoldUpdateOne {
+	if s != nil {
+		rlfuo.SetMode(*s)
+	}
+	return rlfuo
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (rlfuo *RoundLambFoldUpdateOne) SetRound(r *Round) *RoundLambFoldUpdateOne {
 	return rlfuo.SetRoundID(r.ID)
@@ -593,6 +624,9 @@ func (rlfuo *RoundLambFoldUpdateOne) sqlSave(ctx context.Context) (_node *RoundL
 	}
 	if rlfuo.mutation.TotalRoundCountCleared() {
 		_spec.ClearField(roundlambfold.FieldTotalRoundCount, field.TypeUint64)
+	}
+	if value, ok := rlfuo.mutation.Mode(); ok {
+		_spec.SetField(roundlambfold.FieldMode, field.TypeString, value)
 	}
 	if rlfuo.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{

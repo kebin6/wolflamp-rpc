@@ -13,6 +13,7 @@ message ExchangeInfo {
   uint32 type = 7;
   uint32 coin_num = 8;
   uint32 lamp_num = 9;
+  string mode = 10;
 }
 
 message CreateExchangeReq {
@@ -43,15 +44,22 @@ message FindExchangeReq {
 }
 
 message ExchangeReq {
+  string mode = 5;
   uint32 type = 1;
   uint32 coin_amount = 2;
   uint32 lamp_amount = 3;
   uint64 player_id = 4;
 }
 
+message ExchangeResp {
+  uint64 id = 1;
+  optional string link = 2;
+}
+
 message ListExchangeReq {
   uint64 page = 1;
   uint64 page_size = 2;
+  string mode = 3;
   optional uint64 player_id = 5;
   optional string transaction_id = 6;
   optional uint32 type = 7;
@@ -60,6 +68,12 @@ message ListExchangeReq {
 message ListExchangeResp {
   uint64 total = 1;
   repeated ExchangeInfo data = 2;
+}
+
+message NotifyExchangeReq {
+  uint64 id  = 1;
+  bool isPaid = 2;
+  double amount = 3;
 }
 
 service Wolflamp {
@@ -79,5 +93,8 @@ service Wolflamp {
   rpc listExchange (ListExchangeReq) returns (ListExchangeResp);
 
   // group: exchange
-  rpc exchange (ExchangeReq) returns (BaseIDResp);
+  rpc exchange (ExchangeReq) returns (ExchangeResp);
+
+  // group: exchange
+  rpc notify(NotifyExchangeReq) returns (BaseIDResp);
 }

@@ -42,6 +42,22 @@ func (Round) Fields() []ent.Field {
 			Default(0).
 			Comment("选中的羊圈号码").
 			Annotations(entsql.WithComments(true)),
+		field.String("mode").
+			Default("").
+			Comment("游戏类型：coin,token").
+			Annotations(entsql.WithComments(true)),
+		field.Float("compute_amount").
+			Default(0).
+			Comment("计算得出用于回传的羊只数量").
+			Annotations(entsql.WithComments(true)),
+		field.Uint32("sync_status").
+			Default(0).
+			Comment("回传状态").
+			Annotations(entsql.WithComments(true)),
+		field.String("sync_msg").
+			Default("").
+			Comment("回传结果信息").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 

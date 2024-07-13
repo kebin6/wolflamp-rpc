@@ -269,6 +269,30 @@ func (e *ExchangeCreate) SetNotNilTransactionID(value *string) *ExchangeCreate {
 }
 
 // set field if value's pointer is not nil.
+func (e *ExchangeUpdate) SetNotNilMode(value *string) *ExchangeUpdate {
+	if value != nil {
+		return e.SetMode(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeUpdateOne) SetNotNilMode(value *string) *ExchangeUpdateOne {
+	if value != nil {
+		return e.SetMode(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeCreate) SetNotNilMode(value *string) *ExchangeCreate {
+	if value != nil {
+		return e.SetMode(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
 func (e *ExchangeUpdate) SetNotNilType(value *uint32) *ExchangeUpdate {
 	if value != nil {
 		return e.SetType(*value)
@@ -336,6 +360,54 @@ func (e *ExchangeUpdateOne) SetNotNilLampNum(value *uint32) *ExchangeUpdateOne {
 func (e *ExchangeCreate) SetNotNilLampNum(value *uint32) *ExchangeCreate {
 	if value != nil {
 		return e.SetLampNum(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeUpdate) SetNotNilGcicsOrderID(value *string) *ExchangeUpdate {
+	if value != nil {
+		return e.SetGcicsOrderID(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeUpdateOne) SetNotNilGcicsOrderID(value *string) *ExchangeUpdateOne {
+	if value != nil {
+		return e.SetGcicsOrderID(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeCreate) SetNotNilGcicsOrderID(value *string) *ExchangeCreate {
+	if value != nil {
+		return e.SetGcicsOrderID(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeUpdate) SetNotNilRemark(value *string) *ExchangeUpdate {
+	if value != nil {
+		return e.SetRemark(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeUpdateOne) SetNotNilRemark(value *string) *ExchangeUpdateOne {
+	if value != nil {
+		return e.SetRemark(*value)
+	}
+	return e
+}
+
+// set field if value's pointer is not nil.
+func (e *ExchangeCreate) SetNotNilRemark(value *string) *ExchangeCreate {
+	if value != nil {
+		return e.SetRemark(*value)
 	}
 	return e
 }
@@ -1373,6 +1445,198 @@ func (pl *PlayerCreate) SetNotNilGcicsToken(value *string) *PlayerCreate {
 }
 
 // set field if value's pointer is not nil.
+func (pl *PlayerUpdate) SetNotNilGcicsReturnURL(value *string) *PlayerUpdate {
+	if value != nil {
+		return pl.SetGcicsReturnURL(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdateOne) SetNotNilGcicsReturnURL(value *string) *PlayerUpdateOne {
+	if value != nil {
+		return pl.SetGcicsReturnURL(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerCreate) SetNotNilGcicsReturnURL(value *string) *PlayerCreate {
+	if value != nil {
+		return pl.SetGcicsReturnURL(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilUpdatedAt(value *time.Time) *PoolUpdate {
+	if value != nil {
+		return po.SetUpdatedAt(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilUpdatedAt(value *time.Time) *PoolUpdateOne {
+	if value != nil {
+		return po.SetUpdatedAt(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilUpdatedAt(value *time.Time) *PoolCreate {
+	if value != nil {
+		return po.SetUpdatedAt(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilStatus(value *uint8) *PoolUpdate {
+	if value != nil {
+		return po.SetStatus(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilStatus(value *uint8) *PoolUpdateOne {
+	if value != nil {
+		return po.SetStatus(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilStatus(value *uint8) *PoolCreate {
+	if value != nil {
+		return po.SetStatus(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilRoundID(value *uint64) *PoolUpdate {
+	if value != nil {
+		return po.SetRoundID(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilRoundID(value *uint64) *PoolUpdateOne {
+	if value != nil {
+		return po.SetRoundID(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilRoundID(value *uint64) *PoolCreate {
+	if value != nil {
+		return po.SetRoundID(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilMode(value *string) *PoolUpdate {
+	if value != nil {
+		return po.SetMode(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilMode(value *string) *PoolUpdateOne {
+	if value != nil {
+		return po.SetMode(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilMode(value *string) *PoolCreate {
+	if value != nil {
+		return po.SetMode(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilType(value *uint32) *PoolUpdate {
+	if value != nil {
+		return po.SetType(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilType(value *uint32) *PoolUpdateOne {
+	if value != nil {
+		return po.SetType(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilType(value *uint32) *PoolCreate {
+	if value != nil {
+		return po.SetType(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilLambNum(value *float64) *PoolUpdate {
+	if value != nil {
+		return po.SetLambNum(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilLambNum(value *float64) *PoolUpdateOne {
+	if value != nil {
+		return po.SetLambNum(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilLambNum(value *float64) *PoolCreate {
+	if value != nil {
+		return po.SetLambNum(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdate) SetNotNilRemark(value *string) *PoolUpdate {
+	if value != nil {
+		return po.SetRemark(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolUpdateOne) SetNotNilRemark(value *string) *PoolUpdateOne {
+	if value != nil {
+		return po.SetRemark(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
+func (po *PoolCreate) SetNotNilRemark(value *string) *PoolCreate {
+	if value != nil {
+		return po.SetRemark(*value)
+	}
+	return po
+}
+
+// set field if value's pointer is not nil.
 func (r *RewardUpdate) SetNotNilUpdatedAt(value *time.Time) *RewardUpdate {
 	if value != nil {
 		return r.SetUpdatedAt(*value)
@@ -1565,6 +1829,30 @@ func (r *RewardCreate) SetNotNilFormula(value *string) *RewardCreate {
 }
 
 // set field if value's pointer is not nil.
+func (r *RewardUpdate) SetNotNilMode(value *string) *RewardUpdate {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RewardUpdateOne) SetNotNilMode(value *string) *RewardUpdateOne {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RewardCreate) SetNotNilMode(value *string) *RewardCreate {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
 func (r *RewardUpdate) SetNotNilRemark(value *string) *RewardUpdate {
 	if value != nil {
 		return r.SetRemark(*value)
@@ -1680,6 +1968,102 @@ func (r *RoundUpdateOne) SetNotNilSelectedFold(value *uint32) *RoundUpdateOne {
 func (r *RoundCreate) SetNotNilSelectedFold(value *uint32) *RoundCreate {
 	if value != nil {
 		return r.SetSelectedFold(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilMode(value *string) *RoundUpdate {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilMode(value *string) *RoundUpdateOne {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilMode(value *string) *RoundCreate {
+	if value != nil {
+		return r.SetMode(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilComputeAmount(value *float64) *RoundUpdate {
+	if value != nil {
+		return r.SetComputeAmount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilComputeAmount(value *float64) *RoundUpdateOne {
+	if value != nil {
+		return r.SetComputeAmount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilComputeAmount(value *float64) *RoundCreate {
+	if value != nil {
+		return r.SetComputeAmount(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilSyncStatus(value *uint32) *RoundUpdate {
+	if value != nil {
+		return r.SetSyncStatus(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilSyncStatus(value *uint32) *RoundUpdateOne {
+	if value != nil {
+		return r.SetSyncStatus(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilSyncStatus(value *uint32) *RoundCreate {
+	if value != nil {
+		return r.SetSyncStatus(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilSyncMsg(value *string) *RoundUpdate {
+	if value != nil {
+		return r.SetSyncMsg(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilSyncMsg(value *string) *RoundUpdateOne {
+	if value != nil {
+		return r.SetSyncMsg(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilSyncMsg(value *string) *RoundCreate {
+	if value != nil {
+		return r.SetSyncMsg(*value)
 	}
 	return r
 }
@@ -1901,6 +2285,30 @@ func (ri *RoundInvestCreate) SetNotNilTotalRoundCount(value *uint64) *RoundInves
 }
 
 // set field if value's pointer is not nil.
+func (ri *RoundInvestUpdate) SetNotNilMode(value *string) *RoundInvestUpdate {
+	if value != nil {
+		return ri.SetMode(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
+func (ri *RoundInvestUpdateOne) SetNotNilMode(value *string) *RoundInvestUpdateOne {
+	if value != nil {
+		return ri.SetMode(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
+func (ri *RoundInvestCreate) SetNotNilMode(value *string) *RoundInvestCreate {
+	if value != nil {
+		return ri.SetMode(*value)
+	}
+	return ri
+}
+
+// set field if value's pointer is not nil.
 func (rlf *RoundLambFoldUpdate) SetNotNilUpdatedAt(value *time.Time) *RoundLambFoldUpdate {
 	if value != nil {
 		return rlf.SetUpdatedAt(*value)
@@ -2064,6 +2472,30 @@ func (rlf *RoundLambFoldUpdateOne) SetNotNilTotalRoundCount(value *uint64) *Roun
 func (rlf *RoundLambFoldCreate) SetNotNilTotalRoundCount(value *uint64) *RoundLambFoldCreate {
 	if value != nil {
 		return rlf.SetTotalRoundCount(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
+func (rlf *RoundLambFoldUpdate) SetNotNilMode(value *string) *RoundLambFoldUpdate {
+	if value != nil {
+		return rlf.SetMode(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
+func (rlf *RoundLambFoldUpdateOne) SetNotNilMode(value *string) *RoundLambFoldUpdateOne {
+	if value != nil {
+		return rlf.SetMode(*value)
+	}
+	return rlf
+}
+
+// set field if value's pointer is not nil.
+func (rlf *RoundLambFoldCreate) SetNotNilMode(value *string) *RoundLambFoldCreate {
+	if value != nil {
+		return rlf.SetMode(*value)
 	}
 	return rlf
 }
@@ -2376,6 +2808,30 @@ func (s *StatementUpdateOne) SetNotNilReferID(value *string) *StatementUpdateOne
 func (s *StatementCreate) SetNotNilReferID(value *string) *StatementCreate {
 	if value != nil {
 		return s.SetReferID(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdate) SetNotNilMode(value *string) *StatementUpdate {
+	if value != nil {
+		return s.SetMode(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementUpdateOne) SetNotNilMode(value *string) *StatementUpdateOne {
+	if value != nil {
+		return s.SetMode(*value)
+	}
+	return s
+}
+
+// set field if value's pointer is not nil.
+func (s *StatementCreate) SetNotNilMode(value *string) *StatementCreate {
+	if value != nil {
+		return s.SetMode(*value)
 	}
 	return s
 }

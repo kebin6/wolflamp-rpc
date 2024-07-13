@@ -53,6 +53,7 @@ func (l *FindExchangeLogic) Po2Vo(po *ent.Exchange) (vo *wolflamp.ExchangeInfo) 
 		LampNum:       po.LampNum,
 		PlayerId:      po.PlayerID,
 		CoinNum:       po.CoinNum,
+		Mode:          po.Mode,
 	}
 
 }

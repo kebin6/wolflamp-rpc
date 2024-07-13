@@ -10,4 +10,14 @@ type Config struct {
 	DatabaseConf config.DatabaseConf
 	RedisConf    config.RedisConf
 	CoreRpc      zrpc.RpcClientConf
+	GcicsConf    GcicsConf
+}
+
+type GcicsConf struct {
+	Host       string
+	AppId      string
+	AppSecret  string
+	NotifyUrl  string
+	SuccessUrl string
+	FailUrl    string
 }

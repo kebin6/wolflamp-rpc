@@ -53,6 +53,10 @@ func (RoundInvest) Fields() []ent.Field {
 			Default(0).
 			Comment("累计第几回合").
 			Annotations(entsql.WithComments(true)),
+		field.String("mode").
+			Default("").
+			Comment("游戏类型：coin,token").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 

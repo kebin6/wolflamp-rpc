@@ -32,6 +32,14 @@ const (
 	FieldEndAt = "end_at"
 	// FieldSelectedFold holds the string denoting the selected_fold field in the database.
 	FieldSelectedFold = "selected_fold"
+	// FieldMode holds the string denoting the mode field in the database.
+	FieldMode = "mode"
+	// FieldComputeAmount holds the string denoting the compute_amount field in the database.
+	FieldComputeAmount = "compute_amount"
+	// FieldSyncStatus holds the string denoting the sync_status field in the database.
+	FieldSyncStatus = "sync_status"
+	// FieldSyncMsg holds the string denoting the sync_msg field in the database.
+	FieldSyncMsg = "sync_msg"
 	// EdgeFold holds the string denoting the fold edge name in mutations.
 	EdgeFold = "fold"
 	// EdgeInvest holds the string denoting the invest edge name in mutations.
@@ -66,6 +74,10 @@ var Columns = []string{
 	FieldOpenAt,
 	FieldEndAt,
 	FieldSelectedFold,
+	FieldMode,
+	FieldComputeAmount,
+	FieldSyncStatus,
+	FieldSyncMsg,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -91,6 +103,14 @@ var (
 	DefaultTotalRoundCount uint64
 	// DefaultSelectedFold holds the default value on creation for the "selected_fold" field.
 	DefaultSelectedFold uint32
+	// DefaultMode holds the default value on creation for the "mode" field.
+	DefaultMode string
+	// DefaultComputeAmount holds the default value on creation for the "compute_amount" field.
+	DefaultComputeAmount float64
+	// DefaultSyncStatus holds the default value on creation for the "sync_status" field.
+	DefaultSyncStatus uint32
+	// DefaultSyncMsg holds the default value on creation for the "sync_msg" field.
+	DefaultSyncMsg string
 )
 
 // OrderOption defines the ordering options for the Round queries.
@@ -144,6 +164,26 @@ func ByEndAt(opts ...sql.OrderTermOption) OrderOption {
 // BySelectedFold orders the results by the selected_fold field.
 func BySelectedFold(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSelectedFold, opts...).ToFunc()
+}
+
+// ByMode orders the results by the mode field.
+func ByMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMode, opts...).ToFunc()
+}
+
+// ByComputeAmount orders the results by the compute_amount field.
+func ByComputeAmount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldComputeAmount, opts...).ToFunc()
+}
+
+// BySyncStatus orders the results by the sync_status field.
+func BySyncStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSyncStatus, opts...).ToFunc()
+}
+
+// BySyncMsg orders the results by the sync_msg field.
+func BySyncMsg(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSyncMsg, opts...).ToFunc()
 }
 
 // ByFoldCount orders the results by fold count.

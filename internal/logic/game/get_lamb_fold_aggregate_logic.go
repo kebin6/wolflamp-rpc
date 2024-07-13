@@ -29,6 +29,7 @@ func NewGetLambFoldAggregateLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *GetLambFoldAggregateLogic) GetLambFoldAggregate(in *wolflamp.GetLambFoldAggregateReq) (*wolflamp.GetLambFoldAggregateResp, error) {
 
 	allInvests, err := l.svcCtx.DB.RoundInvest.Query().
+		Where(roundinvest.Mode(in.Mode)).
 		Where(roundinvest.TotalRoundCountGTE(in.TotalRoundCountMin), roundinvest.TotalRoundCountLTE(in.TotalRoundCountMax)).All(l.ctx)
 	if err != nil {
 		return nil, err

@@ -34,6 +34,8 @@ const (
 	FieldRoundCount = "round_count"
 	// FieldTotalRoundCount holds the string denoting the total_round_count field in the database.
 	FieldTotalRoundCount = "total_round_count"
+	// FieldMode holds the string denoting the mode field in the database.
+	FieldMode = "mode"
 	// EdgeRound holds the string denoting the round edge name in mutations.
 	EdgeRound = "round"
 	// Table holds the table name of the roundinvest in the database.
@@ -60,6 +62,7 @@ var Columns = []string{
 	FieldRoundID,
 	FieldRoundCount,
 	FieldTotalRoundCount,
+	FieldMode,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -95,6 +98,8 @@ var (
 	DefaultRoundCount uint32
 	// DefaultTotalRoundCount holds the default value on creation for the "total_round_count" field.
 	DefaultTotalRoundCount uint64
+	// DefaultMode holds the default value on creation for the "mode" field.
+	DefaultMode string
 )
 
 // OrderOption defines the ordering options for the RoundInvest queries.
@@ -153,6 +158,11 @@ func ByRoundCount(opts ...sql.OrderTermOption) OrderOption {
 // ByTotalRoundCount orders the results by the total_round_count field.
 func ByTotalRoundCount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTotalRoundCount, opts...).ToFunc()
+}
+
+// ByMode orders the results by the mode field.
+func ByMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMode, opts...).ToFunc()
 }
 
 // ByRoundField orders the results by round field.

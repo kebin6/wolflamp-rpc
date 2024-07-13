@@ -88,6 +88,9 @@ func (Player) Fields() []ent.Field {
 		field.String("gcics_token").
 			Default("").Comment("user game token from gcics system").
 			Annotations(entsql.WithComments(true)),
+		field.String("gcics_return_url").
+			Default("").Comment("登陆失效后的跳转地址").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 

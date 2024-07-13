@@ -34,6 +34,8 @@ type RoundLambFold struct {
 	RoundCount uint32 `json:"round_count,omitempty"`
 	// 累计第几回合
 	TotalRoundCount uint64 `json:"total_round_count,omitempty"`
+	// 游戏类型：coin,token
+	Mode string `json:"mode,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoundLambFoldQuery when eager-loading is set.
 	Edges        RoundLambFoldEdges `json:"edges"`
@@ -69,6 +71,8 @@ func (*RoundLambFold) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case roundlambfold.FieldID, roundlambfold.FieldFoldNo, roundlambfold.FieldLambNum, roundlambfold.FieldRoundID, roundlambfold.FieldRoundCount, roundlambfold.FieldTotalRoundCount:
 			values[i] = new(sql.NullInt64)
+		case roundlambfold.FieldMode:
+			values[i] = new(sql.NullString)
 		case roundlambfold.FieldCreatedAt, roundlambfold.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
@@ -140,6 +144,12 @@ func (rlf *RoundLambFold) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				rlf.TotalRoundCount = uint64(value.Int64)
 			}
+		case roundlambfold.FieldMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mode", values[i])
+			} else if value.Valid {
+				rlf.Mode = value.String
+			}
 		default:
 			rlf.selectValues.Set(columns[i], values[i])
 		}
@@ -204,6 +214,9 @@ func (rlf *RoundLambFold) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("total_round_count=")
 	builder.WriteString(fmt.Sprintf("%v", rlf.TotalRoundCount))
+	builder.WriteString(", ")
+	builder.WriteString("mode=")
+	builder.WriteString(rlf.Mode)
 	builder.WriteByte(')')
 	return builder.String()
 }

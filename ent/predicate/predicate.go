@@ -24,6 +24,9 @@ type OriginInviteCode func(*sql.Selector)
 // Player is the predicate function for player builders.
 type Player func(*sql.Selector)
 
+// Pool is the predicate function for pool builders.
+type Pool func(*sql.Selector)
+
 // Reward is the predicate function for reward builders.
 type Reward func(*sql.Selector)
 

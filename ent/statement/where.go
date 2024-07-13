@@ -99,6 +99,11 @@ func ReferID(v string) predicate.Statement {
 	return predicate.Statement(sql.FieldEQ(FieldReferID, v))
 }
 
+// Mode applies equality check predicate on the "mode" field. It's identical to ModeEQ.
+func Mode(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldEQ(FieldMode, v))
+}
+
 // Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
 func Remark(v string) predicate.Statement {
 	return predicate.Statement(sql.FieldEQ(FieldRemark, v))
@@ -522,6 +527,71 @@ func ReferIDEqualFold(v string) predicate.Statement {
 // ReferIDContainsFold applies the ContainsFold predicate on the "refer_id" field.
 func ReferIDContainsFold(v string) predicate.Statement {
 	return predicate.Statement(sql.FieldContainsFold(FieldReferID, v))
+}
+
+// ModeEQ applies the EQ predicate on the "mode" field.
+func ModeEQ(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldEQ(FieldMode, v))
+}
+
+// ModeNEQ applies the NEQ predicate on the "mode" field.
+func ModeNEQ(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldNEQ(FieldMode, v))
+}
+
+// ModeIn applies the In predicate on the "mode" field.
+func ModeIn(vs ...string) predicate.Statement {
+	return predicate.Statement(sql.FieldIn(FieldMode, vs...))
+}
+
+// ModeNotIn applies the NotIn predicate on the "mode" field.
+func ModeNotIn(vs ...string) predicate.Statement {
+	return predicate.Statement(sql.FieldNotIn(FieldMode, vs...))
+}
+
+// ModeGT applies the GT predicate on the "mode" field.
+func ModeGT(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldGT(FieldMode, v))
+}
+
+// ModeGTE applies the GTE predicate on the "mode" field.
+func ModeGTE(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldGTE(FieldMode, v))
+}
+
+// ModeLT applies the LT predicate on the "mode" field.
+func ModeLT(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldLT(FieldMode, v))
+}
+
+// ModeLTE applies the LTE predicate on the "mode" field.
+func ModeLTE(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldLTE(FieldMode, v))
+}
+
+// ModeContains applies the Contains predicate on the "mode" field.
+func ModeContains(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldContains(FieldMode, v))
+}
+
+// ModeHasPrefix applies the HasPrefix predicate on the "mode" field.
+func ModeHasPrefix(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldHasPrefix(FieldMode, v))
+}
+
+// ModeHasSuffix applies the HasSuffix predicate on the "mode" field.
+func ModeHasSuffix(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldHasSuffix(FieldMode, v))
+}
+
+// ModeEqualFold applies the EqualFold predicate on the "mode" field.
+func ModeEqualFold(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldEqualFold(FieldMode, v))
+}
+
+// ModeContainsFold applies the ContainsFold predicate on the "mode" field.
+func ModeContainsFold(v string) predicate.Statement {
+	return predicate.Statement(sql.FieldContainsFold(FieldMode, v))
 }
 
 // RemarkEQ applies the EQ predicate on the "remark" field.

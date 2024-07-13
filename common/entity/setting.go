@@ -15,8 +15,32 @@ type PlatformSetting struct {
 	WithdrawThreshold float32 `json:"withdrawThreshold"`
 	// 机器人空闲秒数
 	IdleTime uint32 `json:"idleTime"`
-	// 游戏抽佣比例（平台预留部分）
+	// 平台抽佣比例（%）
 	GameCommission float32 `json:"gameCommission"`
+	// 资金池预留比例（%）
+	PoolCommission float32 `json:"poolCommission"`
+	// 机器人池预留占资金池比例（%）
+	RobPoolCommission float32 `json:"robPoolCommission"`
+	// 奖金池预留占资金池比例（%）
+	RewardPoolCommission float32 `json:"rewardPoolCommission"`
+	// 金羊出现时间段
+	GoldenLambAllowTime GoldenLambAllowTime `json:"goldenLambAllowTime"`
+	// 金羊数量区间设定
+	GoldenLambNum GoldenLambNum `json:"goldenLambNum"`
+	// 银羊触发条件-奖金池最低阈值
+	PoolMinNumThenSilver uint32 `json:"poolMinNumThenSilver"`
+	// 银羊触发概率（%）
+	SliverOccurPercent float32 `json:"sliverOccurPercent"`
+}
+
+type GoldenLambNum struct {
+	Min uint32 `json:"min"`
+	Max uint32 `json:"max"`
+}
+
+type GoldenLambAllowTime struct {
+	StartTime string `json:"startTime"`
+	EndTime   string `json:"endTime"`
 }
 
 // GameRule 游戏规则

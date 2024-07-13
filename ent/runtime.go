@@ -12,6 +12,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
@@ -95,18 +96,30 @@ func init() {
 	exchangeDescTransactionID := exchangeFields[1].Descriptor()
 	// exchange.DefaultTransactionID holds the default value on creation for the transaction_id field.
 	exchange.DefaultTransactionID = exchangeDescTransactionID.Default.(string)
+	// exchangeDescMode is the schema descriptor for mode field.
+	exchangeDescMode := exchangeFields[2].Descriptor()
+	// exchange.DefaultMode holds the default value on creation for the mode field.
+	exchange.DefaultMode = exchangeDescMode.Default.(string)
 	// exchangeDescType is the schema descriptor for type field.
-	exchangeDescType := exchangeFields[2].Descriptor()
+	exchangeDescType := exchangeFields[3].Descriptor()
 	// exchange.DefaultType holds the default value on creation for the type field.
 	exchange.DefaultType = exchangeDescType.Default.(uint32)
 	// exchangeDescCoinNum is the schema descriptor for coin_num field.
-	exchangeDescCoinNum := exchangeFields[3].Descriptor()
+	exchangeDescCoinNum := exchangeFields[4].Descriptor()
 	// exchange.DefaultCoinNum holds the default value on creation for the coin_num field.
 	exchange.DefaultCoinNum = exchangeDescCoinNum.Default.(uint32)
 	// exchangeDescLampNum is the schema descriptor for lamp_num field.
-	exchangeDescLampNum := exchangeFields[4].Descriptor()
+	exchangeDescLampNum := exchangeFields[5].Descriptor()
 	// exchange.DefaultLampNum holds the default value on creation for the lamp_num field.
 	exchange.DefaultLampNum = exchangeDescLampNum.Default.(uint32)
+	// exchangeDescGcicsOrderID is the schema descriptor for gcics_order_id field.
+	exchangeDescGcicsOrderID := exchangeFields[6].Descriptor()
+	// exchange.DefaultGcicsOrderID holds the default value on creation for the gcics_order_id field.
+	exchange.DefaultGcicsOrderID = exchangeDescGcicsOrderID.Default.(string)
+	// exchangeDescRemark is the schema descriptor for remark field.
+	exchangeDescRemark := exchangeFields[7].Descriptor()
+	// exchange.DefaultRemark holds the default value on creation for the remark field.
+	exchange.DefaultRemark = exchangeDescRemark.Default.(string)
 	fileMixin := schema.File{}.Mixin()
 	fileMixinFields0 := fileMixin[0].Fields()
 	_ = fileMixinFields0
@@ -311,6 +324,51 @@ func init() {
 	playerDescGcicsToken := playerFields[17].Descriptor()
 	// player.DefaultGcicsToken holds the default value on creation for the gcics_token field.
 	player.DefaultGcicsToken = playerDescGcicsToken.Default.(string)
+	// playerDescGcicsReturnURL is the schema descriptor for gcics_return_url field.
+	playerDescGcicsReturnURL := playerFields[18].Descriptor()
+	// player.DefaultGcicsReturnURL holds the default value on creation for the gcics_return_url field.
+	player.DefaultGcicsReturnURL = playerDescGcicsReturnURL.Default.(string)
+	poolMixin := schema.Pool{}.Mixin()
+	poolMixinFields0 := poolMixin[0].Fields()
+	_ = poolMixinFields0
+	poolMixinFields1 := poolMixin[1].Fields()
+	_ = poolMixinFields1
+	poolFields := schema.Pool{}.Fields()
+	_ = poolFields
+	// poolDescCreatedAt is the schema descriptor for created_at field.
+	poolDescCreatedAt := poolMixinFields0[1].Descriptor()
+	// pool.DefaultCreatedAt holds the default value on creation for the created_at field.
+	pool.DefaultCreatedAt = poolDescCreatedAt.Default.(func() time.Time)
+	// poolDescUpdatedAt is the schema descriptor for updated_at field.
+	poolDescUpdatedAt := poolMixinFields0[2].Descriptor()
+	// pool.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	pool.DefaultUpdatedAt = poolDescUpdatedAt.Default.(func() time.Time)
+	// pool.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	pool.UpdateDefaultUpdatedAt = poolDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// poolDescStatus is the schema descriptor for status field.
+	poolDescStatus := poolMixinFields1[0].Descriptor()
+	// pool.DefaultStatus holds the default value on creation for the status field.
+	pool.DefaultStatus = poolDescStatus.Default.(uint8)
+	// poolDescRoundID is the schema descriptor for round_id field.
+	poolDescRoundID := poolFields[0].Descriptor()
+	// pool.DefaultRoundID holds the default value on creation for the round_id field.
+	pool.DefaultRoundID = poolDescRoundID.Default.(uint64)
+	// poolDescMode is the schema descriptor for mode field.
+	poolDescMode := poolFields[1].Descriptor()
+	// pool.DefaultMode holds the default value on creation for the mode field.
+	pool.DefaultMode = poolDescMode.Default.(string)
+	// poolDescType is the schema descriptor for type field.
+	poolDescType := poolFields[2].Descriptor()
+	// pool.DefaultType holds the default value on creation for the type field.
+	pool.DefaultType = poolDescType.Default.(uint32)
+	// poolDescLambNum is the schema descriptor for lamb_num field.
+	poolDescLambNum := poolFields[3].Descriptor()
+	// pool.DefaultLambNum holds the default value on creation for the lamb_num field.
+	pool.DefaultLambNum = poolDescLambNum.Default.(float64)
+	// poolDescRemark is the schema descriptor for remark field.
+	poolDescRemark := poolFields[4].Descriptor()
+	// pool.DefaultRemark holds the default value on creation for the remark field.
+	pool.DefaultRemark = poolDescRemark.Default.(string)
 	rewardMixin := schema.Reward{}.Mixin()
 	rewardMixinFields0 := rewardMixin[0].Fields()
 	_ = rewardMixinFields0
@@ -356,8 +414,12 @@ func init() {
 	rewardDescFormula := rewardFields[5].Descriptor()
 	// reward.DefaultFormula holds the default value on creation for the formula field.
 	reward.DefaultFormula = rewardDescFormula.Default.(string)
+	// rewardDescMode is the schema descriptor for mode field.
+	rewardDescMode := rewardFields[6].Descriptor()
+	// reward.DefaultMode holds the default value on creation for the mode field.
+	reward.DefaultMode = rewardDescMode.Default.(string)
 	// rewardDescRemark is the schema descriptor for remark field.
-	rewardDescRemark := rewardFields[6].Descriptor()
+	rewardDescRemark := rewardFields[7].Descriptor()
 	// reward.DefaultRemark holds the default value on creation for the remark field.
 	reward.DefaultRemark = rewardDescRemark.Default.(string)
 	roundMixin := schema.Round{}.Mixin()
@@ -389,6 +451,22 @@ func init() {
 	roundDescSelectedFold := roundFields[5].Descriptor()
 	// round.DefaultSelectedFold holds the default value on creation for the selected_fold field.
 	round.DefaultSelectedFold = roundDescSelectedFold.Default.(uint32)
+	// roundDescMode is the schema descriptor for mode field.
+	roundDescMode := roundFields[6].Descriptor()
+	// round.DefaultMode holds the default value on creation for the mode field.
+	round.DefaultMode = roundDescMode.Default.(string)
+	// roundDescComputeAmount is the schema descriptor for compute_amount field.
+	roundDescComputeAmount := roundFields[7].Descriptor()
+	// round.DefaultComputeAmount holds the default value on creation for the compute_amount field.
+	round.DefaultComputeAmount = roundDescComputeAmount.Default.(float64)
+	// roundDescSyncStatus is the schema descriptor for sync_status field.
+	roundDescSyncStatus := roundFields[8].Descriptor()
+	// round.DefaultSyncStatus holds the default value on creation for the sync_status field.
+	round.DefaultSyncStatus = roundDescSyncStatus.Default.(uint32)
+	// roundDescSyncMsg is the schema descriptor for sync_msg field.
+	roundDescSyncMsg := roundFields[9].Descriptor()
+	// round.DefaultSyncMsg holds the default value on creation for the sync_msg field.
+	round.DefaultSyncMsg = roundDescSyncMsg.Default.(string)
 	roundinvestMixin := schema.RoundInvest{}.Mixin()
 	roundinvestMixinFields0 := roundinvestMixin[0].Fields()
 	_ = roundinvestMixinFields0
@@ -436,6 +514,10 @@ func init() {
 	roundinvestDescTotalRoundCount := roundinvestFields[7].Descriptor()
 	// roundinvest.DefaultTotalRoundCount holds the default value on creation for the total_round_count field.
 	roundinvest.DefaultTotalRoundCount = roundinvestDescTotalRoundCount.Default.(uint64)
+	// roundinvestDescMode is the schema descriptor for mode field.
+	roundinvestDescMode := roundinvestFields[8].Descriptor()
+	// roundinvest.DefaultMode holds the default value on creation for the mode field.
+	roundinvest.DefaultMode = roundinvestDescMode.Default.(string)
 	roundlambfoldMixin := schema.RoundLambFold{}.Mixin()
 	roundlambfoldMixinFields0 := roundlambfoldMixin[0].Fields()
 	_ = roundlambfoldMixinFields0
@@ -475,6 +557,10 @@ func init() {
 	roundlambfoldDescTotalRoundCount := roundlambfoldFields[5].Descriptor()
 	// roundlambfold.DefaultTotalRoundCount holds the default value on creation for the total_round_count field.
 	roundlambfold.DefaultTotalRoundCount = roundlambfoldDescTotalRoundCount.Default.(uint64)
+	// roundlambfoldDescMode is the schema descriptor for mode field.
+	roundlambfoldDescMode := roundlambfoldFields[6].Descriptor()
+	// roundlambfold.DefaultMode holds the default value on creation for the mode field.
+	roundlambfold.DefaultMode = roundlambfoldDescMode.Default.(string)
 	settingMixin := schema.Setting{}.Mixin()
 	settingMixinFields0 := settingMixin[0].Fields()
 	_ = settingMixinFields0
@@ -553,8 +639,12 @@ func init() {
 	statementDescReferID := statementFields[5].Descriptor()
 	// statement.DefaultReferID holds the default value on creation for the refer_id field.
 	statement.DefaultReferID = statementDescReferID.Default.(string)
+	// statementDescMode is the schema descriptor for mode field.
+	statementDescMode := statementFields[6].Descriptor()
+	// statement.DefaultMode holds the default value on creation for the mode field.
+	statement.DefaultMode = statementDescMode.Default.(string)
 	// statementDescRemark is the schema descriptor for remark field.
-	statementDescRemark := statementFields[6].Descriptor()
+	statementDescRemark := statementFields[7].Descriptor()
 	// statement.DefaultRemark holds the default value on creation for the remark field.
 	statement.DefaultRemark = statementDescRemark.Default.(string)
 }

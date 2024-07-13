@@ -23,12 +23,18 @@ const (
 	FieldPlayerID = "player_id"
 	// FieldTransactionID holds the string denoting the transaction_id field in the database.
 	FieldTransactionID = "transaction_id"
+	// FieldMode holds the string denoting the mode field in the database.
+	FieldMode = "mode"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
 	// FieldCoinNum holds the string denoting the coin_num field in the database.
 	FieldCoinNum = "coin_num"
 	// FieldLampNum holds the string denoting the lamp_num field in the database.
 	FieldLampNum = "lamp_num"
+	// FieldGcicsOrderID holds the string denoting the gcics_order_id field in the database.
+	FieldGcicsOrderID = "gcics_order_id"
+	// FieldRemark holds the string denoting the remark field in the database.
+	FieldRemark = "remark"
 	// Table holds the table name of the exchange in the database.
 	Table = "wl_exchange"
 )
@@ -41,9 +47,12 @@ var Columns = []string{
 	FieldStatus,
 	FieldPlayerID,
 	FieldTransactionID,
+	FieldMode,
 	FieldType,
 	FieldCoinNum,
 	FieldLampNum,
+	FieldGcicsOrderID,
+	FieldRemark,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -69,12 +78,18 @@ var (
 	DefaultPlayerID uint64
 	// DefaultTransactionID holds the default value on creation for the "transaction_id" field.
 	DefaultTransactionID string
+	// DefaultMode holds the default value on creation for the "mode" field.
+	DefaultMode string
 	// DefaultType holds the default value on creation for the "type" field.
 	DefaultType uint32
 	// DefaultCoinNum holds the default value on creation for the "coin_num" field.
 	DefaultCoinNum uint32
 	// DefaultLampNum holds the default value on creation for the "lamp_num" field.
 	DefaultLampNum uint32
+	// DefaultGcicsOrderID holds the default value on creation for the "gcics_order_id" field.
+	DefaultGcicsOrderID string
+	// DefaultRemark holds the default value on creation for the "remark" field.
+	DefaultRemark string
 )
 
 // OrderOption defines the ordering options for the Exchange queries.
@@ -110,6 +125,11 @@ func ByTransactionID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTransactionID, opts...).ToFunc()
 }
 
+// ByMode orders the results by the mode field.
+func ByMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMode, opts...).ToFunc()
+}
+
 // ByType orders the results by the type field.
 func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
@@ -123,4 +143,14 @@ func ByCoinNum(opts ...sql.OrderTermOption) OrderOption {
 // ByLampNum orders the results by the lamp_num field.
 func ByLampNum(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLampNum, opts...).ToFunc()
+}
+
+// ByGcicsOrderID orders the results by the gcics_order_id field.
+func ByGcicsOrderID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGcicsOrderID, opts...).ToFunc()
+}
+
+// ByRemark orders the results by the remark field.
+func ByRemark(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRemark, opts...).ToFunc()
 }

@@ -173,6 +173,20 @@ func (su *StatementUpdate) SetNillableReferID(s *string) *StatementUpdate {
 	return su
 }
 
+// SetMode sets the "mode" field.
+func (su *StatementUpdate) SetMode(s string) *StatementUpdate {
+	su.mutation.SetMode(s)
+	return su
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (su *StatementUpdate) SetNillableMode(s *string) *StatementUpdate {
+	if s != nil {
+		su.SetMode(*s)
+	}
+	return su
+}
+
 // SetRemark sets the "remark" field.
 func (su *StatementUpdate) SetRemark(s string) *StatementUpdate {
 	su.mutation.SetRemark(s)
@@ -278,6 +292,9 @@ func (su *StatementUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := su.mutation.ReferID(); ok {
 		_spec.SetField(statement.FieldReferID, field.TypeString, value)
+	}
+	if value, ok := su.mutation.Mode(); ok {
+		_spec.SetField(statement.FieldMode, field.TypeString, value)
 	}
 	if value, ok := su.mutation.Remark(); ok {
 		_spec.SetField(statement.FieldRemark, field.TypeString, value)
@@ -447,6 +464,20 @@ func (suo *StatementUpdateOne) SetNillableReferID(s *string) *StatementUpdateOne
 	return suo
 }
 
+// SetMode sets the "mode" field.
+func (suo *StatementUpdateOne) SetMode(s string) *StatementUpdateOne {
+	suo.mutation.SetMode(s)
+	return suo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (suo *StatementUpdateOne) SetNillableMode(s *string) *StatementUpdateOne {
+	if s != nil {
+		suo.SetMode(*s)
+	}
+	return suo
+}
+
 // SetRemark sets the "remark" field.
 func (suo *StatementUpdateOne) SetRemark(s string) *StatementUpdateOne {
 	suo.mutation.SetRemark(s)
@@ -582,6 +613,9 @@ func (suo *StatementUpdateOne) sqlSave(ctx context.Context) (_node *Statement, e
 	}
 	if value, ok := suo.mutation.ReferID(); ok {
 		_spec.SetField(statement.FieldReferID, field.TypeString, value)
+	}
+	if value, ok := suo.mutation.Mode(); ok {
+		_spec.SetField(statement.FieldMode, field.TypeString, value)
 	}
 	if value, ok := suo.mutation.Remark(); ok {
 		_spec.SetField(statement.FieldRemark, field.TypeString, value)

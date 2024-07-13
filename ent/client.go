@@ -22,6 +22,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
@@ -49,6 +50,8 @@ type Client struct {
 	OriginInviteCode *OriginInviteCodeClient
 	// Player is the client for interacting with the Player builders.
 	Player *PlayerClient
+	// Pool is the client for interacting with the Pool builders.
+	Pool *PoolClient
 	// Reward is the client for interacting with the Reward builders.
 	Reward *RewardClient
 	// Round is the client for interacting with the Round builders.
@@ -78,6 +81,7 @@ func (c *Client) init() {
 	c.Order = NewOrderClient(c.config)
 	c.OriginInviteCode = NewOriginInviteCodeClient(c.config)
 	c.Player = NewPlayerClient(c.config)
+	c.Pool = NewPoolClient(c.config)
 	c.Reward = NewRewardClient(c.config)
 	c.Round = NewRoundClient(c.config)
 	c.RoundInvest = NewRoundInvestClient(c.config)
@@ -182,6 +186,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Order:            NewOrderClient(cfg),
 		OriginInviteCode: NewOriginInviteCodeClient(cfg),
 		Player:           NewPlayerClient(cfg),
+		Pool:             NewPoolClient(cfg),
 		Reward:           NewRewardClient(cfg),
 		Round:            NewRoundClient(cfg),
 		RoundInvest:      NewRoundInvestClient(cfg),
@@ -213,6 +218,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Order:            NewOrderClient(cfg),
 		OriginInviteCode: NewOriginInviteCodeClient(cfg),
 		Player:           NewPlayerClient(cfg),
+		Pool:             NewPoolClient(cfg),
 		Reward:           NewRewardClient(cfg),
 		Round:            NewRoundClient(cfg),
 		RoundInvest:      NewRoundInvestClient(cfg),
@@ -248,8 +254,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Reward,
-		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
+		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Pool,
+		c.Reward, c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
 	} {
 		n.Use(hooks...)
 	}
@@ -259,8 +265,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Reward,
-		c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
+		c.Banner, c.Exchange, c.File, c.Order, c.OriginInviteCode, c.Player, c.Pool,
+		c.Reward, c.Round, c.RoundInvest, c.RoundLambFold, c.Setting, c.Statement,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -281,6 +287,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.OriginInviteCode.mutate(ctx, m)
 	case *PlayerMutation:
 		return c.Player.mutate(ctx, m)
+	case *PoolMutation:
+		return c.Pool.mutate(ctx, m)
 	case *RewardMutation:
 		return c.Reward.mutate(ctx, m)
 	case *RoundMutation:
@@ -1160,6 +1168,139 @@ func (c *PlayerClient) mutate(ctx context.Context, m *PlayerMutation) (Value, er
 	}
 }
 
+// PoolClient is a client for the Pool schema.
+type PoolClient struct {
+	config
+}
+
+// NewPoolClient returns a client for the Pool from the given config.
+func NewPoolClient(c config) *PoolClient {
+	return &PoolClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `pool.Hooks(f(g(h())))`.
+func (c *PoolClient) Use(hooks ...Hook) {
+	c.hooks.Pool = append(c.hooks.Pool, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `pool.Intercept(f(g(h())))`.
+func (c *PoolClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Pool = append(c.inters.Pool, interceptors...)
+}
+
+// Create returns a builder for creating a Pool entity.
+func (c *PoolClient) Create() *PoolCreate {
+	mutation := newPoolMutation(c.config, OpCreate)
+	return &PoolCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Pool entities.
+func (c *PoolClient) CreateBulk(builders ...*PoolCreate) *PoolCreateBulk {
+	return &PoolCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PoolClient) MapCreateBulk(slice any, setFunc func(*PoolCreate, int)) *PoolCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PoolCreateBulk{err: fmt.Errorf("calling to PoolClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PoolCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PoolCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Pool.
+func (c *PoolClient) Update() *PoolUpdate {
+	mutation := newPoolMutation(c.config, OpUpdate)
+	return &PoolUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PoolClient) UpdateOne(po *Pool) *PoolUpdateOne {
+	mutation := newPoolMutation(c.config, OpUpdateOne, withPool(po))
+	return &PoolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PoolClient) UpdateOneID(id uint64) *PoolUpdateOne {
+	mutation := newPoolMutation(c.config, OpUpdateOne, withPoolID(id))
+	return &PoolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Pool.
+func (c *PoolClient) Delete() *PoolDelete {
+	mutation := newPoolMutation(c.config, OpDelete)
+	return &PoolDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PoolClient) DeleteOne(po *Pool) *PoolDeleteOne {
+	return c.DeleteOneID(po.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PoolClient) DeleteOneID(id uint64) *PoolDeleteOne {
+	builder := c.Delete().Where(pool.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PoolDeleteOne{builder}
+}
+
+// Query returns a query builder for Pool.
+func (c *PoolClient) Query() *PoolQuery {
+	return &PoolQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePool},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Pool entity by its id.
+func (c *PoolClient) Get(ctx context.Context, id uint64) (*Pool, error) {
+	return c.Query().Where(pool.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PoolClient) GetX(ctx context.Context, id uint64) *Pool {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PoolClient) Hooks() []Hook {
+	return c.hooks.Pool
+}
+
+// Interceptors returns the client interceptors.
+func (c *PoolClient) Interceptors() []Interceptor {
+	return c.inters.Pool
+}
+
+func (c *PoolClient) mutate(ctx context.Context, m *PoolMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PoolCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PoolUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PoolUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PoolDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Pool mutation op: %q", m.Op())
+	}
+}
+
 // RewardClient is a client for the Reward schema.
 type RewardClient struct {
 	config
@@ -2025,11 +2166,11 @@ func (c *StatementClient) mutate(ctx context.Context, m *StatementMutation) (Val
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Banner, Exchange, File, Order, OriginInviteCode, Player, Reward, Round,
+		Banner, Exchange, File, Order, OriginInviteCode, Player, Pool, Reward, Round,
 		RoundInvest, RoundLambFold, Setting, Statement []ent.Hook
 	}
 	inters struct {
-		Banner, Exchange, File, Order, OriginInviteCode, Player, Reward, Round,
+		Banner, Exchange, File, Order, OriginInviteCode, Player, Pool, Reward, Round,
 		RoundInvest, RoundLambFold, Setting, Statement []ent.Interceptor
 	}
 )

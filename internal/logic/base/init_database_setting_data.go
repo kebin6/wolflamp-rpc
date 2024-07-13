@@ -40,7 +40,20 @@ func (l *InitDatabaseLogic) insertSettingData() error {
 				Title:   "",
 				Content: "",
 			},
-			GameCommission: 15, // 默认15个点
+			GameCommission:       3,  // 默认3个点
+			PoolCommission:       3,  // 默认3个点
+			RobPoolCommission:    50, // 默认占资金池50%
+			RewardPoolCommission: 50, // 默认占资金池50%
+			GoldenLambAllowTime: entity.GoldenLambAllowTime{
+				StartTime: "",
+				EndTime:   "",
+			},
+			GoldenLambNum: entity.GoldenLambNum{
+				Max: 0,
+				Min: 0,
+			},
+			PoolMinNumThenSilver: 0,
+			SliverOccurPercent:   0,
 		}
 
 		gameRuleJsonByte, err := json.Marshal(setting)

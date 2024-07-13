@@ -30,6 +30,7 @@ func (l *GetInvestInfoByPlayerIdLogic) GetInvestInfoByPlayerId(in *wolflamp.GetI
 
 	var predicates []predicate.RoundInvest
 	predicates = append(predicates, roundinvest.PlayerID(in.PlayerId))
+	predicates = append(predicates, roundinvest.Mode(in.Mode))
 	if in.RoundId != nil {
 		predicates = append(predicates, roundinvest.RoundID(*in.RoundId))
 	}
@@ -57,6 +58,7 @@ func (l *GetInvestInfoByPlayerIdLogic) GetInvestInfoByPlayerId(in *wolflamp.GetI
 			FoldNo:        v.FoldNo,
 			LambNum:       v.LambNum,
 			ProfitAndLoss: v.ProfitAndLoss,
+			Mode:          v.Mode,
 		})
 	}
 

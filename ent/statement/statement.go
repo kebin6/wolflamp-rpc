@@ -31,6 +31,8 @@ const (
 	FieldAmount = "amount"
 	// FieldReferID holds the string denoting the refer_id field in the database.
 	FieldReferID = "refer_id"
+	// FieldMode holds the string denoting the mode field in the database.
+	FieldMode = "mode"
 	// FieldRemark holds the string denoting the remark field in the database.
 	FieldRemark = "remark"
 	// Table holds the table name of the statement in the database.
@@ -49,6 +51,7 @@ var Columns = []string{
 	FieldInoutType,
 	FieldAmount,
 	FieldReferID,
+	FieldMode,
 	FieldRemark,
 }
 
@@ -83,6 +86,8 @@ var (
 	DefaultAmount float64
 	// DefaultReferID holds the default value on creation for the "refer_id" field.
 	DefaultReferID string
+	// DefaultMode holds the default value on creation for the "mode" field.
+	DefaultMode string
 	// DefaultRemark holds the default value on creation for the "remark" field.
 	DefaultRemark string
 )
@@ -138,6 +143,11 @@ func ByAmount(opts ...sql.OrderTermOption) OrderOption {
 // ByReferID orders the results by the refer_id field.
 func ByReferID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldReferID, opts...).ToFunc()
+}
+
+// ByMode orders the results by the mode field.
+func ByMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMode, opts...).ToFunc()
 }
 
 // ByRemark orders the results by the remark field.

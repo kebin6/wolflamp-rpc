@@ -14,6 +14,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/predicate"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
@@ -241,6 +242,33 @@ func (f TraversePlayer) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.PlayerQuery", q)
 }
 
+// The PoolFunc type is an adapter to allow the use of ordinary function as a Querier.
+type PoolFunc func(context.Context, *ent.PoolQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f PoolFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.PoolQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.PoolQuery", q)
+}
+
+// The TraversePool type is an adapter to allow the use of ordinary function as Traverser.
+type TraversePool func(context.Context, *ent.PoolQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraversePool) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraversePool) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PoolQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.PoolQuery", q)
+}
+
 // The RewardFunc type is an adapter to allow the use of ordinary function as a Querier.
 type RewardFunc func(context.Context, *ent.RewardQuery) (ent.Value, error)
 
@@ -418,6 +446,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.OriginInviteCodeQuery, predicate.OriginInviteCode, origininvitecode.OrderOption]{typ: ent.TypeOriginInviteCode, tq: q}, nil
 	case *ent.PlayerQuery:
 		return &query[*ent.PlayerQuery, predicate.Player, player.OrderOption]{typ: ent.TypePlayer, tq: q}, nil
+	case *ent.PoolQuery:
+		return &query[*ent.PoolQuery, predicate.Pool, pool.OrderOption]{typ: ent.TypePool, tq: q}, nil
 	case *ent.RewardQuery:
 		return &query[*ent.RewardQuery, predicate.Reward, reward.OrderOption]{typ: ent.TypeReward, tq: q}, nil
 	case *ent.RoundQuery:

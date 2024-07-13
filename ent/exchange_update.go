@@ -96,6 +96,20 @@ func (eu *ExchangeUpdate) SetNillableTransactionID(s *string) *ExchangeUpdate {
 	return eu
 }
 
+// SetMode sets the "mode" field.
+func (eu *ExchangeUpdate) SetMode(s string) *ExchangeUpdate {
+	eu.mutation.SetMode(s)
+	return eu
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (eu *ExchangeUpdate) SetNillableMode(s *string) *ExchangeUpdate {
+	if s != nil {
+		eu.SetMode(*s)
+	}
+	return eu
+}
+
 // SetType sets the "type" field.
 func (eu *ExchangeUpdate) SetType(u uint32) *ExchangeUpdate {
 	eu.mutation.ResetType()
@@ -156,6 +170,34 @@ func (eu *ExchangeUpdate) SetNillableLampNum(u *uint32) *ExchangeUpdate {
 // AddLampNum adds u to the "lamp_num" field.
 func (eu *ExchangeUpdate) AddLampNum(u int32) *ExchangeUpdate {
 	eu.mutation.AddLampNum(u)
+	return eu
+}
+
+// SetGcicsOrderID sets the "gcics_order_id" field.
+func (eu *ExchangeUpdate) SetGcicsOrderID(s string) *ExchangeUpdate {
+	eu.mutation.SetGcicsOrderID(s)
+	return eu
+}
+
+// SetNillableGcicsOrderID sets the "gcics_order_id" field if the given value is not nil.
+func (eu *ExchangeUpdate) SetNillableGcicsOrderID(s *string) *ExchangeUpdate {
+	if s != nil {
+		eu.SetGcicsOrderID(*s)
+	}
+	return eu
+}
+
+// SetRemark sets the "remark" field.
+func (eu *ExchangeUpdate) SetRemark(s string) *ExchangeUpdate {
+	eu.mutation.SetRemark(s)
+	return eu
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (eu *ExchangeUpdate) SetNillableRemark(s *string) *ExchangeUpdate {
+	if s != nil {
+		eu.SetRemark(*s)
+	}
 	return eu
 }
 
@@ -230,6 +272,9 @@ func (eu *ExchangeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := eu.mutation.TransactionID(); ok {
 		_spec.SetField(exchange.FieldTransactionID, field.TypeString, value)
 	}
+	if value, ok := eu.mutation.Mode(); ok {
+		_spec.SetField(exchange.FieldMode, field.TypeString, value)
+	}
 	if value, ok := eu.mutation.GetType(); ok {
 		_spec.SetField(exchange.FieldType, field.TypeUint32, value)
 	}
@@ -247,6 +292,12 @@ func (eu *ExchangeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := eu.mutation.AddedLampNum(); ok {
 		_spec.AddField(exchange.FieldLampNum, field.TypeUint32, value)
+	}
+	if value, ok := eu.mutation.GcicsOrderID(); ok {
+		_spec.SetField(exchange.FieldGcicsOrderID, field.TypeString, value)
+	}
+	if value, ok := eu.mutation.Remark(); ok {
+		_spec.SetField(exchange.FieldRemark, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -336,6 +387,20 @@ func (euo *ExchangeUpdateOne) SetNillableTransactionID(s *string) *ExchangeUpdat
 	return euo
 }
 
+// SetMode sets the "mode" field.
+func (euo *ExchangeUpdateOne) SetMode(s string) *ExchangeUpdateOne {
+	euo.mutation.SetMode(s)
+	return euo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (euo *ExchangeUpdateOne) SetNillableMode(s *string) *ExchangeUpdateOne {
+	if s != nil {
+		euo.SetMode(*s)
+	}
+	return euo
+}
+
 // SetType sets the "type" field.
 func (euo *ExchangeUpdateOne) SetType(u uint32) *ExchangeUpdateOne {
 	euo.mutation.ResetType()
@@ -396,6 +461,34 @@ func (euo *ExchangeUpdateOne) SetNillableLampNum(u *uint32) *ExchangeUpdateOne {
 // AddLampNum adds u to the "lamp_num" field.
 func (euo *ExchangeUpdateOne) AddLampNum(u int32) *ExchangeUpdateOne {
 	euo.mutation.AddLampNum(u)
+	return euo
+}
+
+// SetGcicsOrderID sets the "gcics_order_id" field.
+func (euo *ExchangeUpdateOne) SetGcicsOrderID(s string) *ExchangeUpdateOne {
+	euo.mutation.SetGcicsOrderID(s)
+	return euo
+}
+
+// SetNillableGcicsOrderID sets the "gcics_order_id" field if the given value is not nil.
+func (euo *ExchangeUpdateOne) SetNillableGcicsOrderID(s *string) *ExchangeUpdateOne {
+	if s != nil {
+		euo.SetGcicsOrderID(*s)
+	}
+	return euo
+}
+
+// SetRemark sets the "remark" field.
+func (euo *ExchangeUpdateOne) SetRemark(s string) *ExchangeUpdateOne {
+	euo.mutation.SetRemark(s)
+	return euo
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (euo *ExchangeUpdateOne) SetNillableRemark(s *string) *ExchangeUpdateOne {
+	if s != nil {
+		euo.SetRemark(*s)
+	}
 	return euo
 }
 
@@ -500,6 +593,9 @@ func (euo *ExchangeUpdateOne) sqlSave(ctx context.Context) (_node *Exchange, err
 	if value, ok := euo.mutation.TransactionID(); ok {
 		_spec.SetField(exchange.FieldTransactionID, field.TypeString, value)
 	}
+	if value, ok := euo.mutation.Mode(); ok {
+		_spec.SetField(exchange.FieldMode, field.TypeString, value)
+	}
 	if value, ok := euo.mutation.GetType(); ok {
 		_spec.SetField(exchange.FieldType, field.TypeUint32, value)
 	}
@@ -517,6 +613,12 @@ func (euo *ExchangeUpdateOne) sqlSave(ctx context.Context) (_node *Exchange, err
 	}
 	if value, ok := euo.mutation.AddedLampNum(); ok {
 		_spec.AddField(exchange.FieldLampNum, field.TypeUint32, value)
+	}
+	if value, ok := euo.mutation.GcicsOrderID(); ok {
+		_spec.SetField(exchange.FieldGcicsOrderID, field.TypeString, value)
+	}
+	if value, ok := euo.mutation.Remark(); ok {
+		_spec.SetField(exchange.FieldRemark, field.TypeString, value)
 	}
 	_node = &Exchange{config: euo.config}
 	_spec.Assign = _node.assignValues

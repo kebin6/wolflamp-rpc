@@ -56,6 +56,8 @@ const (
 	FieldGcicsUserID = "gcics_user_id"
 	// FieldGcicsToken holds the string denoting the gcics_token field in the database.
 	FieldGcicsToken = "gcics_token"
+	// FieldGcicsReturnURL holds the string denoting the gcics_return_url field in the database.
+	FieldGcicsReturnURL = "gcics_return_url"
 	// EdgeInviter holds the string denoting the inviter edge name in mutations.
 	EdgeInviter = "inviter"
 	// EdgeInvitees holds the string denoting the invitees edge name in mutations.
@@ -96,6 +98,7 @@ var Columns = []string{
 	FieldSystemCommission,
 	FieldGcicsUserID,
 	FieldGcicsToken,
+	FieldGcicsReturnURL,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -153,6 +156,8 @@ var (
 	DefaultGcicsUserID uint64
 	// DefaultGcicsToken holds the default value on creation for the "gcics_token" field.
 	DefaultGcicsToken string
+	// DefaultGcicsReturnURL holds the default value on creation for the "gcics_return_url" field.
+	DefaultGcicsReturnURL string
 )
 
 // OrderOption defines the ordering options for the Player queries.
@@ -266,6 +271,11 @@ func ByGcicsUserID(opts ...sql.OrderTermOption) OrderOption {
 // ByGcicsToken orders the results by the gcics_token field.
 func ByGcicsToken(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGcicsToken, opts...).ToFunc()
+}
+
+// ByGcicsReturnURL orders the results by the gcics_return_url field.
+func ByGcicsReturnURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGcicsReturnURL, opts...).ToFunc()
 }
 
 // ByInviterField orders the results by inviter field.

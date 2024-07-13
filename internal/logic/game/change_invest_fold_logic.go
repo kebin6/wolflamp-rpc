@@ -30,7 +30,7 @@ func NewChangeInvestFoldLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 func (l *ChangeInvestFoldLogic) ChangeInvestFold(in *wolflamp.ChangeInvestFoldReq) (*wolflamp.BaseIDResp, error) {
 
 	// 获取当前轮次信息
-	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
+	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
@@ -38,6 +38,7 @@ func (l *ChangeInvestFoldLogic) ChangeInvestFold(in *wolflamp.ChangeInvestFoldRe
 	investResp, err := NewGetInvestInfoByPlayerIdLogic(l.ctx, l.svcCtx).GetInvestInfoByPlayerId(&wolflamp.GetInvestInfoByPlayerIdReq{
 		PlayerId: in.PlayerId,
 		RoundId:  &roundInfo.Id,
+		Mode:     in.Mode,
 	})
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)

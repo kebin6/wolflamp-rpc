@@ -15,6 +15,7 @@ message StatementInfo {
   double amount = 10;
   string refer_id = 11;
   string remark = 12;
+  string mode = 13;
 }
 
 message CreateStatementReq {
@@ -26,6 +27,7 @@ message CreateStatementReq {
   string refer_id = 11;
   optional string remark = 12;
   optional string prefix = 13;
+  string mode = 14;
 }
 
 message UpdateStatementReq {
@@ -60,6 +62,7 @@ message ListStatementReq {
   optional double amount = 10;
   optional string refer_id = 11;
   optional string remark = 12;
+  string mode = 13;
 }
 
 message ListStatementResp {

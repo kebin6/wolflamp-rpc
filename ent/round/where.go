@@ -100,6 +100,26 @@ func SelectedFold(v uint32) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldSelectedFold, v))
 }
 
+// Mode applies equality check predicate on the "mode" field. It's identical to ModeEQ.
+func Mode(v string) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldMode, v))
+}
+
+// ComputeAmount applies equality check predicate on the "compute_amount" field. It's identical to ComputeAmountEQ.
+func ComputeAmount(v float64) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldComputeAmount, v))
+}
+
+// SyncStatus applies equality check predicate on the "sync_status" field. It's identical to SyncStatusEQ.
+func SyncStatus(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldSyncStatus, v))
+}
+
+// SyncMsg applies equality check predicate on the "sync_msg" field. It's identical to SyncMsgEQ.
+func SyncMsg(v string) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldSyncMsg, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldCreatedAt, v))
@@ -478,6 +498,216 @@ func SelectedFoldLT(v uint32) predicate.Round {
 // SelectedFoldLTE applies the LTE predicate on the "selected_fold" field.
 func SelectedFoldLTE(v uint32) predicate.Round {
 	return predicate.Round(sql.FieldLTE(FieldSelectedFold, v))
+}
+
+// ModeEQ applies the EQ predicate on the "mode" field.
+func ModeEQ(v string) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldMode, v))
+}
+
+// ModeNEQ applies the NEQ predicate on the "mode" field.
+func ModeNEQ(v string) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldMode, v))
+}
+
+// ModeIn applies the In predicate on the "mode" field.
+func ModeIn(vs ...string) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldMode, vs...))
+}
+
+// ModeNotIn applies the NotIn predicate on the "mode" field.
+func ModeNotIn(vs ...string) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldMode, vs...))
+}
+
+// ModeGT applies the GT predicate on the "mode" field.
+func ModeGT(v string) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldMode, v))
+}
+
+// ModeGTE applies the GTE predicate on the "mode" field.
+func ModeGTE(v string) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldMode, v))
+}
+
+// ModeLT applies the LT predicate on the "mode" field.
+func ModeLT(v string) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldMode, v))
+}
+
+// ModeLTE applies the LTE predicate on the "mode" field.
+func ModeLTE(v string) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldMode, v))
+}
+
+// ModeContains applies the Contains predicate on the "mode" field.
+func ModeContains(v string) predicate.Round {
+	return predicate.Round(sql.FieldContains(FieldMode, v))
+}
+
+// ModeHasPrefix applies the HasPrefix predicate on the "mode" field.
+func ModeHasPrefix(v string) predicate.Round {
+	return predicate.Round(sql.FieldHasPrefix(FieldMode, v))
+}
+
+// ModeHasSuffix applies the HasSuffix predicate on the "mode" field.
+func ModeHasSuffix(v string) predicate.Round {
+	return predicate.Round(sql.FieldHasSuffix(FieldMode, v))
+}
+
+// ModeEqualFold applies the EqualFold predicate on the "mode" field.
+func ModeEqualFold(v string) predicate.Round {
+	return predicate.Round(sql.FieldEqualFold(FieldMode, v))
+}
+
+// ModeContainsFold applies the ContainsFold predicate on the "mode" field.
+func ModeContainsFold(v string) predicate.Round {
+	return predicate.Round(sql.FieldContainsFold(FieldMode, v))
+}
+
+// ComputeAmountEQ applies the EQ predicate on the "compute_amount" field.
+func ComputeAmountEQ(v float64) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldComputeAmount, v))
+}
+
+// ComputeAmountNEQ applies the NEQ predicate on the "compute_amount" field.
+func ComputeAmountNEQ(v float64) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldComputeAmount, v))
+}
+
+// ComputeAmountIn applies the In predicate on the "compute_amount" field.
+func ComputeAmountIn(vs ...float64) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldComputeAmount, vs...))
+}
+
+// ComputeAmountNotIn applies the NotIn predicate on the "compute_amount" field.
+func ComputeAmountNotIn(vs ...float64) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldComputeAmount, vs...))
+}
+
+// ComputeAmountGT applies the GT predicate on the "compute_amount" field.
+func ComputeAmountGT(v float64) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldComputeAmount, v))
+}
+
+// ComputeAmountGTE applies the GTE predicate on the "compute_amount" field.
+func ComputeAmountGTE(v float64) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldComputeAmount, v))
+}
+
+// ComputeAmountLT applies the LT predicate on the "compute_amount" field.
+func ComputeAmountLT(v float64) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldComputeAmount, v))
+}
+
+// ComputeAmountLTE applies the LTE predicate on the "compute_amount" field.
+func ComputeAmountLTE(v float64) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldComputeAmount, v))
+}
+
+// SyncStatusEQ applies the EQ predicate on the "sync_status" field.
+func SyncStatusEQ(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldSyncStatus, v))
+}
+
+// SyncStatusNEQ applies the NEQ predicate on the "sync_status" field.
+func SyncStatusNEQ(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldSyncStatus, v))
+}
+
+// SyncStatusIn applies the In predicate on the "sync_status" field.
+func SyncStatusIn(vs ...uint32) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldSyncStatus, vs...))
+}
+
+// SyncStatusNotIn applies the NotIn predicate on the "sync_status" field.
+func SyncStatusNotIn(vs ...uint32) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldSyncStatus, vs...))
+}
+
+// SyncStatusGT applies the GT predicate on the "sync_status" field.
+func SyncStatusGT(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldSyncStatus, v))
+}
+
+// SyncStatusGTE applies the GTE predicate on the "sync_status" field.
+func SyncStatusGTE(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldSyncStatus, v))
+}
+
+// SyncStatusLT applies the LT predicate on the "sync_status" field.
+func SyncStatusLT(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldSyncStatus, v))
+}
+
+// SyncStatusLTE applies the LTE predicate on the "sync_status" field.
+func SyncStatusLTE(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldSyncStatus, v))
+}
+
+// SyncMsgEQ applies the EQ predicate on the "sync_msg" field.
+func SyncMsgEQ(v string) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldSyncMsg, v))
+}
+
+// SyncMsgNEQ applies the NEQ predicate on the "sync_msg" field.
+func SyncMsgNEQ(v string) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldSyncMsg, v))
+}
+
+// SyncMsgIn applies the In predicate on the "sync_msg" field.
+func SyncMsgIn(vs ...string) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldSyncMsg, vs...))
+}
+
+// SyncMsgNotIn applies the NotIn predicate on the "sync_msg" field.
+func SyncMsgNotIn(vs ...string) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldSyncMsg, vs...))
+}
+
+// SyncMsgGT applies the GT predicate on the "sync_msg" field.
+func SyncMsgGT(v string) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldSyncMsg, v))
+}
+
+// SyncMsgGTE applies the GTE predicate on the "sync_msg" field.
+func SyncMsgGTE(v string) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldSyncMsg, v))
+}
+
+// SyncMsgLT applies the LT predicate on the "sync_msg" field.
+func SyncMsgLT(v string) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldSyncMsg, v))
+}
+
+// SyncMsgLTE applies the LTE predicate on the "sync_msg" field.
+func SyncMsgLTE(v string) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldSyncMsg, v))
+}
+
+// SyncMsgContains applies the Contains predicate on the "sync_msg" field.
+func SyncMsgContains(v string) predicate.Round {
+	return predicate.Round(sql.FieldContains(FieldSyncMsg, v))
+}
+
+// SyncMsgHasPrefix applies the HasPrefix predicate on the "sync_msg" field.
+func SyncMsgHasPrefix(v string) predicate.Round {
+	return predicate.Round(sql.FieldHasPrefix(FieldSyncMsg, v))
+}
+
+// SyncMsgHasSuffix applies the HasSuffix predicate on the "sync_msg" field.
+func SyncMsgHasSuffix(v string) predicate.Round {
+	return predicate.Round(sql.FieldHasSuffix(FieldSyncMsg, v))
+}
+
+// SyncMsgEqualFold applies the EqualFold predicate on the "sync_msg" field.
+func SyncMsgEqualFold(v string) predicate.Round {
+	return predicate.Round(sql.FieldEqualFold(FieldSyncMsg, v))
+}
+
+// SyncMsgContainsFold applies the ContainsFold predicate on the "sync_msg" field.
+func SyncMsgContainsFold(v string) predicate.Round {
+	return predicate.Round(sql.FieldContainsFold(FieldSyncMsg, v))
 }
 
 // HasFold applies the HasEdge predicate on the "fold" edge.

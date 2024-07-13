@@ -28,9 +28,9 @@ func NewGetLambFoldAggregateV2Logic(ctx context.Context, svcCtx *svc.ServiceCont
 	}
 }
 
-func (l *GetLambFoldAggregateV2Logic) GetLambFoldAggregateV2(in *wolflamp.Empty) (*wolflamp.GetLambFoldAggregateResp, error) {
+func (l *GetLambFoldAggregateV2Logic) GetLambFoldAggregateV2(in *wolflamp.GetLambFoldAggregateV2Req) (*wolflamp.GetLambFoldAggregateResp, error) {
 
-	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
+	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
@@ -62,7 +62,9 @@ func (l *GetLambFoldAggregateV2Logic) GetLambFoldAggregateV2(in *wolflamp.Empty)
 	// 随机选择10~30随机数，作为查询值N
 	randNum := uint64(rand.Intn(20) + 10)
 	for _, participant := range participants {
-		page, err := l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.PlayerID(participant.PlayerID), roundinvest.RoundIDNEQ(roundInfo.Id)).
+		page, err := l.svcCtx.DB.RoundInvest.Query().
+			Where(roundinvest.Mode(in.Mode)).
+			Where(roundinvest.PlayerID(participant.PlayerID), roundinvest.RoundIDNEQ(roundInfo.Id)).
 			Order(ent.Desc(roundinvest.FieldID)).Page(l.ctx, 1, randNum)
 		if err != nil {
 			return nil, err

@@ -23,6 +23,7 @@ type (
 	CalculateWithdrawFeeReq     = wolflamp.CalculateWithdrawFeeReq
 	CalculateWithdrawFeeResp    = wolflamp.CalculateWithdrawFeeResp
 	ChangeInvestFoldReq         = wolflamp.ChangeInvestFoldReq
+	CommissionResp              = wolflamp.CommissionResp
 	CreateBannerReq             = wolflamp.CreateBannerReq
 	CreateExchangeReq           = wolflamp.CreateExchangeReq
 	CreateInvestReq             = wolflamp.CreateInvestReq
@@ -41,6 +42,7 @@ type (
 	Empty                       = wolflamp.Empty
 	ExchangeInfo                = wolflamp.ExchangeInfo
 	ExchangeReq                 = wolflamp.ExchangeReq
+	ExchangeResp                = wolflamp.ExchangeResp
 	FileInfo                    = wolflamp.FileInfo
 	FindBannerReq               = wolflamp.FindBannerReq
 	FindExchangeReq             = wolflamp.FindExchangeReq
@@ -56,6 +58,8 @@ type (
 	GameRuleResp                = wolflamp.GameRuleResp
 	GetByEmailReq               = wolflamp.GetByEmailReq
 	GetByInviteCodeReq          = wolflamp.GetByInviteCodeReq
+	GetGcicsBalanceReq          = wolflamp.GetGcicsBalanceReq
+	GetGcicsBalanceResp         = wolflamp.GetGcicsBalanceResp
 	GetInvestByRoundIdResp      = wolflamp.GetInvestByRoundIdResp
 	GetInvestInfoByPlayerIdReq  = wolflamp.GetInvestInfoByPlayerIdReq
 	GetInvestInfoByPlayerIdResp = wolflamp.GetInvestInfoByPlayerIdResp
@@ -64,8 +68,10 @@ type (
 	GetInvitorListByIdsResp     = wolflamp.GetInvitorListByIdsResp
 	GetLambFoldAggregateReq     = wolflamp.GetLambFoldAggregateReq
 	GetLambFoldAggregateResp    = wolflamp.GetLambFoldAggregateResp
+	GetLambFoldAggregateV2Req   = wolflamp.GetLambFoldAggregateV2Req
 	GetOverviewReq              = wolflamp.GetOverviewReq
 	GetOverviewResp             = wolflamp.GetOverviewResp
+	HourTimeRangeResp           = wolflamp.HourTimeRangeResp
 	IDInt32Req                  = wolflamp.IDInt32Req
 	IDInt64Req                  = wolflamp.IDInt64Req
 	IDReq                       = wolflamp.IDReq
@@ -95,10 +101,15 @@ type (
 	ListStatementReq            = wolflamp.ListStatementReq
 	ListStatementResp           = wolflamp.ListStatementResp
 	MinWithdrawNumResp          = wolflamp.MinWithdrawNumResp
+	NotifyExchangeReq           = wolflamp.NotifyExchangeReq
+	NumRangeResp                = wolflamp.NumRangeResp
 	OrderInfo                   = wolflamp.OrderInfo
 	OverviewInfo                = wolflamp.OverviewInfo
 	PageInfoReq                 = wolflamp.PageInfoReq
+	PercentResp                 = wolflamp.PercentResp
 	PlayerInfo                  = wolflamp.PlayerInfo
+	PoolMinNumThenSilverResp    = wolflamp.PoolMinNumThenSilverResp
+	PreviousRoundReq            = wolflamp.PreviousRoundReq
 	PreviousRoundResp           = wolflamp.PreviousRoundResp
 	RewardAggregateReq          = wolflamp.RewardAggregateReq
 	RewardAggregateResp         = wolflamp.RewardAggregateResp
@@ -117,6 +128,8 @@ type (
 	UpdateRewardReq             = wolflamp.UpdateRewardReq
 	UpdateSettingReq            = wolflamp.UpdateSettingReq
 	UpdateStatementReq          = wolflamp.UpdateStatementReq
+	ValidateGcicsSignReq        = wolflamp.ValidateGcicsSignReq
+	ValidateGcicsSignResp       = wolflamp.ValidateGcicsSignResp
 	WithdrawCommissionResp      = wolflamp.WithdrawCommissionResp
 	WithdrawThresholdResp       = wolflamp.WithdrawThresholdResp
 
@@ -132,10 +145,11 @@ type (
 		DeleteExchange(ctx context.Context, in *DeleteExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		FindExchange(ctx context.Context, in *FindExchangeReq, opts ...grpc.CallOption) (*ExchangeInfo, error)
 		ListExchange(ctx context.Context, in *ListExchangeReq, opts ...grpc.CallOption) (*ListExchangeResp, error)
-		Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*ExchangeResp, error)
+		Notify(ctx context.Context, in *NotifyExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateRound(ctx context.Context, in *CreateRoundReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error)
-		PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error)
+		PreviousRound(ctx context.Context, in *PreviousRoundReq, opts ...grpc.CallOption) (*PreviousRoundResp, error)
 		ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error)
 		ListFold(ctx context.Context, in *ListFoldReq, opts ...grpc.CallOption) (*ListFoldResp, error)
 		Invest(ctx context.Context, in *CreateInvestReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -143,7 +157,7 @@ type (
 		GetInvestInfoByPlayerId(ctx context.Context, in *GetInvestInfoByPlayerIdReq, opts ...grpc.CallOption) (*GetInvestInfoByPlayerIdResp, error)
 		GetInvestByRoundId(ctx context.Context, in *GetInvestsByRoundIdReq, opts ...grpc.CallOption) (*GetInvestByRoundIdResp, error)
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
-		GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
+		GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateOrder(ctx context.Context, in *UpdateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -160,6 +174,8 @@ type (
 		GetByEmail(ctx context.Context, in *GetByEmailReq, opts ...grpc.CallOption) (*PlayerInfo, error)
 		GetByInviteCode(ctx context.Context, in *GetByInviteCodeReq, opts ...grpc.CallOption) (*PlayerInfo, error)
 		GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error)
+		ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error)
+		GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error)
 		CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateReward(ctx context.Context, in *UpdateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteReward(ctx context.Context, in *DeleteRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -176,6 +192,13 @@ type (
 		GetGameRule(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameRuleResp, error)
 		GetRobotNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotNumResp, error)
 		GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error)
+		GetPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+		GetRobPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+		GetRewardPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+		GetGoldenLambAllowTime(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HourTimeRangeResp, error)
+		GetGoldenLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error)
+		GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error)
+		GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
 		CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -249,9 +272,14 @@ func (m *defaultWolflamp) ListExchange(ctx context.Context, in *ListExchangeReq,
 	return client.ListExchange(ctx, in, opts...)
 }
 
-func (m *defaultWolflamp) Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+func (m *defaultWolflamp) Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*ExchangeResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.Exchange(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) Notify(ctx context.Context, in *NotifyExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.Notify(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateRound(ctx context.Context, in *CreateRoundReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
@@ -264,7 +292,7 @@ func (m *defaultWolflamp) FindRound(ctx context.Context, in *FindRoundReq, opts 
 	return client.FindRound(ctx, in, opts...)
 }
 
-func (m *defaultWolflamp) PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error) {
+func (m *defaultWolflamp) PreviousRound(ctx context.Context, in *PreviousRoundReq, opts ...grpc.CallOption) (*PreviousRoundResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.PreviousRound(ctx, in, opts...)
 }
@@ -304,7 +332,7 @@ func (m *defaultWolflamp) GetLambFoldAggregate(ctx context.Context, in *GetLambF
 	return client.GetLambFoldAggregate(ctx, in, opts...)
 }
 
-func (m *defaultWolflamp) GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
+func (m *defaultWolflamp) GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetLambFoldAggregateV2(ctx, in, opts...)
 }
@@ -389,6 +417,16 @@ func (m *defaultWolflamp) GetInvitorListByIds(ctx context.Context, in *GetInvito
 	return client.GetInvitorListByIds(ctx, in, opts...)
 }
 
+func (m *defaultWolflamp) ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.ValidateGcicsSign(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetGcicsBalance(ctx, in, opts...)
+}
+
 func (m *defaultWolflamp) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.CreateReward(ctx, in, opts...)
@@ -467,6 +505,41 @@ func (m *defaultWolflamp) GetRobotNum(ctx context.Context, in *Empty, opts ...gr
 func (m *defaultWolflamp) GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetGameCommission(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetPoolCommission(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetRobPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetRobPoolCommission(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetRewardPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetRewardPoolCommission(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetGoldenLambAllowTime(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HourTimeRangeResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetGoldenLambAllowTime(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetGoldenLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetGoldenLambNumRange(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetPoolMinNumThenSilver(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetSliverOccurPercent(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

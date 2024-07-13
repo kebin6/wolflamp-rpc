@@ -17,9 +17,11 @@ message RoundInfo {
   uint32 round_count = 10;
   uint64 total_round_count = 11;
   repeated InvestInfo invests = 12;
+  string mode = 13;
 }
 
 message CreateRoundReq {
+  string mode = 2;
   int64 start_at = 5;
   int64 open_at = 6;
   int64 end_at = 7;
@@ -27,6 +29,11 @@ message CreateRoundReq {
 
 message FindRoundReq {
   optional uint64 id = 1;
+  string mode = 2;
+}
+
+message PreviousRoundReq {
+  string mode = 1;
 }
 
 message PreviousRoundResp {
@@ -37,6 +44,7 @@ message ListHistoryInvestReq {
   uint64 page = 1;
   uint64 page_size = 2;
   optional uint64 player_id = 3;
+  string mode = 4;
 }
 
 message ListHistoryInvestResp {
@@ -55,6 +63,7 @@ message FoldInfo {
   uint32 round_count = 7;
   uint64 total_round_count = 8;
   float profit_and_loss = 9;
+  string mode = 10;
 }
 
 message ListFoldReq {
@@ -64,6 +73,7 @@ message ListFoldReq {
   optional uint64 total_round_count = 4;
   optional uint64 total_round_cound_min = 5;
   optional uint64 total_round_cound_max = 6;
+  string mode = 7;
 }
 
 message ListFoldResp {
@@ -82,6 +92,7 @@ message InvestInfo {
   uint32 lamb_num = 8;
   float profit_and_loss = 9;
   uint64 round_id = 10;
+  string mode = 11;
 }
 
 message CreateInvestReq {
@@ -90,6 +101,7 @@ message CreateInvestReq {
   uint32 lamb_num = 8;
   float profit_and_loss = 9;
   uint64 round_id = 10;
+  string mode = 11;
 }
 
 message UpdateInvestReq {
@@ -100,12 +112,14 @@ message UpdateInvestReq {
 message ChangeInvestFoldReq {
   uint64 player_id = 1;
   uint32 fold_no = 2;
+  string mode = 3;
 }
 
 message GetInvestInfoByPlayerIdReq {
   uint64 player_id = 1;
   optional uint64 round_id = 2;
   repeated uint64 round_ids = 3;
+  string mode = 4;
 }
 
 message GetInvestInfoByPlayerIdResp {
@@ -114,6 +128,7 @@ message GetInvestInfoByPlayerIdResp {
 
 message GetInvestsByRoundIdReq {
   uint64 round_id = 1;
+  string mode = 2;
 }
 
 message GetInvestByRoundIdResp {
@@ -131,6 +146,11 @@ message LambFoldAggregateInfo {
 message GetLambFoldAggregateReq {
   uint64 total_round_count_min = 1;
   uint64 total_round_count_max = 2;
+  string mode = 3;
+}
+
+message GetLambFoldAggregateV2Req {
+  string mode = 3;
 }
 
 message GetLambFoldAggregateResp {
@@ -139,6 +159,7 @@ message GetLambFoldAggregateResp {
 
 message dealOpenGameReq {
   uint32 lambFoldNo = 1;
+  string mode = 2;
 }
 
 service Wolflamp {
@@ -149,7 +170,7 @@ service Wolflamp {
   rpc findRound (FindRoundReq) returns (RoundInfo);
 
   // group: game
-  rpc previousRound (Empty) returns (PreviousRoundResp);
+  rpc previousRound (PreviousRoundReq) returns (PreviousRoundResp);
 
   // group: game
   rpc listHistoryInvest (ListHistoryInvestReq) returns (ListHistoryInvestResp);
@@ -173,7 +194,7 @@ service Wolflamp {
   rpc getLambFoldAggregate (GetLambFoldAggregateReq) returns (GetLambFoldAggregateResp);
 
   // group: game
-  rpc getLambFoldAggregateV2 (Empty) returns (GetLambFoldAggregateResp);
+  rpc getLambFoldAggregateV2 (GetLambFoldAggregateV2Req) returns (GetLambFoldAggregateResp);
 
   // group: game
   rpc dealOpenGame (dealOpenGameReq) returns (BaseIDResp);

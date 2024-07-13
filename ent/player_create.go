@@ -314,6 +314,20 @@ func (pc *PlayerCreate) SetNillableGcicsToken(s *string) *PlayerCreate {
 	return pc
 }
 
+// SetGcicsReturnURL sets the "gcics_return_url" field.
+func (pc *PlayerCreate) SetGcicsReturnURL(s string) *PlayerCreate {
+	pc.mutation.SetGcicsReturnURL(s)
+	return pc
+}
+
+// SetNillableGcicsReturnURL sets the "gcics_return_url" field if the given value is not nil.
+func (pc *PlayerCreate) SetNillableGcicsReturnURL(s *string) *PlayerCreate {
+	if s != nil {
+		pc.SetGcicsReturnURL(*s)
+	}
+	return pc
+}
+
 // SetID sets the "id" field.
 func (pc *PlayerCreate) SetID(u uint64) *PlayerCreate {
 	pc.mutation.SetID(u)
@@ -459,6 +473,10 @@ func (pc *PlayerCreate) defaults() {
 		v := player.DefaultGcicsToken
 		pc.mutation.SetGcicsToken(v)
 	}
+	if _, ok := pc.mutation.GcicsReturnURL(); !ok {
+		v := player.DefaultGcicsReturnURL
+		pc.mutation.SetGcicsReturnURL(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -519,6 +537,9 @@ func (pc *PlayerCreate) check() error {
 	}
 	if _, ok := pc.mutation.GcicsToken(); !ok {
 		return &ValidationError{Name: "gcics_token", err: errors.New(`ent: missing required field "Player.gcics_token"`)}
+	}
+	if _, ok := pc.mutation.GcicsReturnURL(); !ok {
+		return &ValidationError{Name: "gcics_return_url", err: errors.New(`ent: missing required field "Player.gcics_return_url"`)}
 	}
 	return nil
 }
@@ -631,6 +652,10 @@ func (pc *PlayerCreate) createSpec() (*Player, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.GcicsToken(); ok {
 		_spec.SetField(player.FieldGcicsToken, field.TypeString, value)
 		_node.GcicsToken = value
+	}
+	if value, ok := pc.mutation.GcicsReturnURL(); ok {
+		_spec.SetField(player.FieldGcicsReturnURL, field.TypeString, value)
+		_node.GcicsReturnURL = value
 	}
 	if nodes := pc.mutation.InviterIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

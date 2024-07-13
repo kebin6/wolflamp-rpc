@@ -105,6 +105,11 @@ func TotalRoundCount(v uint64) predicate.RoundInvest {
 	return predicate.RoundInvest(sql.FieldEQ(FieldTotalRoundCount, v))
 }
 
+// Mode applies equality check predicate on the "mode" field. It's identical to ModeEQ.
+func Mode(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldEQ(FieldMode, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.RoundInvest {
 	return predicate.RoundInvest(sql.FieldEQ(FieldCreatedAt, v))
@@ -538,6 +543,71 @@ func TotalRoundCountIsNil() predicate.RoundInvest {
 // TotalRoundCountNotNil applies the NotNil predicate on the "total_round_count" field.
 func TotalRoundCountNotNil() predicate.RoundInvest {
 	return predicate.RoundInvest(sql.FieldNotNull(FieldTotalRoundCount))
+}
+
+// ModeEQ applies the EQ predicate on the "mode" field.
+func ModeEQ(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldEQ(FieldMode, v))
+}
+
+// ModeNEQ applies the NEQ predicate on the "mode" field.
+func ModeNEQ(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldNEQ(FieldMode, v))
+}
+
+// ModeIn applies the In predicate on the "mode" field.
+func ModeIn(vs ...string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldIn(FieldMode, vs...))
+}
+
+// ModeNotIn applies the NotIn predicate on the "mode" field.
+func ModeNotIn(vs ...string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldNotIn(FieldMode, vs...))
+}
+
+// ModeGT applies the GT predicate on the "mode" field.
+func ModeGT(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldGT(FieldMode, v))
+}
+
+// ModeGTE applies the GTE predicate on the "mode" field.
+func ModeGTE(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldGTE(FieldMode, v))
+}
+
+// ModeLT applies the LT predicate on the "mode" field.
+func ModeLT(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldLT(FieldMode, v))
+}
+
+// ModeLTE applies the LTE predicate on the "mode" field.
+func ModeLTE(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldLTE(FieldMode, v))
+}
+
+// ModeContains applies the Contains predicate on the "mode" field.
+func ModeContains(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldContains(FieldMode, v))
+}
+
+// ModeHasPrefix applies the HasPrefix predicate on the "mode" field.
+func ModeHasPrefix(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldHasPrefix(FieldMode, v))
+}
+
+// ModeHasSuffix applies the HasSuffix predicate on the "mode" field.
+func ModeHasSuffix(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldHasSuffix(FieldMode, v))
+}
+
+// ModeEqualFold applies the EqualFold predicate on the "mode" field.
+func ModeEqualFold(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldEqualFold(FieldMode, v))
+}
+
+// ModeContainsFold applies the ContainsFold predicate on the "mode" field.
+func ModeContainsFold(v string) predicate.RoundInvest {
+	return predicate.RoundInvest(sql.FieldContainsFold(FieldMode, v))
 }
 
 // HasRound applies the HasEdge predicate on the "round" edge.

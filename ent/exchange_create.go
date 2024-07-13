@@ -90,6 +90,20 @@ func (ec *ExchangeCreate) SetNillableTransactionID(s *string) *ExchangeCreate {
 	return ec
 }
 
+// SetMode sets the "mode" field.
+func (ec *ExchangeCreate) SetMode(s string) *ExchangeCreate {
+	ec.mutation.SetMode(s)
+	return ec
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ec *ExchangeCreate) SetNillableMode(s *string) *ExchangeCreate {
+	if s != nil {
+		ec.SetMode(*s)
+	}
+	return ec
+}
+
 // SetType sets the "type" field.
 func (ec *ExchangeCreate) SetType(u uint32) *ExchangeCreate {
 	ec.mutation.SetType(u)
@@ -128,6 +142,34 @@ func (ec *ExchangeCreate) SetLampNum(u uint32) *ExchangeCreate {
 func (ec *ExchangeCreate) SetNillableLampNum(u *uint32) *ExchangeCreate {
 	if u != nil {
 		ec.SetLampNum(*u)
+	}
+	return ec
+}
+
+// SetGcicsOrderID sets the "gcics_order_id" field.
+func (ec *ExchangeCreate) SetGcicsOrderID(s string) *ExchangeCreate {
+	ec.mutation.SetGcicsOrderID(s)
+	return ec
+}
+
+// SetNillableGcicsOrderID sets the "gcics_order_id" field if the given value is not nil.
+func (ec *ExchangeCreate) SetNillableGcicsOrderID(s *string) *ExchangeCreate {
+	if s != nil {
+		ec.SetGcicsOrderID(*s)
+	}
+	return ec
+}
+
+// SetRemark sets the "remark" field.
+func (ec *ExchangeCreate) SetRemark(s string) *ExchangeCreate {
+	ec.mutation.SetRemark(s)
+	return ec
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (ec *ExchangeCreate) SetNillableRemark(s *string) *ExchangeCreate {
+	if s != nil {
+		ec.SetRemark(*s)
 	}
 	return ec
 }
@@ -193,6 +235,10 @@ func (ec *ExchangeCreate) defaults() {
 		v := exchange.DefaultTransactionID
 		ec.mutation.SetTransactionID(v)
 	}
+	if _, ok := ec.mutation.Mode(); !ok {
+		v := exchange.DefaultMode
+		ec.mutation.SetMode(v)
+	}
 	if _, ok := ec.mutation.GetType(); !ok {
 		v := exchange.DefaultType
 		ec.mutation.SetType(v)
@@ -204,6 +250,14 @@ func (ec *ExchangeCreate) defaults() {
 	if _, ok := ec.mutation.LampNum(); !ok {
 		v := exchange.DefaultLampNum
 		ec.mutation.SetLampNum(v)
+	}
+	if _, ok := ec.mutation.GcicsOrderID(); !ok {
+		v := exchange.DefaultGcicsOrderID
+		ec.mutation.SetGcicsOrderID(v)
+	}
+	if _, ok := ec.mutation.Remark(); !ok {
+		v := exchange.DefaultRemark
+		ec.mutation.SetRemark(v)
 	}
 }
 
@@ -221,6 +275,9 @@ func (ec *ExchangeCreate) check() error {
 	if _, ok := ec.mutation.TransactionID(); !ok {
 		return &ValidationError{Name: "transaction_id", err: errors.New(`ent: missing required field "Exchange.transaction_id"`)}
 	}
+	if _, ok := ec.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "Exchange.mode"`)}
+	}
 	if _, ok := ec.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Exchange.type"`)}
 	}
@@ -229,6 +286,12 @@ func (ec *ExchangeCreate) check() error {
 	}
 	if _, ok := ec.mutation.LampNum(); !ok {
 		return &ValidationError{Name: "lamp_num", err: errors.New(`ent: missing required field "Exchange.lamp_num"`)}
+	}
+	if _, ok := ec.mutation.GcicsOrderID(); !ok {
+		return &ValidationError{Name: "gcics_order_id", err: errors.New(`ent: missing required field "Exchange.gcics_order_id"`)}
+	}
+	if _, ok := ec.mutation.Remark(); !ok {
+		return &ValidationError{Name: "remark", err: errors.New(`ent: missing required field "Exchange.remark"`)}
 	}
 	return nil
 }
@@ -282,6 +345,10 @@ func (ec *ExchangeCreate) createSpec() (*Exchange, *sqlgraph.CreateSpec) {
 		_spec.SetField(exchange.FieldTransactionID, field.TypeString, value)
 		_node.TransactionID = value
 	}
+	if value, ok := ec.mutation.Mode(); ok {
+		_spec.SetField(exchange.FieldMode, field.TypeString, value)
+		_node.Mode = value
+	}
 	if value, ok := ec.mutation.GetType(); ok {
 		_spec.SetField(exchange.FieldType, field.TypeUint32, value)
 		_node.Type = value
@@ -293,6 +360,14 @@ func (ec *ExchangeCreate) createSpec() (*Exchange, *sqlgraph.CreateSpec) {
 	if value, ok := ec.mutation.LampNum(); ok {
 		_spec.SetField(exchange.FieldLampNum, field.TypeUint32, value)
 		_node.LampNum = value
+	}
+	if value, ok := ec.mutation.GcicsOrderID(); ok {
+		_spec.SetField(exchange.FieldGcicsOrderID, field.TypeString, value)
+		_node.GcicsOrderID = value
+	}
+	if value, ok := ec.mutation.Remark(); ok {
+		_spec.SetField(exchange.FieldRemark, field.TypeString, value)
+		_node.Remark = value
 	}
 	return _node, _spec
 }

@@ -31,6 +31,8 @@ const (
 	FieldNum = "num"
 	// FieldFormula holds the string denoting the formula field in the database.
 	FieldFormula = "formula"
+	// FieldMode holds the string denoting the mode field in the database.
+	FieldMode = "mode"
 	// FieldRemark holds the string denoting the remark field in the database.
 	FieldRemark = "remark"
 	// Table holds the table name of the reward in the database.
@@ -49,6 +51,7 @@ var Columns = []string{
 	FieldContributorLevel,
 	FieldNum,
 	FieldFormula,
+	FieldMode,
 	FieldRemark,
 }
 
@@ -83,6 +86,8 @@ var (
 	DefaultNum float32
 	// DefaultFormula holds the default value on creation for the "formula" field.
 	DefaultFormula string
+	// DefaultMode holds the default value on creation for the "mode" field.
+	DefaultMode string
 	// DefaultRemark holds the default value on creation for the "remark" field.
 	DefaultRemark string
 )
@@ -138,6 +143,11 @@ func ByNum(opts ...sql.OrderTermOption) OrderOption {
 // ByFormula orders the results by the formula field.
 func ByFormula(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldFormula, opts...).ToFunc()
+}
+
+// ByMode orders the results by the mode field.
+func ByMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMode, opts...).ToFunc()
 }
 
 // ByRemark orders the results by the remark field.

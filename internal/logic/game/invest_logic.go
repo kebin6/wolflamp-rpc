@@ -49,7 +49,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		player = playerInfo
 	}
 	// 获取当前轮次信息
-	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
+	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
@@ -77,16 +77,22 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		playerEmail := ""
 		if player != nil {
 			playerEmail = player.Email
-			err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
-				AddCoinLamb(-float32(in.LambNum)).
-				Exec(l.ctx)
+			if in.Mode == "coin" {
+				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+					AddCoinLamb(-float32(in.LambNum)).
+					Exec(l.ctx)
+			} else {
+				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+					AddTokenLamb(-float32(in.LambNum)).
+					Exec(l.ctx)
+			}
 			if err != nil {
 				return err
 			}
 		}
 		if investedOne == nil {
-
 			result, err = l.svcCtx.DB.RoundInvest.Create().
+				SetMode(in.Mode).
 				SetPlayerID(in.PlayerId).
 				SetPlayerEmail(playerEmail).
 				SetRoundID(in.RoundId).

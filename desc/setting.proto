@@ -51,6 +51,28 @@ message GameCommissionResp {
   float gameCommission = 1;
 }
 
+message CommissionResp {
+  float commission = 1;
+}
+
+message HourTimeRangeResp {
+  string startTime = 1;
+  string endTime = 2;
+}
+
+message NumRangeResp {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+message PoolMinNumThenSilverResp {
+  uint32 min = 1;
+}
+
+message PercentResp {
+  float percent = 1;
+}
+
 service Wolflamp {
   // group: setting
   //rpc createSetting (CreateSettingReq) returns (BaseIDResp);
@@ -90,4 +112,25 @@ service Wolflamp {
 
   // group: setting
   rpc getGameCommission (Empty) returns (GameCommissionResp);
+
+  // group: setting
+  rpc getPoolCommission (Empty) returns (CommissionResp);
+
+  // group: setting
+  rpc getRobPoolCommission (Empty) returns (CommissionResp);
+
+  // group: setting
+  rpc getRewardPoolCommission (Empty) returns (CommissionResp);
+
+  // group: setting
+  rpc getGoldenLambAllowTime (Empty) returns (HourTimeRangeResp);
+
+  // group: setting
+  rpc getGoldenLambNumRange (Empty) returns (NumRangeResp);
+
+  // group: setting
+  rpc getPoolMinNumThenSilver (Empty) returns (PoolMinNumThenSilverResp);
+
+  // group: setting
+  rpc getSliverOccurPercent (Empty) returns (PercentResp);
 }

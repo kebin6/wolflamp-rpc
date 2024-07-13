@@ -173,6 +173,20 @@ func (ru *RewardUpdate) SetNillableFormula(s *string) *RewardUpdate {
 	return ru
 }
 
+// SetMode sets the "mode" field.
+func (ru *RewardUpdate) SetMode(s string) *RewardUpdate {
+	ru.mutation.SetMode(s)
+	return ru
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ru *RewardUpdate) SetNillableMode(s *string) *RewardUpdate {
+	if s != nil {
+		ru.SetMode(*s)
+	}
+	return ru
+}
+
 // SetRemark sets the "remark" field.
 func (ru *RewardUpdate) SetRemark(s string) *RewardUpdate {
 	ru.mutation.SetRemark(s)
@@ -278,6 +292,9 @@ func (ru *RewardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Formula(); ok {
 		_spec.SetField(reward.FieldFormula, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Mode(); ok {
+		_spec.SetField(reward.FieldMode, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.Remark(); ok {
 		_spec.SetField(reward.FieldRemark, field.TypeString, value)
@@ -447,6 +464,20 @@ func (ruo *RewardUpdateOne) SetNillableFormula(s *string) *RewardUpdateOne {
 	return ruo
 }
 
+// SetMode sets the "mode" field.
+func (ruo *RewardUpdateOne) SetMode(s string) *RewardUpdateOne {
+	ruo.mutation.SetMode(s)
+	return ruo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ruo *RewardUpdateOne) SetNillableMode(s *string) *RewardUpdateOne {
+	if s != nil {
+		ruo.SetMode(*s)
+	}
+	return ruo
+}
+
 // SetRemark sets the "remark" field.
 func (ruo *RewardUpdateOne) SetRemark(s string) *RewardUpdateOne {
 	ruo.mutation.SetRemark(s)
@@ -582,6 +613,9 @@ func (ruo *RewardUpdateOne) sqlSave(ctx context.Context) (_node *Reward, err err
 	}
 	if value, ok := ruo.mutation.Formula(); ok {
 		_spec.SetField(reward.FieldFormula, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Mode(); ok {
+		_spec.SetField(reward.FieldMode, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.Remark(); ok {
 		_spec.SetField(reward.FieldRemark, field.TypeString, value)

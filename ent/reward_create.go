@@ -146,6 +146,20 @@ func (rc *RewardCreate) SetNillableFormula(s *string) *RewardCreate {
 	return rc
 }
 
+// SetMode sets the "mode" field.
+func (rc *RewardCreate) SetMode(s string) *RewardCreate {
+	rc.mutation.SetMode(s)
+	return rc
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (rc *RewardCreate) SetNillableMode(s *string) *RewardCreate {
+	if s != nil {
+		rc.SetMode(*s)
+	}
+	return rc
+}
+
 // SetRemark sets the "remark" field.
 func (rc *RewardCreate) SetRemark(s string) *RewardCreate {
 	rc.mutation.SetRemark(s)
@@ -237,6 +251,10 @@ func (rc *RewardCreate) defaults() {
 		v := reward.DefaultFormula
 		rc.mutation.SetFormula(v)
 	}
+	if _, ok := rc.mutation.Mode(); !ok {
+		v := reward.DefaultMode
+		rc.mutation.SetMode(v)
+	}
 	if _, ok := rc.mutation.Remark(); !ok {
 		v := reward.DefaultRemark
 		rc.mutation.SetRemark(v)
@@ -268,6 +286,9 @@ func (rc *RewardCreate) check() error {
 	}
 	if _, ok := rc.mutation.Formula(); !ok {
 		return &ValidationError{Name: "formula", err: errors.New(`ent: missing required field "Reward.formula"`)}
+	}
+	if _, ok := rc.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "Reward.mode"`)}
 	}
 	if _, ok := rc.mutation.Remark(); !ok {
 		return &ValidationError{Name: "remark", err: errors.New(`ent: missing required field "Reward.remark"`)}
@@ -339,6 +360,10 @@ func (rc *RewardCreate) createSpec() (*Reward, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Formula(); ok {
 		_spec.SetField(reward.FieldFormula, field.TypeString, value)
 		_node.Formula = value
+	}
+	if value, ok := rc.mutation.Mode(); ok {
+		_spec.SetField(reward.FieldMode, field.TypeString, value)
+		_node.Mode = value
 	}
 	if value, ok := rc.mutation.Remark(); ok {
 		_spec.SetField(reward.FieldRemark, field.TypeString, value)

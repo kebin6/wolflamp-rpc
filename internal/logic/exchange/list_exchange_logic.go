@@ -29,6 +29,7 @@ func NewListExchangeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *List
 func (l *ListExchangeLogic) ListExchange(in *wolflamp.ListExchangeReq) (*wolflamp.ListExchangeResp, error) {
 
 	var predicates []predicate.Exchange
+	predicates = append(predicates, exchange.Mode(in.Mode))
 	if in.Type != nil {
 		predicates = append(predicates, exchange.Type(*in.Type))
 	}

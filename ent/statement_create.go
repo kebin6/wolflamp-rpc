@@ -146,6 +146,20 @@ func (sc *StatementCreate) SetNillableReferID(s *string) *StatementCreate {
 	return sc
 }
 
+// SetMode sets the "mode" field.
+func (sc *StatementCreate) SetMode(s string) *StatementCreate {
+	sc.mutation.SetMode(s)
+	return sc
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (sc *StatementCreate) SetNillableMode(s *string) *StatementCreate {
+	if s != nil {
+		sc.SetMode(*s)
+	}
+	return sc
+}
+
 // SetRemark sets the "remark" field.
 func (sc *StatementCreate) SetRemark(s string) *StatementCreate {
 	sc.mutation.SetRemark(s)
@@ -237,6 +251,10 @@ func (sc *StatementCreate) defaults() {
 		v := statement.DefaultReferID
 		sc.mutation.SetReferID(v)
 	}
+	if _, ok := sc.mutation.Mode(); !ok {
+		v := statement.DefaultMode
+		sc.mutation.SetMode(v)
+	}
 	if _, ok := sc.mutation.Remark(); !ok {
 		v := statement.DefaultRemark
 		sc.mutation.SetRemark(v)
@@ -268,6 +286,9 @@ func (sc *StatementCreate) check() error {
 	}
 	if _, ok := sc.mutation.ReferID(); !ok {
 		return &ValidationError{Name: "refer_id", err: errors.New(`ent: missing required field "Statement.refer_id"`)}
+	}
+	if _, ok := sc.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "Statement.mode"`)}
 	}
 	if _, ok := sc.mutation.Remark(); !ok {
 		return &ValidationError{Name: "remark", err: errors.New(`ent: missing required field "Statement.remark"`)}
@@ -339,6 +360,10 @@ func (sc *StatementCreate) createSpec() (*Statement, *sqlgraph.CreateSpec) {
 	if value, ok := sc.mutation.ReferID(); ok {
 		_spec.SetField(statement.FieldReferID, field.TypeString, value)
 		_node.ReferID = value
+	}
+	if value, ok := sc.mutation.Mode(); ok {
+		_spec.SetField(statement.FieldMode, field.TypeString, value)
+		_node.Mode = value
 	}
 	if value, ok := sc.mutation.Remark(); ok {
 		_spec.SetField(statement.FieldRemark, field.TypeString, value)

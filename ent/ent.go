@@ -18,6 +18,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
@@ -90,6 +91,7 @@ func checkColumn(table, column string) error {
 			order.Table:            order.ValidColumn,
 			origininvitecode.Table: origininvitecode.ValidColumn,
 			player.Table:           player.ValidColumn,
+			pool.Table:             pool.ValidColumn,
 			reward.Table:           reward.ValidColumn,
 			round.Table:            round.ValidColumn,
 			roundinvest.Table:      roundinvest.ValidColumn,

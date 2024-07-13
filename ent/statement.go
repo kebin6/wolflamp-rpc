@@ -35,6 +35,8 @@ type Statement struct {
 	Amount float64 `json:"amount,omitempty"`
 	// refer id | 对应单ID
 	ReferID string `json:"refer_id,omitempty"`
+	// 币种类别：coin/token
+	Mode string `json:"mode,omitempty"`
 	// remark | 备注
 	Remark       string `json:"remark,omitempty"`
 	selectValues sql.SelectValues
@@ -49,7 +51,7 @@ func (*Statement) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case statement.FieldID, statement.FieldStatus, statement.FieldPlayerID, statement.FieldModule, statement.FieldInoutType:
 			values[i] = new(sql.NullInt64)
-		case statement.FieldCode, statement.FieldReferID, statement.FieldRemark:
+		case statement.FieldCode, statement.FieldReferID, statement.FieldMode, statement.FieldRemark:
 			values[i] = new(sql.NullString)
 		case statement.FieldCreatedAt, statement.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -128,6 +130,12 @@ func (s *Statement) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.ReferID = value.String
 			}
+		case statement.FieldMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mode", values[i])
+			} else if value.Valid {
+				s.Mode = value.String
+			}
 		case statement.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
@@ -196,6 +204,9 @@ func (s *Statement) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("refer_id=")
 	builder.WriteString(s.ReferID)
+	builder.WriteString(", ")
+	builder.WriteString("mode=")
+	builder.WriteString(s.Mode)
 	builder.WriteString(", ")
 	builder.WriteString("remark=")
 	builder.WriteString(s.Remark)

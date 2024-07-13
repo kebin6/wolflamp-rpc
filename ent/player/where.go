@@ -160,6 +160,11 @@ func GcicsToken(v string) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldGcicsToken, v))
 }
 
+// GcicsReturnURL applies equality check predicate on the "gcics_return_url" field. It's identical to GcicsReturnURLEQ.
+func GcicsReturnURL(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsReturnURL, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldCreatedAt, v))
@@ -1198,6 +1203,71 @@ func GcicsTokenEqualFold(v string) predicate.Player {
 // GcicsTokenContainsFold applies the ContainsFold predicate on the "gcics_token" field.
 func GcicsTokenContainsFold(v string) predicate.Player {
 	return predicate.Player(sql.FieldContainsFold(FieldGcicsToken, v))
+}
+
+// GcicsReturnURLEQ applies the EQ predicate on the "gcics_return_url" field.
+func GcicsReturnURLEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLNEQ applies the NEQ predicate on the "gcics_return_url" field.
+func GcicsReturnURLNEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLIn applies the In predicate on the "gcics_return_url" field.
+func GcicsReturnURLIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldGcicsReturnURL, vs...))
+}
+
+// GcicsReturnURLNotIn applies the NotIn predicate on the "gcics_return_url" field.
+func GcicsReturnURLNotIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldGcicsReturnURL, vs...))
+}
+
+// GcicsReturnURLGT applies the GT predicate on the "gcics_return_url" field.
+func GcicsReturnURLGT(v string) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLGTE applies the GTE predicate on the "gcics_return_url" field.
+func GcicsReturnURLGTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLLT applies the LT predicate on the "gcics_return_url" field.
+func GcicsReturnURLLT(v string) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLLTE applies the LTE predicate on the "gcics_return_url" field.
+func GcicsReturnURLLTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLContains applies the Contains predicate on the "gcics_return_url" field.
+func GcicsReturnURLContains(v string) predicate.Player {
+	return predicate.Player(sql.FieldContains(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLHasPrefix applies the HasPrefix predicate on the "gcics_return_url" field.
+func GcicsReturnURLHasPrefix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasPrefix(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLHasSuffix applies the HasSuffix predicate on the "gcics_return_url" field.
+func GcicsReturnURLHasSuffix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasSuffix(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLEqualFold applies the EqualFold predicate on the "gcics_return_url" field.
+func GcicsReturnURLEqualFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldEqualFold(FieldGcicsReturnURL, v))
+}
+
+// GcicsReturnURLContainsFold applies the ContainsFold predicate on the "gcics_return_url" field.
+func GcicsReturnURLContainsFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldContainsFold(FieldGcicsReturnURL, v))
 }
 
 // HasInviter applies the HasEdge predicate on the "inviter" edge.

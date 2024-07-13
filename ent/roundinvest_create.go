@@ -161,6 +161,20 @@ func (ric *RoundInvestCreate) SetNillableTotalRoundCount(u *uint64) *RoundInvest
 	return ric
 }
 
+// SetMode sets the "mode" field.
+func (ric *RoundInvestCreate) SetMode(s string) *RoundInvestCreate {
+	ric.mutation.SetMode(s)
+	return ric
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (ric *RoundInvestCreate) SetNillableMode(s *string) *RoundInvestCreate {
+	if s != nil {
+		ric.SetMode(*s)
+	}
+	return ric
+}
+
 // SetID sets the "id" field.
 func (ric *RoundInvestCreate) SetID(u uint64) *RoundInvestCreate {
 	ric.mutation.SetID(u)
@@ -247,6 +261,10 @@ func (ric *RoundInvestCreate) defaults() {
 		v := roundinvest.DefaultTotalRoundCount
 		ric.mutation.SetTotalRoundCount(v)
 	}
+	if _, ok := ric.mutation.Mode(); !ok {
+		v := roundinvest.DefaultMode
+		ric.mutation.SetMode(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -271,6 +289,9 @@ func (ric *RoundInvestCreate) check() error {
 	}
 	if _, ok := ric.mutation.ProfitAndLoss(); !ok {
 		return &ValidationError{Name: "profit_and_loss", err: errors.New(`ent: missing required field "RoundInvest.profit_and_loss"`)}
+	}
+	if _, ok := ric.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "RoundInvest.mode"`)}
 	}
 	return nil
 }
@@ -339,6 +360,10 @@ func (ric *RoundInvestCreate) createSpec() (*RoundInvest, *sqlgraph.CreateSpec) 
 	if value, ok := ric.mutation.TotalRoundCount(); ok {
 		_spec.SetField(roundinvest.FieldTotalRoundCount, field.TypeUint64, value)
 		_node.TotalRoundCount = value
+	}
+	if value, ok := ric.mutation.Mode(); ok {
+		_spec.SetField(roundinvest.FieldMode, field.TypeString, value)
+		_node.Mode = value
 	}
 	if nodes := ric.mutation.RoundIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

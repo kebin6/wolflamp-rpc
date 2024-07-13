@@ -59,6 +59,8 @@ type Player struct {
 	GcicsUserID uint64 `json:"gcics_user_id,omitempty"`
 	// user game token from gcics system
 	GcicsToken string `json:"gcics_token,omitempty"`
+	// 登陆失效后的跳转地址
+	GcicsReturnURL string `json:"gcics_return_url,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PlayerQuery when eager-loading is set.
 	Edges        PlayerEdges `json:"edges"`
@@ -105,7 +107,7 @@ func (*Player) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case player.FieldID, player.FieldStatus, player.FieldRank, player.FieldInvitedNum, player.FieldInviterID, player.FieldGcicsUserID:
 			values[i] = new(sql.NullInt64)
-		case player.FieldName, player.FieldEmail, player.FieldPassword, player.FieldTransactionPassword, player.FieldDepositAddress, player.FieldInviteCode, player.FieldInvitedCode, player.FieldGcicsToken:
+		case player.FieldName, player.FieldEmail, player.FieldPassword, player.FieldTransactionPassword, player.FieldDepositAddress, player.FieldInviteCode, player.FieldInvitedCode, player.FieldGcicsToken, player.FieldGcicsReturnURL:
 			values[i] = new(sql.NullString)
 		case player.FieldCreatedAt, player.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -256,6 +258,12 @@ func (pl *Player) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pl.GcicsToken = value.String
 			}
+		case player.FieldGcicsReturnURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gcics_return_url", values[i])
+			} else if value.Valid {
+				pl.GcicsReturnURL = value.String
+			}
 		default:
 			pl.selectValues.Set(columns[i], values[i])
 		}
@@ -364,6 +372,9 @@ func (pl *Player) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("gcics_token=")
 	builder.WriteString(pl.GcicsToken)
+	builder.WriteString(", ")
+	builder.WriteString("gcics_return_url=")
+	builder.WriteString(pl.GcicsReturnURL)
 	builder.WriteByte(')')
 	return builder.String()
 }

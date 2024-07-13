@@ -35,6 +35,9 @@ func (Statement) Fields() []ent.Field {
 		field.String("refer_id").Default("").
 			Comment("refer id | 对应单ID").
 			Annotations(entsql.WithComments(true)),
+		field.String("mode").Default("").
+			Comment("币种类别：coin/token").
+			Annotations(entsql.WithComments(true)),
 		field.String("remark").Default("").
 			Comment("remark | 备注").
 			Annotations(entsql.WithComments(true)),

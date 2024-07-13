@@ -40,6 +40,13 @@ func (l *UpdateSettingLogic) UpdateSetting(in *wolflamp.UpdateSettingReq) (*wolf
 	l.svcCtx.Redis.Del(l.ctx, enum.IdleTime.CacheKey())
 	l.svcCtx.Redis.Del(l.ctx, enum.WithdrawThreshold.CacheKey())
 	l.svcCtx.Redis.Del(l.ctx, enum.GameCommission.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.PoolCommission.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.RobPoolCommission.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.RewardPoolCommission.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.GoldenLambAllowTime.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.GoldenLambNum.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.PoolMinNumThenSilver.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.SliverOccurPercent.CacheKey())
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}

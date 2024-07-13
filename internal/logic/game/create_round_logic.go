@@ -36,7 +36,7 @@ func NewCreateRoundLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.BaseIDResp, error) {
 
 	// 获取当前轮次信息
-	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
+	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
 	if err != nil && !errors.Is(err, errorx.NewInternalError("game.roundNotFound")) {
 		return nil, err
 	}
@@ -74,6 +74,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 			SetEndAt(time.Unix(in.EndAt, 0)).
 			SetRoundCount(roundCount).
 			SetTotalRoundCount(totalRoundCount).
+			SetMode(in.Mode).
 			Save(l.ctx)
 		if err != nil {
 			return err
@@ -88,7 +89,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 				SetTotalRoundCount(totalRoundCount).
 				SetFoldNo(uint32(i)).
 				SetLambNum(uint32(0)).
-				SetProfitAndLoss(float32(0)))
+				SetProfitAndLoss(float32(0)).SetMode(in.Mode))
 		}
 		err = l.svcCtx.DB.RoundLambFold.CreateBulk(folds...).Exec(l.ctx)
 		if err != nil {

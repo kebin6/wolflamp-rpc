@@ -35,6 +35,8 @@ type Reward struct {
 	Num float32 `json:"num,omitempty"`
 	// 计算公式
 	Formula string `json:"formula,omitempty"`
+	// 币种类别：coin/token
+	Mode string `json:"mode,omitempty"`
 	// remark | 备注
 	Remark       string `json:"remark,omitempty"`
 	selectValues sql.SelectValues
@@ -49,7 +51,7 @@ func (*Reward) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case reward.FieldID, reward.FieldStatus, reward.FieldToID, reward.FieldContributorID, reward.FieldContributorLevel:
 			values[i] = new(sql.NullInt64)
-		case reward.FieldContributorEmail, reward.FieldFormula, reward.FieldRemark:
+		case reward.FieldContributorEmail, reward.FieldFormula, reward.FieldMode, reward.FieldRemark:
 			values[i] = new(sql.NullString)
 		case reward.FieldCreatedAt, reward.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -128,6 +130,12 @@ func (r *Reward) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.Formula = value.String
 			}
+		case reward.FieldMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mode", values[i])
+			} else if value.Valid {
+				r.Mode = value.String
+			}
 		case reward.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
@@ -196,6 +204,9 @@ func (r *Reward) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("formula=")
 	builder.WriteString(r.Formula)
+	builder.WriteString(", ")
+	builder.WriteString("mode=")
+	builder.WriteString(r.Mode)
 	builder.WriteString(", ")
 	builder.WriteString("remark=")
 	builder.WriteString(r.Remark)

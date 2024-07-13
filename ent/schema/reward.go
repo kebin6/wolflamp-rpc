@@ -35,6 +35,9 @@ func (Reward) Fields() []ent.Field {
 		field.String("formula").Default("").
 			Comment("计算公式").
 			Annotations(entsql.WithComments(true)),
+		field.String("mode").Default("").
+			Comment("币种类别：coin/token").
+			Annotations(entsql.WithComments(true)),
 		field.String("remark").Default("").
 			Comment("remark | 备注").
 			Annotations(entsql.WithComments(true)),

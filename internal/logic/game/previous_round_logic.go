@@ -27,20 +27,22 @@ func NewPreviousRoundLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pre
 	}
 }
 
-func (l *PreviousRoundLogic) PreviousRound(in *wolflamp.Empty) (*wolflamp.PreviousRoundResp, error) {
+func (l *PreviousRoundLogic) PreviousRound(in *wolflamp.PreviousRoundReq) (*wolflamp.PreviousRoundResp, error) {
 
-	previousFoldNo, err := l.svcCtx.Redis.Get(l.ctx, cachekey.PreviousSelectedLambFoldNo.Val()).Uint64()
+	previousFoldNo, err := l.svcCtx.Redis.Get(l.ctx, cachekey.PreviousSelectedLambFoldNo.ModeVal(in.Mode)).Uint64()
 	if err != nil {
-		currentRound, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{})
+		currentRound, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
 		if err != nil {
 			return nil, err
 		}
-		previousRound, err := l.svcCtx.DB.Round.Query().Where(round.IDLT(currentRound.Id)).Order(ent.Desc(round.FieldID)).First(l.ctx)
+		previousRound, err := l.svcCtx.DB.Round.Query().
+			Where(round.Mode(in.Mode)).
+			Where(round.IDLT(currentRound.Id)).Order(ent.Desc(round.FieldID)).First(l.ctx)
 		if err != nil {
 			previousFoldNo = 0
 		} else {
 			previousFoldNo = uint64(previousRound.SelectedFold)
-			l.svcCtx.Redis.Set(l.ctx, cachekey.PreviousSelectedLambFoldNo.Val(), previousFoldNo, time.Second*600)
+			l.svcCtx.Redis.Set(l.ctx, cachekey.PreviousSelectedLambFoldNo.ModeVal(in.Mode), previousFoldNo, time.Second*600)
 		}
 	}
 	return &wolflamp.PreviousRoundResp{

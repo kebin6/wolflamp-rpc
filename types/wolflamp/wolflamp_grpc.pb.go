@@ -45,13 +45,15 @@ type WolflampClient interface {
 	// group: exchange
 	ListExchange(ctx context.Context, in *ListExchangeReq, opts ...grpc.CallOption) (*ListExchangeResp, error)
 	// group: exchange
-	Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*ExchangeResp, error)
+	// group: exchange
+	Notify(ctx context.Context, in *NotifyExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: game
 	CreateRound(ctx context.Context, in *CreateRoundReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: game
 	FindRound(ctx context.Context, in *FindRoundReq, opts ...grpc.CallOption) (*RoundInfo, error)
 	// group: game
-	PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error)
+	PreviousRound(ctx context.Context, in *PreviousRoundReq, opts ...grpc.CallOption) (*PreviousRoundResp, error)
 	// group: game
 	ListHistoryInvest(ctx context.Context, in *ListHistoryInvestReq, opts ...grpc.CallOption) (*ListHistoryInvestResp, error)
 	// group: game
@@ -67,7 +69,7 @@ type WolflampClient interface {
 	// group: game
 	GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 	// group: game
-	GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
+	GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 	// group: game
 	DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: order
@@ -100,6 +102,10 @@ type WolflampClient interface {
 	GetByInviteCode(ctx context.Context, in *GetByInviteCodeReq, opts ...grpc.CallOption) (*PlayerInfo, error)
 	// group: player
 	GetInvitorListByIds(ctx context.Context, in *GetInvitorListByIdsReq, opts ...grpc.CallOption) (*GetInvitorListByIdsResp, error)
+	// group: player
+	ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error)
+	// group: player
+	GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error)
 	// group: reward
 	CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: reward
@@ -132,6 +138,20 @@ type WolflampClient interface {
 	GetRobotNum(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RobotNumResp, error)
 	// group: setting
 	GetGameCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GameCommissionResp, error)
+	// group: setting
+	GetPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+	// group: setting
+	GetRobPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+	// group: setting
+	GetRewardPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error)
+	// group: setting
+	GetGoldenLambAllowTime(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HourTimeRangeResp, error)
+	// group: setting
+	GetGoldenLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error)
+	// group: setting
+	GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error)
+	// group: setting
+	GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
 	// group: statement
 	CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: statement
@@ -251,9 +271,18 @@ func (c *wolflampClient) ListExchange(ctx context.Context, in *ListExchangeReq, 
 	return out, nil
 }
 
-func (c *wolflampClient) Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
-	out := new(BaseIDResp)
+func (c *wolflampClient) Exchange(ctx context.Context, in *ExchangeReq, opts ...grpc.CallOption) (*ExchangeResp, error) {
+	out := new(ExchangeResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/exchange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) Notify(ctx context.Context, in *NotifyExchangeReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/notify", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -278,7 +307,7 @@ func (c *wolflampClient) FindRound(ctx context.Context, in *FindRoundReq, opts .
 	return out, nil
 }
 
-func (c *wolflampClient) PreviousRound(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PreviousRoundResp, error) {
+func (c *wolflampClient) PreviousRound(ctx context.Context, in *PreviousRoundReq, opts ...grpc.CallOption) (*PreviousRoundResp, error) {
 	out := new(PreviousRoundResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/previousRound", in, out, opts...)
 	if err != nil {
@@ -350,7 +379,7 @@ func (c *wolflampClient) GetLambFoldAggregate(ctx context.Context, in *GetLambFo
 	return out, nil
 }
 
-func (c *wolflampClient) GetLambFoldAggregateV2(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
+func (c *wolflampClient) GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error) {
 	out := new(GetLambFoldAggregateResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getLambFoldAggregateV2", in, out, opts...)
 	if err != nil {
@@ -503,6 +532,24 @@ func (c *wolflampClient) GetInvitorListByIds(ctx context.Context, in *GetInvitor
 	return out, nil
 }
 
+func (c *wolflampClient) ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error) {
+	out := new(ValidateGcicsSignResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/validateGcicsSign", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error) {
+	out := new(GetGcicsBalanceResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getGcicsBalance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createReward", in, out, opts...)
@@ -647,6 +694,69 @@ func (c *wolflampClient) GetGameCommission(ctx context.Context, in *Empty, opts 
 	return out, nil
 }
 
+func (c *wolflampClient) GetPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	out := new(CommissionResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getPoolCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetRobPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	out := new(CommissionResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getRobPoolCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetRewardPoolCommission(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CommissionResp, error) {
+	out := new(CommissionResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getRewardPoolCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetGoldenLambAllowTime(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HourTimeRangeResp, error) {
+	out := new(HourTimeRangeResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getGoldenLambAllowTime", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetGoldenLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error) {
+	out := new(NumRangeResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getGoldenLambNumRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error) {
+	out := new(PoolMinNumThenSilverResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getPoolMinNumThenSilver", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error) {
+	out := new(PercentResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getSliverOccurPercent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createStatement", in, out, opts...)
@@ -719,13 +829,15 @@ type WolflampServer interface {
 	// group: exchange
 	ListExchange(context.Context, *ListExchangeReq) (*ListExchangeResp, error)
 	// group: exchange
-	Exchange(context.Context, *ExchangeReq) (*BaseIDResp, error)
+	Exchange(context.Context, *ExchangeReq) (*ExchangeResp, error)
+	// group: exchange
+	Notify(context.Context, *NotifyExchangeReq) (*BaseIDResp, error)
 	// group: game
 	CreateRound(context.Context, *CreateRoundReq) (*BaseIDResp, error)
 	// group: game
 	FindRound(context.Context, *FindRoundReq) (*RoundInfo, error)
 	// group: game
-	PreviousRound(context.Context, *Empty) (*PreviousRoundResp, error)
+	PreviousRound(context.Context, *PreviousRoundReq) (*PreviousRoundResp, error)
 	// group: game
 	ListHistoryInvest(context.Context, *ListHistoryInvestReq) (*ListHistoryInvestResp, error)
 	// group: game
@@ -741,7 +853,7 @@ type WolflampServer interface {
 	// group: game
 	GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error)
 	// group: game
-	GetLambFoldAggregateV2(context.Context, *Empty) (*GetLambFoldAggregateResp, error)
+	GetLambFoldAggregateV2(context.Context, *GetLambFoldAggregateV2Req) (*GetLambFoldAggregateResp, error)
 	// group: game
 	DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error)
 	// group: order
@@ -774,6 +886,10 @@ type WolflampServer interface {
 	GetByInviteCode(context.Context, *GetByInviteCodeReq) (*PlayerInfo, error)
 	// group: player
 	GetInvitorListByIds(context.Context, *GetInvitorListByIdsReq) (*GetInvitorListByIdsResp, error)
+	// group: player
+	ValidateGcicsSign(context.Context, *ValidateGcicsSignReq) (*ValidateGcicsSignResp, error)
+	// group: player
+	GetGcicsBalance(context.Context, *GetGcicsBalanceReq) (*GetGcicsBalanceResp, error)
 	// group: reward
 	CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error)
 	// group: reward
@@ -806,6 +922,20 @@ type WolflampServer interface {
 	GetRobotNum(context.Context, *Empty) (*RobotNumResp, error)
 	// group: setting
 	GetGameCommission(context.Context, *Empty) (*GameCommissionResp, error)
+	// group: setting
+	GetPoolCommission(context.Context, *Empty) (*CommissionResp, error)
+	// group: setting
+	GetRobPoolCommission(context.Context, *Empty) (*CommissionResp, error)
+	// group: setting
+	GetRewardPoolCommission(context.Context, *Empty) (*CommissionResp, error)
+	// group: setting
+	GetGoldenLambAllowTime(context.Context, *Empty) (*HourTimeRangeResp, error)
+	// group: setting
+	GetGoldenLambNumRange(context.Context, *Empty) (*NumRangeResp, error)
+	// group: setting
+	GetPoolMinNumThenSilver(context.Context, *Empty) (*PoolMinNumThenSilverResp, error)
+	// group: setting
+	GetSliverOccurPercent(context.Context, *Empty) (*PercentResp, error)
 	// group: statement
 	CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error)
 	// group: statement
@@ -856,8 +986,11 @@ func (UnimplementedWolflampServer) FindExchange(context.Context, *FindExchangeRe
 func (UnimplementedWolflampServer) ListExchange(context.Context, *ListExchangeReq) (*ListExchangeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListExchange not implemented")
 }
-func (UnimplementedWolflampServer) Exchange(context.Context, *ExchangeReq) (*BaseIDResp, error) {
+func (UnimplementedWolflampServer) Exchange(context.Context, *ExchangeReq) (*ExchangeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Exchange not implemented")
+}
+func (UnimplementedWolflampServer) Notify(context.Context, *NotifyExchangeReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Notify not implemented")
 }
 func (UnimplementedWolflampServer) CreateRound(context.Context, *CreateRoundReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRound not implemented")
@@ -865,7 +998,7 @@ func (UnimplementedWolflampServer) CreateRound(context.Context, *CreateRoundReq)
 func (UnimplementedWolflampServer) FindRound(context.Context, *FindRoundReq) (*RoundInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindRound not implemented")
 }
-func (UnimplementedWolflampServer) PreviousRound(context.Context, *Empty) (*PreviousRoundResp, error) {
+func (UnimplementedWolflampServer) PreviousRound(context.Context, *PreviousRoundReq) (*PreviousRoundResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PreviousRound not implemented")
 }
 func (UnimplementedWolflampServer) ListHistoryInvest(context.Context, *ListHistoryInvestReq) (*ListHistoryInvestResp, error) {
@@ -889,7 +1022,7 @@ func (UnimplementedWolflampServer) GetInvestByRoundId(context.Context, *GetInves
 func (UnimplementedWolflampServer) GetLambFoldAggregate(context.Context, *GetLambFoldAggregateReq) (*GetLambFoldAggregateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLambFoldAggregate not implemented")
 }
-func (UnimplementedWolflampServer) GetLambFoldAggregateV2(context.Context, *Empty) (*GetLambFoldAggregateResp, error) {
+func (UnimplementedWolflampServer) GetLambFoldAggregateV2(context.Context, *GetLambFoldAggregateV2Req) (*GetLambFoldAggregateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLambFoldAggregateV2 not implemented")
 }
 func (UnimplementedWolflampServer) DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error) {
@@ -940,6 +1073,12 @@ func (UnimplementedWolflampServer) GetByInviteCode(context.Context, *GetByInvite
 func (UnimplementedWolflampServer) GetInvitorListByIds(context.Context, *GetInvitorListByIdsReq) (*GetInvitorListByIdsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInvitorListByIds not implemented")
 }
+func (UnimplementedWolflampServer) ValidateGcicsSign(context.Context, *ValidateGcicsSignReq) (*ValidateGcicsSignResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateGcicsSign not implemented")
+}
+func (UnimplementedWolflampServer) GetGcicsBalance(context.Context, *GetGcicsBalanceReq) (*GetGcicsBalanceResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGcicsBalance not implemented")
+}
 func (UnimplementedWolflampServer) CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateReward not implemented")
 }
@@ -987,6 +1126,27 @@ func (UnimplementedWolflampServer) GetRobotNum(context.Context, *Empty) (*RobotN
 }
 func (UnimplementedWolflampServer) GetGameCommission(context.Context, *Empty) (*GameCommissionResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGameCommission not implemented")
+}
+func (UnimplementedWolflampServer) GetPoolCommission(context.Context, *Empty) (*CommissionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoolCommission not implemented")
+}
+func (UnimplementedWolflampServer) GetRobPoolCommission(context.Context, *Empty) (*CommissionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRobPoolCommission not implemented")
+}
+func (UnimplementedWolflampServer) GetRewardPoolCommission(context.Context, *Empty) (*CommissionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRewardPoolCommission not implemented")
+}
+func (UnimplementedWolflampServer) GetGoldenLambAllowTime(context.Context, *Empty) (*HourTimeRangeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGoldenLambAllowTime not implemented")
+}
+func (UnimplementedWolflampServer) GetGoldenLambNumRange(context.Context, *Empty) (*NumRangeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGoldenLambNumRange not implemented")
+}
+func (UnimplementedWolflampServer) GetPoolMinNumThenSilver(context.Context, *Empty) (*PoolMinNumThenSilverResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoolMinNumThenSilver not implemented")
+}
+func (UnimplementedWolflampServer) GetSliverOccurPercent(context.Context, *Empty) (*PercentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSliverOccurPercent not implemented")
 }
 func (UnimplementedWolflampServer) CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStatement not implemented")
@@ -1232,6 +1392,24 @@ func _Wolflamp_Exchange_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_Notify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyExchangeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).Notify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/notify",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).Notify(ctx, req.(*NotifyExchangeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateRound_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRoundReq)
 	if err := dec(in); err != nil {
@@ -1269,7 +1447,7 @@ func _Wolflamp_FindRound_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Wolflamp_PreviousRound_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(PreviousRoundReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1281,7 +1459,7 @@ func _Wolflamp_PreviousRound_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/wolflamp.Wolflamp/previousRound",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WolflampServer).PreviousRound(ctx, req.(*Empty))
+		return srv.(WolflampServer).PreviousRound(ctx, req.(*PreviousRoundReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1413,7 +1591,7 @@ func _Wolflamp_GetLambFoldAggregate_Handler(srv interface{}, ctx context.Context
 }
 
 func _Wolflamp_GetLambFoldAggregateV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetLambFoldAggregateV2Req)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1425,7 +1603,7 @@ func _Wolflamp_GetLambFoldAggregateV2_Handler(srv interface{}, ctx context.Conte
 		FullMethod: "/wolflamp.Wolflamp/getLambFoldAggregateV2",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WolflampServer).GetLambFoldAggregateV2(ctx, req.(*Empty))
+		return srv.(WolflampServer).GetLambFoldAggregateV2(ctx, req.(*GetLambFoldAggregateV2Req))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1718,6 +1896,42 @@ func _Wolflamp_GetInvitorListByIds_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_ValidateGcicsSign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateGcicsSignReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).ValidateGcicsSign(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/validateGcicsSign",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).ValidateGcicsSign(ctx, req.(*ValidateGcicsSignReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetGcicsBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGcicsBalanceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetGcicsBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getGcicsBalance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetGcicsBalance(ctx, req.(*GetGcicsBalanceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRewardReq)
 	if err := dec(in); err != nil {
@@ -2006,6 +2220,132 @@ func _Wolflamp_GetGameCommission_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetPoolCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetPoolCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getPoolCommission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetPoolCommission(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetRobPoolCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetRobPoolCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getRobPoolCommission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetRobPoolCommission(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetRewardPoolCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetRewardPoolCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getRewardPoolCommission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetRewardPoolCommission(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetGoldenLambAllowTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetGoldenLambAllowTime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getGoldenLambAllowTime",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetGoldenLambAllowTime(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetGoldenLambNumRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetGoldenLambNumRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getGoldenLambNumRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetGoldenLambNumRange(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetPoolMinNumThenSilver_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetPoolMinNumThenSilver(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getPoolMinNumThenSilver",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetPoolMinNumThenSilver(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetSliverOccurPercent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetSliverOccurPercent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getSliverOccurPercent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetSliverOccurPercent(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateStatementReq)
 	if err := dec(in); err != nil {
@@ -2152,6 +2492,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wolflamp_Exchange_Handler,
 		},
 		{
+			MethodName: "notify",
+			Handler:    _Wolflamp_Notify_Handler,
+		},
+		{
 			MethodName: "createRound",
 			Handler:    _Wolflamp_CreateRound_Handler,
 		},
@@ -2260,6 +2604,14 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wolflamp_GetInvitorListByIds_Handler,
 		},
 		{
+			MethodName: "validateGcicsSign",
+			Handler:    _Wolflamp_ValidateGcicsSign_Handler,
+		},
+		{
+			MethodName: "getGcicsBalance",
+			Handler:    _Wolflamp_GetGcicsBalance_Handler,
+		},
+		{
 			MethodName: "createReward",
 			Handler:    _Wolflamp_CreateReward_Handler,
 		},
@@ -2322,6 +2674,34 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getGameCommission",
 			Handler:    _Wolflamp_GetGameCommission_Handler,
+		},
+		{
+			MethodName: "getPoolCommission",
+			Handler:    _Wolflamp_GetPoolCommission_Handler,
+		},
+		{
+			MethodName: "getRobPoolCommission",
+			Handler:    _Wolflamp_GetRobPoolCommission_Handler,
+		},
+		{
+			MethodName: "getRewardPoolCommission",
+			Handler:    _Wolflamp_GetRewardPoolCommission_Handler,
+		},
+		{
+			MethodName: "getGoldenLambAllowTime",
+			Handler:    _Wolflamp_GetGoldenLambAllowTime_Handler,
+		},
+		{
+			MethodName: "getGoldenLambNumRange",
+			Handler:    _Wolflamp_GetGoldenLambNumRange_Handler,
+		},
+		{
+			MethodName: "getPoolMinNumThenSilver",
+			Handler:    _Wolflamp_GetPoolMinNumThenSilver_Handler,
+		},
+		{
+			MethodName: "getSliverOccurPercent",
+			Handler:    _Wolflamp_GetSliverOccurPercent_Handler,
 		},
 		{
 			MethodName: "createStatement",

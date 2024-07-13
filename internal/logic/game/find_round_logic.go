@@ -33,7 +33,7 @@ func (l *FindRoundLogic) FindRound(in *wolflamp.FindRoundReq) (*wolflamp.RoundIn
 
 	var query *ent.RoundQuery
 	if in.Id == nil {
-		currentId, err := l.GetCurrentRoundId()
+		currentId, err := l.GetCurrentRoundId(in.Mode)
 		if err != nil {
 			return nil, err
 		}
@@ -53,12 +53,13 @@ func (l *FindRoundLogic) FindRound(in *wolflamp.FindRoundReq) (*wolflamp.RoundIn
 
 }
 
-func (l *FindRoundLogic) GetCurrentRoundId() (uint64, error) {
-	currentIdCached, err := l.svcCtx.Redis.Get(l.ctx, cachekey.CurrentGameRound.Val()).Uint64()
+func (l *FindRoundLogic) GetCurrentRoundId(mode string) (uint64, error) {
+	currentIdCached, err := l.svcCtx.Redis.Get(l.ctx, cachekey.CurrentGameRound.ModeVal(mode)).Uint64()
 	if err == nil {
 		return currentIdCached, err
 	}
-	listResp, err := l.svcCtx.DB.Round.Query().WithFold().Order(ent.Desc(round.FieldID)).Page(l.ctx, 1, 2)
+	listResp, err := l.svcCtx.DB.Round.Query().Where(round.Mode(mode)).
+		WithFold().Order(ent.Desc(round.FieldID)).Page(l.ctx, 1, 2)
 	if err != nil {
 		return 0, err
 	}
@@ -73,12 +74,12 @@ func (l *FindRoundLogic) GetCurrentRoundId() (uint64, error) {
 	}
 	// 查看最新的回合是否在当前时间段内
 	if newestOne.StartAt.Unix() <= nowTime && newestOne.EndAt.Unix() >= nowTime {
-		l.svcCtx.Redis.Set(l.ctx, cachekey.CurrentGameRound.Val(), newestOne.ID, 0)
+		l.svcCtx.Redis.Set(l.ctx, cachekey.CurrentGameRound.ModeVal(mode), newestOne.ID, 0)
 		return newestOne.ID, nil
 	}
 	newestOne = listResp.List[1]
 	if newestOne.StartAt.Unix() <= nowTime && newestOne.EndAt.Unix() >= nowTime {
-		l.svcCtx.Redis.Set(l.ctx, cachekey.CurrentGameRound.Val(), newestOne.ID, 0)
+		l.svcCtx.Redis.Set(l.ctx, cachekey.CurrentGameRound.ModeVal(mode), newestOne.ID, 0)
 		return newestOne.ID, nil
 	}
 	return 0, errorx.NewInternalError("game.roundNotFound")
@@ -96,6 +97,7 @@ func (l *FindRoundLogic) Po2Vo(po *ent.Round) (vo *wolflamp.RoundInfo) {
 				RoundId:   fold.RoundID,
 				FoldNo:    fold.FoldNo,
 				LambNum:   fold.LambNum,
+				Mode:      po.Mode,
 			})
 		}
 	}
@@ -112,6 +114,7 @@ func (l *FindRoundLogic) Po2Vo(po *ent.Round) (vo *wolflamp.RoundInfo) {
 		TotalRoundCount: po.TotalRoundCount,
 		RoundCount:      po.RoundCount,
 		Folds:           folds,
+		Mode:            po.Mode,
 	}
 
 }

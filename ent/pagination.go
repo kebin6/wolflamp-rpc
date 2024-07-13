@@ -12,6 +12,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
@@ -544,6 +545,87 @@ func (pl *PlayerQuery) Page(
 
 	pl = pl.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))
 	list, err := pl.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ret.List = list
+
+	return ret, nil
+}
+
+type PoolPager struct {
+	Order  pool.OrderOption
+	Filter func(*PoolQuery) (*PoolQuery, error)
+}
+
+// PoolPaginateOption enables pagination customization.
+type PoolPaginateOption func(*PoolPager)
+
+// DefaultPoolOrder is the default ordering of Pool.
+var DefaultPoolOrder = Desc(pool.FieldID)
+
+func newPoolPager(opts []PoolPaginateOption) (*PoolPager, error) {
+	pager := &PoolPager{}
+	for _, opt := range opts {
+		opt(pager)
+	}
+	if pager.Order == nil {
+		pager.Order = DefaultPoolOrder
+	}
+	return pager, nil
+}
+
+func (p *PoolPager) ApplyFilter(query *PoolQuery) (*PoolQuery, error) {
+	if p.Filter != nil {
+		return p.Filter(query)
+	}
+	return query, nil
+}
+
+// PoolPageList is Pool PageList result.
+type PoolPageList struct {
+	List        []*Pool      `json:"list"`
+	PageDetails *PageDetails `json:"pageDetails"`
+}
+
+func (po *PoolQuery) Page(
+	ctx context.Context, pageNum uint64, pageSize uint64, opts ...PoolPaginateOption,
+) (*PoolPageList, error) {
+
+	pager, err := newPoolPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if po, err = pager.ApplyFilter(po); err != nil {
+		return nil, err
+	}
+
+	ret := &PoolPageList{}
+
+	ret.PageDetails = &PageDetails{
+		Page: pageNum,
+		Size: pageSize,
+	}
+
+	query := po.Clone()
+	query.ctx.Fields = nil
+	count, err := query.Count(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ret.PageDetails.Total = uint64(count)
+
+	if pager.Order != nil {
+		po = po.Order(pager.Order)
+	} else {
+		po = po.Order(DefaultPoolOrder)
+	}
+
+	po = po.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))
+	list, err := po.All(ctx)
 	if err != nil {
 		return nil, err
 	}

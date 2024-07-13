@@ -26,6 +26,8 @@ type Tx struct {
 	OriginInviteCode *OriginInviteCodeClient
 	// Player is the client for interacting with the Player builders.
 	Player *PlayerClient
+	// Pool is the client for interacting with the Pool builders.
+	Pool *PoolClient
 	// Reward is the client for interacting with the Reward builders.
 	Reward *RewardClient
 	// Round is the client for interacting with the Round builders.
@@ -175,6 +177,7 @@ func (tx *Tx) init() {
 	tx.Order = NewOrderClient(tx.config)
 	tx.OriginInviteCode = NewOriginInviteCodeClient(tx.config)
 	tx.Player = NewPlayerClient(tx.config)
+	tx.Pool = NewPoolClient(tx.config)
 	tx.Reward = NewRewardClient(tx.config)
 	tx.Round = NewRoundClient(tx.config)
 	tx.RoundInvest = NewRoundInvestClient(tx.config)

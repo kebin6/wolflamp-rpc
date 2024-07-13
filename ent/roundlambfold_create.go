@@ -133,6 +133,20 @@ func (rlfc *RoundLambFoldCreate) SetNillableTotalRoundCount(u *uint64) *RoundLam
 	return rlfc
 }
 
+// SetMode sets the "mode" field.
+func (rlfc *RoundLambFoldCreate) SetMode(s string) *RoundLambFoldCreate {
+	rlfc.mutation.SetMode(s)
+	return rlfc
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (rlfc *RoundLambFoldCreate) SetNillableMode(s *string) *RoundLambFoldCreate {
+	if s != nil {
+		rlfc.SetMode(*s)
+	}
+	return rlfc
+}
+
 // SetID sets the "id" field.
 func (rlfc *RoundLambFoldCreate) SetID(u uint64) *RoundLambFoldCreate {
 	rlfc.mutation.SetID(u)
@@ -211,6 +225,10 @@ func (rlfc *RoundLambFoldCreate) defaults() {
 		v := roundlambfold.DefaultTotalRoundCount
 		rlfc.mutation.SetTotalRoundCount(v)
 	}
+	if _, ok := rlfc.mutation.Mode(); !ok {
+		v := roundlambfold.DefaultMode
+		rlfc.mutation.SetMode(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -229,6 +247,9 @@ func (rlfc *RoundLambFoldCreate) check() error {
 	}
 	if _, ok := rlfc.mutation.ProfitAndLoss(); !ok {
 		return &ValidationError{Name: "profit_and_loss", err: errors.New(`ent: missing required field "RoundLambFold.profit_and_loss"`)}
+	}
+	if _, ok := rlfc.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "RoundLambFold.mode"`)}
 	}
 	return nil
 }
@@ -289,6 +310,10 @@ func (rlfc *RoundLambFoldCreate) createSpec() (*RoundLambFold, *sqlgraph.CreateS
 	if value, ok := rlfc.mutation.TotalRoundCount(); ok {
 		_spec.SetField(roundlambfold.FieldTotalRoundCount, field.TypeUint64, value)
 		_node.TotalRoundCount = value
+	}
+	if value, ok := rlfc.mutation.Mode(); ok {
+		_spec.SetField(roundlambfold.FieldMode, field.TypeString, value)
+		_node.Mode = value
 	}
 	if nodes := rlfc.mutation.RoundIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

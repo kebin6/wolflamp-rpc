@@ -35,6 +35,14 @@ type Round struct {
 	EndAt time.Time `json:"end_at,omitempty"`
 	// 选中的羊圈号码
 	SelectedFold uint32 `json:"selected_fold,omitempty"`
+	// 游戏类型：coin,token
+	Mode string `json:"mode,omitempty"`
+	// 计算得出用于回传的羊只数量
+	ComputeAmount float64 `json:"compute_amount,omitempty"`
+	// 回传状态
+	SyncStatus uint32 `json:"sync_status,omitempty"`
+	// 回传结果信息
+	SyncMsg string `json:"sync_msg,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoundQuery when eager-loading is set.
 	Edges        RoundEdges `json:"edges"`
@@ -75,8 +83,12 @@ func (*Round) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldTotalRoundCount, round.FieldSelectedFold:
+		case round.FieldComputeAmount:
+			values[i] = new(sql.NullFloat64)
+		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldTotalRoundCount, round.FieldSelectedFold, round.FieldSyncStatus:
 			values[i] = new(sql.NullInt64)
+		case round.FieldMode, round.FieldSyncMsg:
+			values[i] = new(sql.NullString)
 		case round.FieldCreatedAt, round.FieldUpdatedAt, round.FieldStartAt, round.FieldOpenAt, round.FieldEndAt:
 			values[i] = new(sql.NullTime)
 		default:
@@ -154,6 +166,30 @@ func (r *Round) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.SelectedFold = uint32(value.Int64)
 			}
+		case round.FieldMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field mode", values[i])
+			} else if value.Valid {
+				r.Mode = value.String
+			}
+		case round.FieldComputeAmount:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field compute_amount", values[i])
+			} else if value.Valid {
+				r.ComputeAmount = value.Float64
+			}
+		case round.FieldSyncStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sync_status", values[i])
+			} else if value.Valid {
+				r.SyncStatus = uint32(value.Int64)
+			}
+		case round.FieldSyncMsg:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sync_msg", values[i])
+			} else if value.Valid {
+				r.SyncMsg = value.String
+			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
 		}
@@ -226,6 +262,18 @@ func (r *Round) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("selected_fold=")
 	builder.WriteString(fmt.Sprintf("%v", r.SelectedFold))
+	builder.WriteString(", ")
+	builder.WriteString("mode=")
+	builder.WriteString(r.Mode)
+	builder.WriteString(", ")
+	builder.WriteString("compute_amount=")
+	builder.WriteString(fmt.Sprintf("%v", r.ComputeAmount))
+	builder.WriteString(", ")
+	builder.WriteString("sync_status=")
+	builder.WriteString(fmt.Sprintf("%v", r.SyncStatus))
+	builder.WriteString(", ")
+	builder.WriteString("sync_msg=")
+	builder.WriteString(r.SyncMsg)
 	builder.WriteByte(')')
 	return builder.String()
 }

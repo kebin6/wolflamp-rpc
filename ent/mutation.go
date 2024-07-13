@@ -18,6 +18,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent/order"
 	"github.com/kebin6/wolflamp-rpc/ent/origininvitecode"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/predicate"
 	"github.com/kebin6/wolflamp-rpc/ent/reward"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
@@ -42,6 +43,7 @@ const (
 	TypeOrder            = "Order"
 	TypeOriginInviteCode = "OriginInviteCode"
 	TypePlayer           = "Player"
+	TypePool             = "Pool"
 	TypeReward           = "Reward"
 	TypeRound            = "Round"
 	TypeRoundInvest      = "RoundInvest"
@@ -951,12 +953,15 @@ type ExchangeMutation struct {
 	player_id      *uint64
 	addplayer_id   *int64
 	transaction_id *string
+	mode           *string
 	_type          *uint32
 	add_type       *int32
 	coin_num       *uint32
 	addcoin_num    *int32
 	lamp_num       *uint32
 	addlamp_num    *int32
+	gcics_order_id *string
+	remark         *string
 	clearedFields  map[string]struct{}
 	done           bool
 	oldValue       func(context.Context) (*Exchange, error)
@@ -1301,6 +1306,42 @@ func (m *ExchangeMutation) ResetTransactionID() {
 	m.transaction_id = nil
 }
 
+// SetMode sets the "mode" field.
+func (m *ExchangeMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *ExchangeMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the Exchange entity.
+// If the Exchange object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *ExchangeMutation) ResetMode() {
+	m.mode = nil
+}
+
 // SetType sets the "type" field.
 func (m *ExchangeMutation) SetType(u uint32) {
 	m._type = &u
@@ -1469,6 +1510,78 @@ func (m *ExchangeMutation) ResetLampNum() {
 	m.addlamp_num = nil
 }
 
+// SetGcicsOrderID sets the "gcics_order_id" field.
+func (m *ExchangeMutation) SetGcicsOrderID(s string) {
+	m.gcics_order_id = &s
+}
+
+// GcicsOrderID returns the value of the "gcics_order_id" field in the mutation.
+func (m *ExchangeMutation) GcicsOrderID() (r string, exists bool) {
+	v := m.gcics_order_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGcicsOrderID returns the old "gcics_order_id" field's value of the Exchange entity.
+// If the Exchange object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeMutation) OldGcicsOrderID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGcicsOrderID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGcicsOrderID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGcicsOrderID: %w", err)
+	}
+	return oldValue.GcicsOrderID, nil
+}
+
+// ResetGcicsOrderID resets all changes to the "gcics_order_id" field.
+func (m *ExchangeMutation) ResetGcicsOrderID() {
+	m.gcics_order_id = nil
+}
+
+// SetRemark sets the "remark" field.
+func (m *ExchangeMutation) SetRemark(s string) {
+	m.remark = &s
+}
+
+// Remark returns the value of the "remark" field in the mutation.
+func (m *ExchangeMutation) Remark() (r string, exists bool) {
+	v := m.remark
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRemark returns the old "remark" field's value of the Exchange entity.
+// If the Exchange object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeMutation) OldRemark(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRemark requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
+	}
+	return oldValue.Remark, nil
+}
+
+// ResetRemark resets all changes to the "remark" field.
+func (m *ExchangeMutation) ResetRemark() {
+	m.remark = nil
+}
+
 // Where appends a list predicates to the ExchangeMutation builder.
 func (m *ExchangeMutation) Where(ps ...predicate.Exchange) {
 	m.predicates = append(m.predicates, ps...)
@@ -1503,7 +1616,7 @@ func (m *ExchangeMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExchangeMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, exchange.FieldCreatedAt)
 	}
@@ -1519,6 +1632,9 @@ func (m *ExchangeMutation) Fields() []string {
 	if m.transaction_id != nil {
 		fields = append(fields, exchange.FieldTransactionID)
 	}
+	if m.mode != nil {
+		fields = append(fields, exchange.FieldMode)
+	}
 	if m._type != nil {
 		fields = append(fields, exchange.FieldType)
 	}
@@ -1527,6 +1643,12 @@ func (m *ExchangeMutation) Fields() []string {
 	}
 	if m.lamp_num != nil {
 		fields = append(fields, exchange.FieldLampNum)
+	}
+	if m.gcics_order_id != nil {
+		fields = append(fields, exchange.FieldGcicsOrderID)
+	}
+	if m.remark != nil {
+		fields = append(fields, exchange.FieldRemark)
 	}
 	return fields
 }
@@ -1546,12 +1668,18 @@ func (m *ExchangeMutation) Field(name string) (ent.Value, bool) {
 		return m.PlayerID()
 	case exchange.FieldTransactionID:
 		return m.TransactionID()
+	case exchange.FieldMode:
+		return m.Mode()
 	case exchange.FieldType:
 		return m.GetType()
 	case exchange.FieldCoinNum:
 		return m.CoinNum()
 	case exchange.FieldLampNum:
 		return m.LampNum()
+	case exchange.FieldGcicsOrderID:
+		return m.GcicsOrderID()
+	case exchange.FieldRemark:
+		return m.Remark()
 	}
 	return nil, false
 }
@@ -1571,12 +1699,18 @@ func (m *ExchangeMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldPlayerID(ctx)
 	case exchange.FieldTransactionID:
 		return m.OldTransactionID(ctx)
+	case exchange.FieldMode:
+		return m.OldMode(ctx)
 	case exchange.FieldType:
 		return m.OldType(ctx)
 	case exchange.FieldCoinNum:
 		return m.OldCoinNum(ctx)
 	case exchange.FieldLampNum:
 		return m.OldLampNum(ctx)
+	case exchange.FieldGcicsOrderID:
+		return m.OldGcicsOrderID(ctx)
+	case exchange.FieldRemark:
+		return m.OldRemark(ctx)
 	}
 	return nil, fmt.Errorf("unknown Exchange field %s", name)
 }
@@ -1621,6 +1755,13 @@ func (m *ExchangeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetTransactionID(v)
 		return nil
+	case exchange.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
+		return nil
 	case exchange.FieldType:
 		v, ok := value.(uint32)
 		if !ok {
@@ -1641,6 +1782,20 @@ func (m *ExchangeMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLampNum(v)
+		return nil
+	case exchange.FieldGcicsOrderID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGcicsOrderID(v)
+		return nil
+	case exchange.FieldRemark:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRemark(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Exchange field %s", name)
@@ -1778,6 +1933,9 @@ func (m *ExchangeMutation) ResetField(name string) error {
 	case exchange.FieldTransactionID:
 		m.ResetTransactionID()
 		return nil
+	case exchange.FieldMode:
+		m.ResetMode()
+		return nil
 	case exchange.FieldType:
 		m.ResetType()
 		return nil
@@ -1786,6 +1944,12 @@ func (m *ExchangeMutation) ResetField(name string) error {
 		return nil
 	case exchange.FieldLampNum:
 		m.ResetLampNum()
+		return nil
+	case exchange.FieldGcicsOrderID:
+		m.ResetGcicsOrderID()
+		return nil
+	case exchange.FieldRemark:
+		m.ResetRemark()
 		return nil
 	}
 	return fmt.Errorf("unknown Exchange field %s", name)
@@ -4522,6 +4686,7 @@ type PlayerMutation struct {
 	gcics_user_id        *uint64
 	addgcics_user_id     *int64
 	gcics_token          *string
+	gcics_return_url     *string
 	clearedFields        map[string]struct{}
 	inviter              *uint64
 	clearedinviter       bool
@@ -5620,6 +5785,42 @@ func (m *PlayerMutation) ResetGcicsToken() {
 	m.gcics_token = nil
 }
 
+// SetGcicsReturnURL sets the "gcics_return_url" field.
+func (m *PlayerMutation) SetGcicsReturnURL(s string) {
+	m.gcics_return_url = &s
+}
+
+// GcicsReturnURL returns the value of the "gcics_return_url" field in the mutation.
+func (m *PlayerMutation) GcicsReturnURL() (r string, exists bool) {
+	v := m.gcics_return_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGcicsReturnURL returns the old "gcics_return_url" field's value of the Player entity.
+// If the Player object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlayerMutation) OldGcicsReturnURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGcicsReturnURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGcicsReturnURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGcicsReturnURL: %w", err)
+	}
+	return oldValue.GcicsReturnURL, nil
+}
+
+// ResetGcicsReturnURL resets all changes to the "gcics_return_url" field.
+func (m *PlayerMutation) ResetGcicsReturnURL() {
+	m.gcics_return_url = nil
+}
+
 // ClearInviter clears the "inviter" edge to the Player entity.
 func (m *PlayerMutation) ClearInviter() {
 	m.clearedinviter = true
@@ -5735,7 +5936,7 @@ func (m *PlayerMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlayerMutation) Fields() []string {
-	fields := make([]string, 0, 21)
+	fields := make([]string, 0, 22)
 	if m.created_at != nil {
 		fields = append(fields, player.FieldCreatedAt)
 	}
@@ -5799,6 +6000,9 @@ func (m *PlayerMutation) Fields() []string {
 	if m.gcics_token != nil {
 		fields = append(fields, player.FieldGcicsToken)
 	}
+	if m.gcics_return_url != nil {
+		fields = append(fields, player.FieldGcicsReturnURL)
+	}
 	return fields
 }
 
@@ -5849,6 +6053,8 @@ func (m *PlayerMutation) Field(name string) (ent.Value, bool) {
 		return m.GcicsUserID()
 	case player.FieldGcicsToken:
 		return m.GcicsToken()
+	case player.FieldGcicsReturnURL:
+		return m.GcicsReturnURL()
 	}
 	return nil, false
 }
@@ -5900,6 +6106,8 @@ func (m *PlayerMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldGcicsUserID(ctx)
 	case player.FieldGcicsToken:
 		return m.OldGcicsToken(ctx)
+	case player.FieldGcicsReturnURL:
+		return m.OldGcicsReturnURL(ctx)
 	}
 	return nil, fmt.Errorf("unknown Player field %s", name)
 }
@@ -6055,6 +6263,13 @@ func (m *PlayerMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGcicsToken(v)
+		return nil
+	case player.FieldGcicsReturnURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGcicsReturnURL(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)
@@ -6306,6 +6521,9 @@ func (m *PlayerMutation) ResetField(name string) error {
 	case player.FieldGcicsToken:
 		m.ResetGcicsToken()
 		return nil
+	case player.FieldGcicsReturnURL:
+		m.ResetGcicsReturnURL()
+		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)
 }
@@ -6412,6 +6630,874 @@ func (m *PlayerMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Player edge %s", name)
 }
 
+// PoolMutation represents an operation that mutates the Pool nodes in the graph.
+type PoolMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uint64
+	created_at    *time.Time
+	updated_at    *time.Time
+	status        *uint8
+	addstatus     *int8
+	round_id      *uint64
+	addround_id   *int64
+	mode          *string
+	_type         *uint32
+	add_type      *int32
+	lamb_num      *float64
+	addlamb_num   *float64
+	remark        *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Pool, error)
+	predicates    []predicate.Pool
+}
+
+var _ ent.Mutation = (*PoolMutation)(nil)
+
+// poolOption allows management of the mutation configuration using functional options.
+type poolOption func(*PoolMutation)
+
+// newPoolMutation creates new mutation for the Pool entity.
+func newPoolMutation(c config, op Op, opts ...poolOption) *PoolMutation {
+	m := &PoolMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePool,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPoolID sets the ID field of the mutation.
+func withPoolID(id uint64) poolOption {
+	return func(m *PoolMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Pool
+		)
+		m.oldValue = func(ctx context.Context) (*Pool, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Pool.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPool sets the old Pool of the mutation.
+func withPool(node *Pool) poolOption {
+	return func(m *PoolMutation) {
+		m.oldValue = func(context.Context) (*Pool, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PoolMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PoolMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Pool entities.
+func (m *PoolMutation) SetID(id uint64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *PoolMutation) ID() (id uint64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *PoolMutation) IDs(ctx context.Context) ([]uint64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Pool.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *PoolMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *PoolMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *PoolMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *PoolMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *PoolMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *PoolMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *PoolMutation) SetStatus(u uint8) {
+	m.status = &u
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *PoolMutation) Status() (r uint8, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldStatus(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds u to the "status" field.
+func (m *PoolMutation) AddStatus(u int8) {
+	if m.addstatus != nil {
+		*m.addstatus += u
+	} else {
+		m.addstatus = &u
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *PoolMutation) AddedStatus() (r int8, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearStatus clears the value of the "status" field.
+func (m *PoolMutation) ClearStatus() {
+	m.status = nil
+	m.addstatus = nil
+	m.clearedFields[pool.FieldStatus] = struct{}{}
+}
+
+// StatusCleared returns if the "status" field was cleared in this mutation.
+func (m *PoolMutation) StatusCleared() bool {
+	_, ok := m.clearedFields[pool.FieldStatus]
+	return ok
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *PoolMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+	delete(m.clearedFields, pool.FieldStatus)
+}
+
+// SetRoundID sets the "round_id" field.
+func (m *PoolMutation) SetRoundID(u uint64) {
+	m.round_id = &u
+	m.addround_id = nil
+}
+
+// RoundID returns the value of the "round_id" field in the mutation.
+func (m *PoolMutation) RoundID() (r uint64, exists bool) {
+	v := m.round_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRoundID returns the old "round_id" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldRoundID(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRoundID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRoundID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRoundID: %w", err)
+	}
+	return oldValue.RoundID, nil
+}
+
+// AddRoundID adds u to the "round_id" field.
+func (m *PoolMutation) AddRoundID(u int64) {
+	if m.addround_id != nil {
+		*m.addround_id += u
+	} else {
+		m.addround_id = &u
+	}
+}
+
+// AddedRoundID returns the value that was added to the "round_id" field in this mutation.
+func (m *PoolMutation) AddedRoundID() (r int64, exists bool) {
+	v := m.addround_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRoundID resets all changes to the "round_id" field.
+func (m *PoolMutation) ResetRoundID() {
+	m.round_id = nil
+	m.addround_id = nil
+}
+
+// SetMode sets the "mode" field.
+func (m *PoolMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *PoolMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *PoolMutation) ResetMode() {
+	m.mode = nil
+}
+
+// SetType sets the "type" field.
+func (m *PoolMutation) SetType(u uint32) {
+	m._type = &u
+	m.add_type = nil
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *PoolMutation) GetType() (r uint32, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldType(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// AddType adds u to the "type" field.
+func (m *PoolMutation) AddType(u int32) {
+	if m.add_type != nil {
+		*m.add_type += u
+	} else {
+		m.add_type = &u
+	}
+}
+
+// AddedType returns the value that was added to the "type" field in this mutation.
+func (m *PoolMutation) AddedType() (r int32, exists bool) {
+	v := m.add_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *PoolMutation) ResetType() {
+	m._type = nil
+	m.add_type = nil
+}
+
+// SetLambNum sets the "lamb_num" field.
+func (m *PoolMutation) SetLambNum(f float64) {
+	m.lamb_num = &f
+	m.addlamb_num = nil
+}
+
+// LambNum returns the value of the "lamb_num" field in the mutation.
+func (m *PoolMutation) LambNum() (r float64, exists bool) {
+	v := m.lamb_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLambNum returns the old "lamb_num" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldLambNum(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLambNum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLambNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLambNum: %w", err)
+	}
+	return oldValue.LambNum, nil
+}
+
+// AddLambNum adds f to the "lamb_num" field.
+func (m *PoolMutation) AddLambNum(f float64) {
+	if m.addlamb_num != nil {
+		*m.addlamb_num += f
+	} else {
+		m.addlamb_num = &f
+	}
+}
+
+// AddedLambNum returns the value that was added to the "lamb_num" field in this mutation.
+func (m *PoolMutation) AddedLambNum() (r float64, exists bool) {
+	v := m.addlamb_num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLambNum resets all changes to the "lamb_num" field.
+func (m *PoolMutation) ResetLambNum() {
+	m.lamb_num = nil
+	m.addlamb_num = nil
+}
+
+// SetRemark sets the "remark" field.
+func (m *PoolMutation) SetRemark(s string) {
+	m.remark = &s
+}
+
+// Remark returns the value of the "remark" field in the mutation.
+func (m *PoolMutation) Remark() (r string, exists bool) {
+	v := m.remark
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRemark returns the old "remark" field's value of the Pool entity.
+// If the Pool object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PoolMutation) OldRemark(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRemark requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
+	}
+	return oldValue.Remark, nil
+}
+
+// ResetRemark resets all changes to the "remark" field.
+func (m *PoolMutation) ResetRemark() {
+	m.remark = nil
+}
+
+// Where appends a list predicates to the PoolMutation builder.
+func (m *PoolMutation) Where(ps ...predicate.Pool) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the PoolMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *PoolMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Pool, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *PoolMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *PoolMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Pool).
+func (m *PoolMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *PoolMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.created_at != nil {
+		fields = append(fields, pool.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, pool.FieldUpdatedAt)
+	}
+	if m.status != nil {
+		fields = append(fields, pool.FieldStatus)
+	}
+	if m.round_id != nil {
+		fields = append(fields, pool.FieldRoundID)
+	}
+	if m.mode != nil {
+		fields = append(fields, pool.FieldMode)
+	}
+	if m._type != nil {
+		fields = append(fields, pool.FieldType)
+	}
+	if m.lamb_num != nil {
+		fields = append(fields, pool.FieldLambNum)
+	}
+	if m.remark != nil {
+		fields = append(fields, pool.FieldRemark)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *PoolMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case pool.FieldCreatedAt:
+		return m.CreatedAt()
+	case pool.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case pool.FieldStatus:
+		return m.Status()
+	case pool.FieldRoundID:
+		return m.RoundID()
+	case pool.FieldMode:
+		return m.Mode()
+	case pool.FieldType:
+		return m.GetType()
+	case pool.FieldLambNum:
+		return m.LambNum()
+	case pool.FieldRemark:
+		return m.Remark()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *PoolMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case pool.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case pool.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case pool.FieldStatus:
+		return m.OldStatus(ctx)
+	case pool.FieldRoundID:
+		return m.OldRoundID(ctx)
+	case pool.FieldMode:
+		return m.OldMode(ctx)
+	case pool.FieldType:
+		return m.OldType(ctx)
+	case pool.FieldLambNum:
+		return m.OldLambNum(ctx)
+	case pool.FieldRemark:
+		return m.OldRemark(ctx)
+	}
+	return nil, fmt.Errorf("unknown Pool field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PoolMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case pool.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case pool.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case pool.FieldStatus:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case pool.FieldRoundID:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRoundID(v)
+		return nil
+	case pool.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
+		return nil
+	case pool.FieldType:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case pool.FieldLambNum:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLambNum(v)
+		return nil
+	case pool.FieldRemark:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRemark(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Pool field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *PoolMutation) AddedFields() []string {
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, pool.FieldStatus)
+	}
+	if m.addround_id != nil {
+		fields = append(fields, pool.FieldRoundID)
+	}
+	if m.add_type != nil {
+		fields = append(fields, pool.FieldType)
+	}
+	if m.addlamb_num != nil {
+		fields = append(fields, pool.FieldLambNum)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *PoolMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case pool.FieldStatus:
+		return m.AddedStatus()
+	case pool.FieldRoundID:
+		return m.AddedRoundID()
+	case pool.FieldType:
+		return m.AddedType()
+	case pool.FieldLambNum:
+		return m.AddedLambNum()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PoolMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case pool.FieldStatus:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	case pool.FieldRoundID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRoundID(v)
+		return nil
+	case pool.FieldType:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddType(v)
+		return nil
+	case pool.FieldLambNum:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLambNum(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Pool numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *PoolMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(pool.FieldStatus) {
+		fields = append(fields, pool.FieldStatus)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *PoolMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PoolMutation) ClearField(name string) error {
+	switch name {
+	case pool.FieldStatus:
+		m.ClearStatus()
+		return nil
+	}
+	return fmt.Errorf("unknown Pool nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *PoolMutation) ResetField(name string) error {
+	switch name {
+	case pool.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case pool.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case pool.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case pool.FieldRoundID:
+		m.ResetRoundID()
+		return nil
+	case pool.FieldMode:
+		m.ResetMode()
+		return nil
+	case pool.FieldType:
+		m.ResetType()
+		return nil
+	case pool.FieldLambNum:
+		m.ResetLambNum()
+		return nil
+	case pool.FieldRemark:
+		m.ResetRemark()
+		return nil
+	}
+	return fmt.Errorf("unknown Pool field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *PoolMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *PoolMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *PoolMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *PoolMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *PoolMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *PoolMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *PoolMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Pool unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *PoolMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Pool edge %s", name)
+}
+
 // RewardMutation represents an operation that mutates the Reward nodes in the graph.
 type RewardMutation struct {
 	config
@@ -6432,6 +7518,7 @@ type RewardMutation struct {
 	num                  *float32
 	addnum               *float32
 	formula              *string
+	mode                 *string
 	remark               *string
 	clearedFields        map[string]struct{}
 	done                 bool
@@ -6981,6 +8068,42 @@ func (m *RewardMutation) ResetFormula() {
 	m.formula = nil
 }
 
+// SetMode sets the "mode" field.
+func (m *RewardMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *RewardMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the Reward entity.
+// If the Reward object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RewardMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *RewardMutation) ResetMode() {
+	m.mode = nil
+}
+
 // SetRemark sets the "remark" field.
 func (m *RewardMutation) SetRemark(s string) {
 	m.remark = &s
@@ -7051,7 +8174,7 @@ func (m *RewardMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RewardMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, reward.FieldCreatedAt)
 	}
@@ -7078,6 +8201,9 @@ func (m *RewardMutation) Fields() []string {
 	}
 	if m.formula != nil {
 		fields = append(fields, reward.FieldFormula)
+	}
+	if m.mode != nil {
+		fields = append(fields, reward.FieldMode)
 	}
 	if m.remark != nil {
 		fields = append(fields, reward.FieldRemark)
@@ -7108,6 +8234,8 @@ func (m *RewardMutation) Field(name string) (ent.Value, bool) {
 		return m.Num()
 	case reward.FieldFormula:
 		return m.Formula()
+	case reward.FieldMode:
+		return m.Mode()
 	case reward.FieldRemark:
 		return m.Remark()
 	}
@@ -7137,6 +8265,8 @@ func (m *RewardMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldNum(ctx)
 	case reward.FieldFormula:
 		return m.OldFormula(ctx)
+	case reward.FieldMode:
+		return m.OldMode(ctx)
 	case reward.FieldRemark:
 		return m.OldRemark(ctx)
 	}
@@ -7210,6 +8340,13 @@ func (m *RewardMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetFormula(v)
+		return nil
+	case reward.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
 		return nil
 	case reward.FieldRemark:
 		v, ok := value.(string)
@@ -7366,6 +8503,9 @@ func (m *RewardMutation) ResetField(name string) error {
 	case reward.FieldFormula:
 		m.ResetFormula()
 		return nil
+	case reward.FieldMode:
+		m.ResetMode()
+		return nil
 	case reward.FieldRemark:
 		m.ResetRemark()
 		return nil
@@ -7440,6 +8580,12 @@ type RoundMutation struct {
 	end_at               *time.Time
 	selected_fold        *uint32
 	addselected_fold     *int32
+	mode                 *string
+	compute_amount       *float64
+	addcompute_amount    *float64
+	sync_status          *uint32
+	addsync_status       *int32
+	sync_msg             *string
 	clearedFields        map[string]struct{}
 	fold                 map[uint64]struct{}
 	removedfold          map[uint64]struct{}
@@ -7988,6 +9134,190 @@ func (m *RoundMutation) ResetSelectedFold() {
 	m.addselected_fold = nil
 }
 
+// SetMode sets the "mode" field.
+func (m *RoundMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *RoundMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *RoundMutation) ResetMode() {
+	m.mode = nil
+}
+
+// SetComputeAmount sets the "compute_amount" field.
+func (m *RoundMutation) SetComputeAmount(f float64) {
+	m.compute_amount = &f
+	m.addcompute_amount = nil
+}
+
+// ComputeAmount returns the value of the "compute_amount" field in the mutation.
+func (m *RoundMutation) ComputeAmount() (r float64, exists bool) {
+	v := m.compute_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldComputeAmount returns the old "compute_amount" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldComputeAmount(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldComputeAmount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldComputeAmount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldComputeAmount: %w", err)
+	}
+	return oldValue.ComputeAmount, nil
+}
+
+// AddComputeAmount adds f to the "compute_amount" field.
+func (m *RoundMutation) AddComputeAmount(f float64) {
+	if m.addcompute_amount != nil {
+		*m.addcompute_amount += f
+	} else {
+		m.addcompute_amount = &f
+	}
+}
+
+// AddedComputeAmount returns the value that was added to the "compute_amount" field in this mutation.
+func (m *RoundMutation) AddedComputeAmount() (r float64, exists bool) {
+	v := m.addcompute_amount
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetComputeAmount resets all changes to the "compute_amount" field.
+func (m *RoundMutation) ResetComputeAmount() {
+	m.compute_amount = nil
+	m.addcompute_amount = nil
+}
+
+// SetSyncStatus sets the "sync_status" field.
+func (m *RoundMutation) SetSyncStatus(u uint32) {
+	m.sync_status = &u
+	m.addsync_status = nil
+}
+
+// SyncStatus returns the value of the "sync_status" field in the mutation.
+func (m *RoundMutation) SyncStatus() (r uint32, exists bool) {
+	v := m.sync_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSyncStatus returns the old "sync_status" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldSyncStatus(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSyncStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSyncStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSyncStatus: %w", err)
+	}
+	return oldValue.SyncStatus, nil
+}
+
+// AddSyncStatus adds u to the "sync_status" field.
+func (m *RoundMutation) AddSyncStatus(u int32) {
+	if m.addsync_status != nil {
+		*m.addsync_status += u
+	} else {
+		m.addsync_status = &u
+	}
+}
+
+// AddedSyncStatus returns the value that was added to the "sync_status" field in this mutation.
+func (m *RoundMutation) AddedSyncStatus() (r int32, exists bool) {
+	v := m.addsync_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSyncStatus resets all changes to the "sync_status" field.
+func (m *RoundMutation) ResetSyncStatus() {
+	m.sync_status = nil
+	m.addsync_status = nil
+}
+
+// SetSyncMsg sets the "sync_msg" field.
+func (m *RoundMutation) SetSyncMsg(s string) {
+	m.sync_msg = &s
+}
+
+// SyncMsg returns the value of the "sync_msg" field in the mutation.
+func (m *RoundMutation) SyncMsg() (r string, exists bool) {
+	v := m.sync_msg
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSyncMsg returns the old "sync_msg" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldSyncMsg(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSyncMsg is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSyncMsg requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSyncMsg: %w", err)
+	}
+	return oldValue.SyncMsg, nil
+}
+
+// ResetSyncMsg resets all changes to the "sync_msg" field.
+func (m *RoundMutation) ResetSyncMsg() {
+	m.sync_msg = nil
+}
+
 // AddFoldIDs adds the "fold" edge to the RoundLambFold entity by ids.
 func (m *RoundMutation) AddFoldIDs(ids ...uint64) {
 	if m.fold == nil {
@@ -8130,7 +9460,7 @@ func (m *RoundMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 13)
 	if m.created_at != nil {
 		fields = append(fields, round.FieldCreatedAt)
 	}
@@ -8158,6 +9488,18 @@ func (m *RoundMutation) Fields() []string {
 	if m.selected_fold != nil {
 		fields = append(fields, round.FieldSelectedFold)
 	}
+	if m.mode != nil {
+		fields = append(fields, round.FieldMode)
+	}
+	if m.compute_amount != nil {
+		fields = append(fields, round.FieldComputeAmount)
+	}
+	if m.sync_status != nil {
+		fields = append(fields, round.FieldSyncStatus)
+	}
+	if m.sync_msg != nil {
+		fields = append(fields, round.FieldSyncMsg)
+	}
 	return fields
 }
 
@@ -8184,6 +9526,14 @@ func (m *RoundMutation) Field(name string) (ent.Value, bool) {
 		return m.EndAt()
 	case round.FieldSelectedFold:
 		return m.SelectedFold()
+	case round.FieldMode:
+		return m.Mode()
+	case round.FieldComputeAmount:
+		return m.ComputeAmount()
+	case round.FieldSyncStatus:
+		return m.SyncStatus()
+	case round.FieldSyncMsg:
+		return m.SyncMsg()
 	}
 	return nil, false
 }
@@ -8211,6 +9561,14 @@ func (m *RoundMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldEndAt(ctx)
 	case round.FieldSelectedFold:
 		return m.OldSelectedFold(ctx)
+	case round.FieldMode:
+		return m.OldMode(ctx)
+	case round.FieldComputeAmount:
+		return m.OldComputeAmount(ctx)
+	case round.FieldSyncStatus:
+		return m.OldSyncStatus(ctx)
+	case round.FieldSyncMsg:
+		return m.OldSyncMsg(ctx)
 	}
 	return nil, fmt.Errorf("unknown Round field %s", name)
 }
@@ -8283,6 +9641,34 @@ func (m *RoundMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSelectedFold(v)
 		return nil
+	case round.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
+		return nil
+	case round.FieldComputeAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetComputeAmount(v)
+		return nil
+	case round.FieldSyncStatus:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSyncStatus(v)
+		return nil
+	case round.FieldSyncMsg:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSyncMsg(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Round field %s", name)
 }
@@ -8303,6 +9689,12 @@ func (m *RoundMutation) AddedFields() []string {
 	if m.addselected_fold != nil {
 		fields = append(fields, round.FieldSelectedFold)
 	}
+	if m.addcompute_amount != nil {
+		fields = append(fields, round.FieldComputeAmount)
+	}
+	if m.addsync_status != nil {
+		fields = append(fields, round.FieldSyncStatus)
+	}
 	return fields
 }
 
@@ -8319,6 +9711,10 @@ func (m *RoundMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedTotalRoundCount()
 	case round.FieldSelectedFold:
 		return m.AddedSelectedFold()
+	case round.FieldComputeAmount:
+		return m.AddedComputeAmount()
+	case round.FieldSyncStatus:
+		return m.AddedSyncStatus()
 	}
 	return nil, false
 }
@@ -8355,6 +9751,20 @@ func (m *RoundMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddSelectedFold(v)
+		return nil
+	case round.FieldComputeAmount:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddComputeAmount(v)
+		return nil
+	case round.FieldSyncStatus:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSyncStatus(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Round numeric field %s", name)
@@ -8424,6 +9834,18 @@ func (m *RoundMutation) ResetField(name string) error {
 		return nil
 	case round.FieldSelectedFold:
 		m.ResetSelectedFold()
+		return nil
+	case round.FieldMode:
+		m.ResetMode()
+		return nil
+	case round.FieldComputeAmount:
+		m.ResetComputeAmount()
+		return nil
+	case round.FieldSyncStatus:
+		m.ResetSyncStatus()
+		return nil
+	case round.FieldSyncMsg:
+		m.ResetSyncMsg()
 		return nil
 	}
 	return fmt.Errorf("unknown Round field %s", name)
@@ -8560,6 +9982,7 @@ type RoundInvestMutation struct {
 	addround_count       *int32
 	total_round_count    *uint64
 	addtotal_round_count *int64
+	mode                 *string
 	clearedFields        map[string]struct{}
 	round                *uint64
 	clearedround         bool
@@ -9193,6 +10616,42 @@ func (m *RoundInvestMutation) ResetTotalRoundCount() {
 	delete(m.clearedFields, roundinvest.FieldTotalRoundCount)
 }
 
+// SetMode sets the "mode" field.
+func (m *RoundInvestMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *RoundInvestMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the RoundInvest entity.
+// If the RoundInvest object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundInvestMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *RoundInvestMutation) ResetMode() {
+	m.mode = nil
+}
+
 // ClearRound clears the "round" edge to the Round entity.
 func (m *RoundInvestMutation) ClearRound() {
 	m.clearedround = true
@@ -9254,7 +10713,7 @@ func (m *RoundInvestMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundInvestMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, roundinvest.FieldCreatedAt)
 	}
@@ -9285,6 +10744,9 @@ func (m *RoundInvestMutation) Fields() []string {
 	if m.total_round_count != nil {
 		fields = append(fields, roundinvest.FieldTotalRoundCount)
 	}
+	if m.mode != nil {
+		fields = append(fields, roundinvest.FieldMode)
+	}
 	return fields
 }
 
@@ -9313,6 +10775,8 @@ func (m *RoundInvestMutation) Field(name string) (ent.Value, bool) {
 		return m.RoundCount()
 	case roundinvest.FieldTotalRoundCount:
 		return m.TotalRoundCount()
+	case roundinvest.FieldMode:
+		return m.Mode()
 	}
 	return nil, false
 }
@@ -9342,6 +10806,8 @@ func (m *RoundInvestMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldRoundCount(ctx)
 	case roundinvest.FieldTotalRoundCount:
 		return m.OldTotalRoundCount(ctx)
+	case roundinvest.FieldMode:
+		return m.OldMode(ctx)
 	}
 	return nil, fmt.Errorf("unknown RoundInvest field %s", name)
 }
@@ -9420,6 +10886,13 @@ func (m *RoundInvestMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTotalRoundCount(v)
+		return nil
+	case roundinvest.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest field %s", name)
@@ -9596,6 +11069,9 @@ func (m *RoundInvestMutation) ResetField(name string) error {
 	case roundinvest.FieldTotalRoundCount:
 		m.ResetTotalRoundCount()
 		return nil
+	case roundinvest.FieldMode:
+		m.ResetMode()
+		return nil
 	}
 	return fmt.Errorf("unknown RoundInvest field %s", name)
 }
@@ -9692,6 +11168,7 @@ type RoundLambFoldMutation struct {
 	addround_count       *int32
 	total_round_count    *uint64
 	addtotal_round_count *int64
+	mode                 *string
 	clearedFields        map[string]struct{}
 	round                *uint64
 	clearedround         bool
@@ -10233,6 +11710,42 @@ func (m *RoundLambFoldMutation) ResetTotalRoundCount() {
 	delete(m.clearedFields, roundlambfold.FieldTotalRoundCount)
 }
 
+// SetMode sets the "mode" field.
+func (m *RoundLambFoldMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *RoundLambFoldMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the RoundLambFold entity.
+// If the RoundLambFold object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundLambFoldMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *RoundLambFoldMutation) ResetMode() {
+	m.mode = nil
+}
+
 // ClearRound clears the "round" edge to the Round entity.
 func (m *RoundLambFoldMutation) ClearRound() {
 	m.clearedround = true
@@ -10294,7 +11807,7 @@ func (m *RoundLambFoldMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundLambFoldMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, roundlambfold.FieldCreatedAt)
 	}
@@ -10318,6 +11831,9 @@ func (m *RoundLambFoldMutation) Fields() []string {
 	}
 	if m.total_round_count != nil {
 		fields = append(fields, roundlambfold.FieldTotalRoundCount)
+	}
+	if m.mode != nil {
+		fields = append(fields, roundlambfold.FieldMode)
 	}
 	return fields
 }
@@ -10343,6 +11859,8 @@ func (m *RoundLambFoldMutation) Field(name string) (ent.Value, bool) {
 		return m.RoundCount()
 	case roundlambfold.FieldTotalRoundCount:
 		return m.TotalRoundCount()
+	case roundlambfold.FieldMode:
+		return m.Mode()
 	}
 	return nil, false
 }
@@ -10368,6 +11886,8 @@ func (m *RoundLambFoldMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldRoundCount(ctx)
 	case roundlambfold.FieldTotalRoundCount:
 		return m.OldTotalRoundCount(ctx)
+	case roundlambfold.FieldMode:
+		return m.OldMode(ctx)
 	}
 	return nil, fmt.Errorf("unknown RoundLambFold field %s", name)
 }
@@ -10432,6 +11952,13 @@ func (m *RoundLambFoldMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetTotalRoundCount(v)
+		return nil
+	case roundlambfold.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold field %s", name)
@@ -10589,6 +12116,9 @@ func (m *RoundLambFoldMutation) ResetField(name string) error {
 		return nil
 	case roundlambfold.FieldTotalRoundCount:
 		m.ResetTotalRoundCount()
+		return nil
+	case roundlambfold.FieldMode:
+		m.ResetMode()
 		return nil
 	}
 	return fmt.Errorf("unknown RoundLambFold field %s", name)
@@ -11349,6 +12879,7 @@ type StatementMutation struct {
 	amount        *float64
 	addamount     *float64
 	refer_id      *string
+	mode          *string
 	remark        *string
 	clearedFields map[string]struct{}
 	done          bool
@@ -11898,6 +13429,42 @@ func (m *StatementMutation) ResetReferID() {
 	m.refer_id = nil
 }
 
+// SetMode sets the "mode" field.
+func (m *StatementMutation) SetMode(s string) {
+	m.mode = &s
+}
+
+// Mode returns the value of the "mode" field in the mutation.
+func (m *StatementMutation) Mode() (r string, exists bool) {
+	v := m.mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMode returns the old "mode" field's value of the Statement entity.
+// If the Statement object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *StatementMutation) OldMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMode: %w", err)
+	}
+	return oldValue.Mode, nil
+}
+
+// ResetMode resets all changes to the "mode" field.
+func (m *StatementMutation) ResetMode() {
+	m.mode = nil
+}
+
 // SetRemark sets the "remark" field.
 func (m *StatementMutation) SetRemark(s string) {
 	m.remark = &s
@@ -11968,7 +13535,7 @@ func (m *StatementMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *StatementMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.created_at != nil {
 		fields = append(fields, statement.FieldCreatedAt)
 	}
@@ -11995,6 +13562,9 @@ func (m *StatementMutation) Fields() []string {
 	}
 	if m.refer_id != nil {
 		fields = append(fields, statement.FieldReferID)
+	}
+	if m.mode != nil {
+		fields = append(fields, statement.FieldMode)
 	}
 	if m.remark != nil {
 		fields = append(fields, statement.FieldRemark)
@@ -12025,6 +13595,8 @@ func (m *StatementMutation) Field(name string) (ent.Value, bool) {
 		return m.Amount()
 	case statement.FieldReferID:
 		return m.ReferID()
+	case statement.FieldMode:
+		return m.Mode()
 	case statement.FieldRemark:
 		return m.Remark()
 	}
@@ -12054,6 +13626,8 @@ func (m *StatementMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldAmount(ctx)
 	case statement.FieldReferID:
 		return m.OldReferID(ctx)
+	case statement.FieldMode:
+		return m.OldMode(ctx)
 	case statement.FieldRemark:
 		return m.OldRemark(ctx)
 	}
@@ -12127,6 +13701,13 @@ func (m *StatementMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetReferID(v)
+		return nil
+	case statement.FieldMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMode(v)
 		return nil
 	case statement.FieldRemark:
 		v, ok := value.(string)
@@ -12282,6 +13863,9 @@ func (m *StatementMutation) ResetField(name string) error {
 		return nil
 	case statement.FieldReferID:
 		m.ResetReferID()
+		return nil
+	case statement.FieldMode:
+		m.ResetMode()
 		return nil
 	case statement.FieldRemark:
 		m.ResetRemark()

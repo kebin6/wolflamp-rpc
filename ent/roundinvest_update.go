@@ -207,6 +207,20 @@ func (riu *RoundInvestUpdate) ClearTotalRoundCount() *RoundInvestUpdate {
 	return riu
 }
 
+// SetMode sets the "mode" field.
+func (riu *RoundInvestUpdate) SetMode(s string) *RoundInvestUpdate {
+	riu.mutation.SetMode(s)
+	return riu
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (riu *RoundInvestUpdate) SetNillableMode(s *string) *RoundInvestUpdate {
+	if s != nil {
+		riu.SetMode(*s)
+	}
+	return riu
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (riu *RoundInvestUpdate) SetRound(r *Round) *RoundInvestUpdate {
 	return riu.SetRoundID(r.ID)
@@ -315,6 +329,9 @@ func (riu *RoundInvestUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if riu.mutation.TotalRoundCountCleared() {
 		_spec.ClearField(roundinvest.FieldTotalRoundCount, field.TypeUint64)
+	}
+	if value, ok := riu.mutation.Mode(); ok {
+		_spec.SetField(roundinvest.FieldMode, field.TypeString, value)
 	}
 	if riu.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -543,6 +560,20 @@ func (riuo *RoundInvestUpdateOne) ClearTotalRoundCount() *RoundInvestUpdateOne {
 	return riuo
 }
 
+// SetMode sets the "mode" field.
+func (riuo *RoundInvestUpdateOne) SetMode(s string) *RoundInvestUpdateOne {
+	riuo.mutation.SetMode(s)
+	return riuo
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (riuo *RoundInvestUpdateOne) SetNillableMode(s *string) *RoundInvestUpdateOne {
+	if s != nil {
+		riuo.SetMode(*s)
+	}
+	return riuo
+}
+
 // SetRound sets the "round" edge to the Round entity.
 func (riuo *RoundInvestUpdateOne) SetRound(r *Round) *RoundInvestUpdateOne {
 	return riuo.SetRoundID(r.ID)
@@ -681,6 +712,9 @@ func (riuo *RoundInvestUpdateOne) sqlSave(ctx context.Context) (_node *RoundInve
 	}
 	if riuo.mutation.TotalRoundCountCleared() {
 		_spec.ClearField(roundinvest.FieldTotalRoundCount, field.TypeUint64)
+	}
+	if value, ok := riuo.mutation.Mode(); ok {
+		_spec.SetField(roundinvest.FieldMode, field.TypeString, value)
 	}
 	if riuo.mutation.RoundCleared() {
 		edge := &sqlgraph.EdgeSpec{

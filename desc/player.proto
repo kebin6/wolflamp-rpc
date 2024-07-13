@@ -27,6 +27,7 @@ message PlayerInfo {
   string deposit_address = 21;
   uint64 gcics_user_id = 22;
   string gcics_token = 23;
+  string return_url = 24;
 }
 
 message CreatePlayerReq {
@@ -46,6 +47,7 @@ message CreatePlayerReq {
   string deposit_address = 16;
   uint64 gcics_user_id = 18;
   string gcics_token = 19;
+  string return_url = 20;
 }
 
 message UpdatePlayerReq {
@@ -121,12 +123,30 @@ message InvitorInfo {
 
 }
 
+message ValidateGcicsSignReq {
+  int64 timestamp = 1;
+  string sign = 2;
+}
+
+message ValidateGcicsSignResp {
+  bool isValid = 1;
+}
+
 message GetInvitorListByIdsReq {
   repeated uint64 player_ids = 1;
 }
 
 message GetInvitorListByIdsResp {
   repeated InvitorInfo data = 1;
+}
+
+message GetGcicsBalanceReq {
+  uint64 player_id = 1;
+}
+
+message GetGcicsBalanceResp {
+  double token = 1;
+  double coin = 2;
 }
 
 service Wolflamp {
@@ -153,4 +173,10 @@ service Wolflamp {
 
   // group: player
   rpc getInvitorListByIds (GetInvitorListByIdsReq) returns (GetInvitorListByIdsResp);
+
+  // group: player
+  rpc validateGcicsSign (ValidateGcicsSignReq) returns (ValidateGcicsSignResp);
+
+  // group: player
+  rpc getGcicsBalance (GetGcicsBalanceReq) returns (GetGcicsBalanceResp);
 }

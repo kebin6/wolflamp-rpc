@@ -116,6 +116,62 @@ func (rc *RoundCreate) SetNillableSelectedFold(u *uint32) *RoundCreate {
 	return rc
 }
 
+// SetMode sets the "mode" field.
+func (rc *RoundCreate) SetMode(s string) *RoundCreate {
+	rc.mutation.SetMode(s)
+	return rc
+}
+
+// SetNillableMode sets the "mode" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableMode(s *string) *RoundCreate {
+	if s != nil {
+		rc.SetMode(*s)
+	}
+	return rc
+}
+
+// SetComputeAmount sets the "compute_amount" field.
+func (rc *RoundCreate) SetComputeAmount(f float64) *RoundCreate {
+	rc.mutation.SetComputeAmount(f)
+	return rc
+}
+
+// SetNillableComputeAmount sets the "compute_amount" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableComputeAmount(f *float64) *RoundCreate {
+	if f != nil {
+		rc.SetComputeAmount(*f)
+	}
+	return rc
+}
+
+// SetSyncStatus sets the "sync_status" field.
+func (rc *RoundCreate) SetSyncStatus(u uint32) *RoundCreate {
+	rc.mutation.SetSyncStatus(u)
+	return rc
+}
+
+// SetNillableSyncStatus sets the "sync_status" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableSyncStatus(u *uint32) *RoundCreate {
+	if u != nil {
+		rc.SetSyncStatus(*u)
+	}
+	return rc
+}
+
+// SetSyncMsg sets the "sync_msg" field.
+func (rc *RoundCreate) SetSyncMsg(s string) *RoundCreate {
+	rc.mutation.SetSyncMsg(s)
+	return rc
+}
+
+// SetNillableSyncMsg sets the "sync_msg" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableSyncMsg(s *string) *RoundCreate {
+	if s != nil {
+		rc.SetSyncMsg(*s)
+	}
+	return rc
+}
+
 // SetID sets the "id" field.
 func (rc *RoundCreate) SetID(u uint64) *RoundCreate {
 	rc.mutation.SetID(u)
@@ -207,6 +263,22 @@ func (rc *RoundCreate) defaults() {
 		v := round.DefaultSelectedFold
 		rc.mutation.SetSelectedFold(v)
 	}
+	if _, ok := rc.mutation.Mode(); !ok {
+		v := round.DefaultMode
+		rc.mutation.SetMode(v)
+	}
+	if _, ok := rc.mutation.ComputeAmount(); !ok {
+		v := round.DefaultComputeAmount
+		rc.mutation.SetComputeAmount(v)
+	}
+	if _, ok := rc.mutation.SyncStatus(); !ok {
+		v := round.DefaultSyncStatus
+		rc.mutation.SetSyncStatus(v)
+	}
+	if _, ok := rc.mutation.SyncMsg(); !ok {
+		v := round.DefaultSyncMsg
+		rc.mutation.SetSyncMsg(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -231,6 +303,18 @@ func (rc *RoundCreate) check() error {
 	}
 	if _, ok := rc.mutation.SelectedFold(); !ok {
 		return &ValidationError{Name: "selected_fold", err: errors.New(`ent: missing required field "Round.selected_fold"`)}
+	}
+	if _, ok := rc.mutation.Mode(); !ok {
+		return &ValidationError{Name: "mode", err: errors.New(`ent: missing required field "Round.mode"`)}
+	}
+	if _, ok := rc.mutation.ComputeAmount(); !ok {
+		return &ValidationError{Name: "compute_amount", err: errors.New(`ent: missing required field "Round.compute_amount"`)}
+	}
+	if _, ok := rc.mutation.SyncStatus(); !ok {
+		return &ValidationError{Name: "sync_status", err: errors.New(`ent: missing required field "Round.sync_status"`)}
+	}
+	if _, ok := rc.mutation.SyncMsg(); !ok {
+		return &ValidationError{Name: "sync_msg", err: errors.New(`ent: missing required field "Round.sync_msg"`)}
 	}
 	return nil
 }
@@ -299,6 +383,22 @@ func (rc *RoundCreate) createSpec() (*Round, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.SelectedFold(); ok {
 		_spec.SetField(round.FieldSelectedFold, field.TypeUint32, value)
 		_node.SelectedFold = value
+	}
+	if value, ok := rc.mutation.Mode(); ok {
+		_spec.SetField(round.FieldMode, field.TypeString, value)
+		_node.Mode = value
+	}
+	if value, ok := rc.mutation.ComputeAmount(); ok {
+		_spec.SetField(round.FieldComputeAmount, field.TypeFloat64, value)
+		_node.ComputeAmount = value
+	}
+	if value, ok := rc.mutation.SyncStatus(); ok {
+		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)
+		_node.SyncStatus = value
+	}
+	if value, ok := rc.mutation.SyncMsg(); ok {
+		_spec.SetField(round.FieldSyncMsg, field.TypeString, value)
+		_node.SyncMsg = value
 	}
 	if nodes := rc.mutation.FoldIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
