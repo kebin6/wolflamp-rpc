@@ -390,6 +390,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	}
 	if round.Status != roundenum.Investing.Val() {
 		l.svcCtx.Redis.Del(l.ctx, openLock)
+		fmt.Printf("ProcessOpen[%s]: round status is not investing, exist", in.Mode)
 		return nil, errorx.NewAlreadyExistsError("game was already open")
 	}
 
@@ -397,6 +398,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	allInvests, err := l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.Mode(in.Mode)).
 		Where(roundinvest.RoundID(round.Id)).All(l.ctx)
 	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: get all invest list faild: %s", in.Mode, err.Error())
 		l.svcCtx.Redis.Del(l.ctx, openLock)
 		return nil, err
 	}
@@ -415,6 +417,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	if investResult == nil {
 		choiceFoldNo, totalRewardNum, investResult, err = l.DealSingleWolfCase(in.Mode, round, allInvests)
 		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: deal single wolf case error : %s", in.Mode, err.Error())
 			l.svcCtx.Redis.Del(l.ctx, openLock)
 			return nil, err
 		}
@@ -430,6 +433,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	commissionResp, err := setting.NewGetGameCommissionLogic(l.ctx, l.svcCtx).GetGameCommission(&wolflamp.Empty{})
 	if err != nil {
 		l.svcCtx.Redis.Del(l.ctx, openLock)
+		fmt.Printf("ProcessOpen[%s]: get system commission setting error : %s", in.Mode, err.Error())
 		return nil, err
 	}
 	systemCommission := commissionResp.GameCommission
@@ -439,6 +443,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	poolCommissionResp, err := setting.NewGetPoolCommissionLogic(l.ctx, l.svcCtx).GetPoolCommission(&wolflamp.Empty{})
 	if err != nil {
 		l.svcCtx.Redis.Del(l.ctx, openLock)
+		fmt.Printf("ProcessOpen[%s]: get pool commission setting error : %s", in.Mode, err.Error())
 		return nil, err
 	}
 	poolCommission := poolCommissionResp.Commission
@@ -447,12 +452,14 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 	robPoolCommissionResp, err := setting.NewGetRobPoolCommissionLogic(l.ctx, l.svcCtx).GetRobPoolCommission(&wolflamp.Empty{})
 	if err != nil {
 		l.svcCtx.Redis.Del(l.ctx, openLock)
+		fmt.Printf("ProcessOpen[%s]: get robot pool commission setting error : %s", in.Mode, err.Error())
 		return nil, err
 	}
 	// 奖金池预留占比
 	rewardPoolCommissionResp, err := setting.NewGetRewardPoolCommissionLogic(l.ctx, l.svcCtx).GetRewardPoolCommission(&wolflamp.Empty{})
 	if err != nil {
 		l.svcCtx.Redis.Del(l.ctx, openLock)
+		fmt.Printf("ProcessOpen[%s]: get reward pool commission setting error : %s", in.Mode, err.Error())
 		return nil, err
 	}
 	// 机器人池预留数
@@ -501,6 +508,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				SetLambNum(robPoolCommissionNum).SetRemark("机器人池预留").
 				Exec(l.ctx)
 			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: create robot pool commission error : %s", in.Mode, err.Error())
 				return err
 			}
 		}
@@ -512,6 +520,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				SetRemark("奖金池预留").
 				Exec(l.ctx)
 			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: create reward pool commission error : %s", in.Mode, err.Error())
 				return err
 			}
 		}
@@ -520,6 +529,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Other.Val()).
 				SetLambNum(restPoolCommissionNum).Exec(l.ctx)
 			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: create rest pool commission error : %s", in.Mode, err.Error())
 				return err
 			}
 		}
@@ -532,6 +542,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			Remark: pointy.GetPointer(fmt.Sprintf("资金池预留：%f*%f=%f", float32(totalRewardNum), poolCommission/100, poolCommissionNum)),
 		})
 		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: create pool statement error : %s", in.Mode, err.Error())
 			return err
 		}
 
@@ -544,6 +555,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			Remark: pointy.GetPointer(fmt.Sprintf("平台收益：%f*%f=%f", float32(totalRewardNum), systemCommission/100, systemCommissionNum)),
 		})
 		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: create system commission statement error : %s", in.Mode, err.Error())
 			return err
 		}
 
@@ -556,6 +568,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			Remark: pointy.GetPointer(fmt.Sprintf("上级总分佣：%f*%f=%f", float32(totalRewardNum), invitorCommission, invitorCommissionNum)),
 		})
 		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: create invitor reward commission statement error : %s", in.Mode, err.Error())
 			return err
 		}
 
@@ -566,6 +579,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			err := l.svcCtx.DB.RoundInvest.Update().Where(roundinvest.ID(investInfo.InvestId)).
 				SetProfitAndLoss(investInfo.ProfitAndLoss).Exec(l.ctx)
 			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: update invest error : %s", in.Mode, err.Error())
 				return err
 			}
 			if util.IsRealPlayer(investInfo.PlayerId) {
@@ -578,6 +592,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					}
 
 					if err != nil {
+						fmt.Printf("ProcessOpen[%s]: update player error : %s", in.Mode, err.Error())
 						return err
 					}
 					// 赢亏为正的，则记录流水账单
@@ -599,6 +614,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					})
 				}
 				if err != nil {
+					fmt.Printf("ProcessOpen[%s]: create player invest statement error : %s", in.Mode, err.Error())
 					return err
 				}
 			} else {
@@ -610,6 +626,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
 						SetLambNum(float64(investInfo.ProfitAndLoss)).SetRemark("机器人获胜").Exec(l.ctx)
 					if err != nil {
+						fmt.Printf("ProcessOpen[%s]: create robot pool invest error : %s", in.Mode, err.Error())
 						return err
 					}
 
@@ -629,6 +646,11 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
 					})
 				}
+
+				if err != nil {
+					fmt.Printf("ProcessOpen[%s]: create robot invest statement error : %s", in.Mode, err.Error())
+					return err
+				}
 			}
 		}
 
@@ -638,6 +660,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			err := l.svcCtx.DB.RoundLambFold.Update().Where(roundlambfold.RoundID(round.Id), roundlambfold.FoldNo(foldInfo.LambFoldNo)).
 				SetLambNum(foldInfo.LambNum).SetProfitAndLoss(foldInfo.ProfitAndLoss).Exec(l.ctx)
 			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: update fold error : %s", in.Mode, err.Error())
 				return err
 			}
 		}
@@ -649,6 +672,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			SetSyncStatus(uint32(roundenum.NotYet)).
 			SetSelectedFold(choiceFoldNo).Exec(l.ctx)
 		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: update round error : %s", in.Mode, err.Error())
 			return err
 		}
 
