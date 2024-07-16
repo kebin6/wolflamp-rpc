@@ -274,7 +274,7 @@ func (l *DealOpenGameLogic) GetSliverNum(mode string) (sliverNum *uint32, err er
 		return nil, err
 	}
 
-	if numRange.Min < numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
+	if numRange.Min > numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
 		fmt.Printf("ProcessOpen[%s]: checking sliver, num range setting is invalid, exit\n", mode)
 		return nil, err
 	}
