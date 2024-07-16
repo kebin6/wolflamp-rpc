@@ -2,6 +2,7 @@ package game
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/cachekey"
@@ -16,6 +17,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/statement"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
+	"github.com/redis/go-redis/v9"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"math/rand"
@@ -105,19 +107,23 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 	// 判断时间段
 	allowTimeRange, err := setting.NewGetGoldenLambAllowTimeLogic(l.ctx, l.svcCtx).GetGoldenLambAllowTime(&wolflamp.Empty{})
 	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden allow time, error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
 	nowTime := time.Now().Format("15:04:05")
 	if nowTime < allowTimeRange.StartTime && nowTime > allowTimeRange.EndTime {
+		fmt.Printf("ProcessOpen[%s]: check golden allow time, no match, exit\n", mode)
 		return nil, err
 	}
 
 	numRange, err := setting.NewGetGoldenLambNumRangeLogic(l.ctx, l.svcCtx).GetGoldenLambNumRange(&wolflamp.Empty{})
 	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden num range error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
 
 	if numRange.Min < numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
+		fmt.Printf("ProcessOpen[%s]: check golden num, invalid, exit\n", mode)
 		return nil, err
 	}
 
@@ -128,9 +134,11 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 		Status: 1,
 	})
 	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden, reward pool error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
 	if sumResp.Amount < float64(numRange.Min) {
+		fmt.Printf("ProcessOpen[%s]: check golden, reward pool not enough, exit\n", mode)
 		return nil, nil
 	}
 	if sumResp.Amount < float64(numRange.Max) {
@@ -144,18 +152,20 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 
 func (l *DealOpenGameLogic) DealGoldenCase(mode string, invests []*ent.RoundInvest) (choiceFoldNo uint32, totalRewardNum float64, investResult []PlayerInvestInfo, err error) {
 
-	goldenLock := fmt.Sprintf("%s_%s", mode, cachekey.TodayGoldenLambOccurred)
-	hasOccur, err := l.svcCtx.Redis.Get(l.ctx, goldenLock).Result()
-	if err != nil {
+	goldenLock := cachekey.TodayGoldenLambLock.ModeVal(mode)
+	occurTime, err := l.svcCtx.Redis.Get(l.ctx, goldenLock).Result()
+	if err != nil && !errors.Is(err, redis.Nil) {
+		fmt.Printf("ProcessOpen[%s]: checking golden, golden lock error : %s, exit\n", mode, err.Error())
 		return 0, 0, nil, err
 	}
-	if hasOccur != "" {
+	if occurTime != "" {
 		fmt.Printf("ProcessOpen[%s]: today golden lamb has occur, exit\n", mode)
 		return 0, 0, nil, err
 	}
 
 	num, err := l.GetGoldenNum(mode)
 	if err != nil || num == nil {
+		fmt.Printf("ProcessOpen[%s]: get golden num error: %s, exit\n", mode, err.Error())
 		return 0, 0, nil, err
 	}
 	// 符合触发条件，计算出中奖羊圈
@@ -200,8 +210,9 @@ func (l *DealOpenGameLogic) DealGoldenCase(mode string, invests []*ent.RoundInve
 		}
 	}
 
+	expiredTime := time.Duration(now.EndOfDay().Unix()-time.Now().Unix()) * time.Second
 	_, err = l.svcCtx.Redis.SetNX(l.ctx, goldenLock,
-		time.Now().Unix(), time.Duration(now.EndOfDay().Unix()-time.Now().Unix())).Result()
+		time.Now().Unix(), expiredTime).Result()
 	if err != nil {
 		fmt.Printf("ProcessOpen[%s]: today golden lamb has occur, exit\n", mode)
 		return 0, 0, nil, err
