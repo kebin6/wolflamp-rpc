@@ -72,7 +72,7 @@ func (g GcicsApi) GetBalance(gameToken string) (*BalanceData, error) {
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/api/wallet"
 	timestamp := time.Now().Unix()
-	sign, err := util.GenerateSHA1Signature(timestamp, c.AppId, c.AppSecret)
+	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return nil, err
 	}
@@ -140,11 +140,11 @@ type GeneratePaymentLinkResp struct {
 }
 
 // GeneratePaymentLink 请求生成支付链接
-func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount float64) (*string, error) {
+func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount float64) (*GeneratePaymentLinkResp, error) {
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/api/generateCustomLink"
 	timestamp := time.Now().Unix()
-	sign, err := util.GenerateSHA1Signature(timestamp, c.AppId, c.AppSecret)
+	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 	// 定义要发送的数据
 	data := &GeneratePaymentLinkReq{
 		OrderId:    strconv.FormatUint(exchangeId, 10),
-		Ref:        "",
+		Ref:        "xxx",
 		Coin:       coinType,
 		Amount:     amount,
 		Time:       timestamp,
@@ -213,7 +213,7 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 	if err != nil {
 		return nil, err
 	}
-	return &postResp.Data, nil
+	return &postResp, nil
 }
 
 type WithdrawReq struct {
@@ -230,7 +230,7 @@ func (g GcicsApi) Withdraw(coinType string, lambAmount float64) error {
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/api/withdrawal"
 	timestamp := time.Now().Unix()
-	sign, err := util.GenerateSHA1Signature(timestamp, c.AppId, c.AppSecret)
+	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return err
 	}
@@ -300,7 +300,7 @@ func (g GcicsApi) Commission(coinType string, commissionList []CommissionInfo) e
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/manage/commission"
 	timestamp := time.Now().Unix()
-	sign, err := util.GenerateSHA1Signature(timestamp, c.AppId, c.AppSecret)
+	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return err
 	}
@@ -360,7 +360,7 @@ func (g GcicsApi) Logout(coinType string, lambAmount float64) error {
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/api/logout"
 	timestamp := time.Now().Unix()
-	sign, err := util.GenerateSHA1Signature(timestamp, c.AppId, c.AppSecret)
+	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return err
 	}

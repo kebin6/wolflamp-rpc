@@ -6,6 +6,7 @@ import (
 	"github.com/duke-git/lancet/v2/random"
 	"github.com/kebin6/wolflamp-rpc/common/api"
 	"github.com/kebin6/wolflamp-rpc/common/enum/exchangeenum"
+	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/player"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
@@ -93,11 +94,16 @@ func (l *ExchangeLogic) DoExchange(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 		Ctx: l.ctx, SvcCtx: l.svcCtx,
 		UserId: info.ID,
 	}
-	link, err := gcicsApi.GeneratePaymentLink(exchageInfo.ID, in.Mode, float64(in.CoinAmount))
+	resp, err := gcicsApi.GeneratePaymentLink(exchageInfo.ID, in.Mode, float64(in.CoinAmount))
 	if err != nil {
 		return nil, err
 	}
-	dealLink := fmt.Sprintf(*link+"?q=%s&k=%s&lang=en", "", "")
+
+	sign, err := util.GenerateSHA1Signature(resp.Data, l.svcCtx.Config.GcicsConf.AppId, l.svcCtx.Config.GcicsConf.AppSecret)
+	if err != nil {
+		return nil, err
+	}
+	dealLink := fmt.Sprintf("%s?q=%s&k=%s&lang=en", resp.Link, resp.Data, sign)
 
 	return &wolflamp.ExchangeResp{
 		Id:   exchageInfo.ID,

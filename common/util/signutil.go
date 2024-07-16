@@ -7,9 +7,9 @@ import (
 	"strings"
 )
 
-func GenerateSHA1Signature(time int64, appID, secret string) (string, error) {
+func GenerateSHA1Signature(nonce string, appID, secret string) (string, error) {
 	// 将输入串接
-	input := strings.Join([]string{appID, strconv.FormatInt(time, 10), secret}, "&")
+	input := strings.Join([]string{appID, nonce, secret}, "&")
 
 	// 创建一个新的SHA-1哈希对象
 	hasher := sha1.New()
@@ -28,7 +28,7 @@ func GenerateSHA1Signature(time int64, appID, secret string) (string, error) {
 
 func ValidateSignature(time int64, appID, secret, signature string) bool {
 	// 生成签名
-	generatedSignature, err := GenerateSHA1Signature(time, appID, secret)
+	generatedSignature, err := GenerateSHA1Signature(strconv.FormatInt(time, 10), appID, secret)
 	if err != nil {
 		return false
 	}
