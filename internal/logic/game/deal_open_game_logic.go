@@ -372,7 +372,7 @@ func (l *DealOpenGameLogic) DealSingleWolfCase(mode string, round *wolflamp.Roun
 			})
 		}
 	}
-	fmt.Printf("ProcessOpen[%s]: Single Wolf Choose LambFold: %d\n", mode, *foldChoice)
+	fmt.Printf("ProcessOpen[%s]: Single Wolf Choose LambFold is : %d\n", mode, *foldChoice)
 	return *foldChoice, totalLoserInvestNum, investResult, nil
 
 }
