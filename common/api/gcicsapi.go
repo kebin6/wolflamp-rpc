@@ -157,8 +157,8 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 		Amount:     amount,
 		Time:       timestamp,
 		NotifyUrl:  c.NotifyUrl,
-		SuccessUrl: c.SuccessUrl,
-		FailUrl:    c.FailUrl,
+		SuccessUrl: fmt.Sprintf(c.SuccessUrl, exchangeId),
+		FailUrl:    fmt.Sprintf(c.FailUrl, exchangeId),
 	}
 
 	// 将数据转换为 JSON 格式
