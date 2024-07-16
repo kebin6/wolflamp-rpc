@@ -9,6 +9,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent/exchange"
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io/ioutil"
@@ -69,6 +70,10 @@ func (g GcicsApi) CheckStatus(status int64, code int64, msg string) error {
 }
 
 func (g GcicsApi) GetBalance(gameToken string) (*BalanceData, error) {
+	return &BalanceData{
+		Token: pointy.GetPointer(float64(100)),
+		Coin:  pointy.GetPointer(float64(100)),
+	}, nil
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/Game/api/wallet"
 	timestamp := time.Now().Unix()
