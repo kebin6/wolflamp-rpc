@@ -43,6 +43,8 @@ func (l *UpdatePlayerLogic) UpdatePlayer(in *wolflamp.UpdatePlayerReq) (*wolflam
 		SetNotNilTransactionPassword(in.TransactionPassword).
 		SetNotNilDepositAddress(in.DepositAddress).
 		SetNotNilSystemCommission(in.SystemCommission).
+		SetNotNilGcicsToken(in.GcicsToken).
+		SetNotNilGcicsReturnURL(in.ReturnUrl).
 		Exec(l.ctx)
 
 	if err != nil {

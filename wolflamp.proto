@@ -779,6 +779,7 @@ message UpdatePlayerReq {
   optional string transaction_password = 17;
   optional string deposit_address = 18;
   optional string gcics_token = 21;
+  optional string return_url = 22;
 }
 
 message UpdateRewardReq {
