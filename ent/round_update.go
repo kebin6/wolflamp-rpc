@@ -146,6 +146,27 @@ func (ru *RoundUpdate) AddComputeAmount(f float64) *RoundUpdate {
 	return ru
 }
 
+// SetOpenType sets the "open_type" field.
+func (ru *RoundUpdate) SetOpenType(u uint32) *RoundUpdate {
+	ru.mutation.ResetOpenType()
+	ru.mutation.SetOpenType(u)
+	return ru
+}
+
+// SetNillableOpenType sets the "open_type" field if the given value is not nil.
+func (ru *RoundUpdate) SetNillableOpenType(u *uint32) *RoundUpdate {
+	if u != nil {
+		ru.SetOpenType(*u)
+	}
+	return ru
+}
+
+// AddOpenType adds u to the "open_type" field.
+func (ru *RoundUpdate) AddOpenType(u int32) *RoundUpdate {
+	ru.mutation.AddOpenType(u)
+	return ru
+}
+
 // SetSyncStatus sets the "sync_status" field.
 func (ru *RoundUpdate) SetSyncStatus(u uint32) *RoundUpdate {
 	ru.mutation.ResetSyncStatus()
@@ -338,6 +359,12 @@ func (ru *RoundUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.AddedComputeAmount(); ok {
 		_spec.AddField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ru.mutation.OpenType(); ok {
+		_spec.SetField(round.FieldOpenType, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.AddedOpenType(); ok {
+		_spec.AddField(round.FieldOpenType, field.TypeUint32, value)
 	}
 	if value, ok := ru.mutation.SyncStatus(); ok {
 		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)
@@ -574,6 +601,27 @@ func (ruo *RoundUpdateOne) AddComputeAmount(f float64) *RoundUpdateOne {
 	return ruo
 }
 
+// SetOpenType sets the "open_type" field.
+func (ruo *RoundUpdateOne) SetOpenType(u uint32) *RoundUpdateOne {
+	ruo.mutation.ResetOpenType()
+	ruo.mutation.SetOpenType(u)
+	return ruo
+}
+
+// SetNillableOpenType sets the "open_type" field if the given value is not nil.
+func (ruo *RoundUpdateOne) SetNillableOpenType(u *uint32) *RoundUpdateOne {
+	if u != nil {
+		ruo.SetOpenType(*u)
+	}
+	return ruo
+}
+
+// AddOpenType adds u to the "open_type" field.
+func (ruo *RoundUpdateOne) AddOpenType(u int32) *RoundUpdateOne {
+	ruo.mutation.AddOpenType(u)
+	return ruo
+}
+
 // SetSyncStatus sets the "sync_status" field.
 func (ruo *RoundUpdateOne) SetSyncStatus(u uint32) *RoundUpdateOne {
 	ruo.mutation.ResetSyncStatus()
@@ -796,6 +844,12 @@ func (ruo *RoundUpdateOne) sqlSave(ctx context.Context) (_node *Round, err error
 	}
 	if value, ok := ruo.mutation.AddedComputeAmount(); ok {
 		_spec.AddField(round.FieldComputeAmount, field.TypeFloat64, value)
+	}
+	if value, ok := ruo.mutation.OpenType(); ok {
+		_spec.SetField(round.FieldOpenType, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.AddedOpenType(); ok {
+		_spec.AddField(round.FieldOpenType, field.TypeUint32, value)
 	}
 	if value, ok := ruo.mutation.SyncStatus(); ok {
 		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)

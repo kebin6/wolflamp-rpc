@@ -2021,6 +2021,30 @@ func (r *RoundCreate) SetNotNilComputeAmount(value *float64) *RoundCreate {
 }
 
 // set field if value's pointer is not nil.
+func (r *RoundUpdate) SetNotNilOpenType(value *uint32) *RoundUpdate {
+	if value != nil {
+		return r.SetOpenType(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundUpdateOne) SetNotNilOpenType(value *uint32) *RoundUpdateOne {
+	if value != nil {
+		return r.SetOpenType(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
+func (r *RoundCreate) SetNotNilOpenType(value *uint32) *RoundCreate {
+	if value != nil {
+		return r.SetOpenType(*value)
+	}
+	return r
+}
+
+// set field if value's pointer is not nil.
 func (r *RoundUpdate) SetNotNilSyncStatus(value *uint32) *RoundUpdate {
 	if value != nil {
 		return r.SetSyncStatus(*value)

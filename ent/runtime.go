@@ -459,12 +459,16 @@ func init() {
 	roundDescComputeAmount := roundFields[7].Descriptor()
 	// round.DefaultComputeAmount holds the default value on creation for the compute_amount field.
 	round.DefaultComputeAmount = roundDescComputeAmount.Default.(float64)
+	// roundDescOpenType is the schema descriptor for open_type field.
+	roundDescOpenType := roundFields[8].Descriptor()
+	// round.DefaultOpenType holds the default value on creation for the open_type field.
+	round.DefaultOpenType = roundDescOpenType.Default.(uint32)
 	// roundDescSyncStatus is the schema descriptor for sync_status field.
-	roundDescSyncStatus := roundFields[8].Descriptor()
+	roundDescSyncStatus := roundFields[9].Descriptor()
 	// round.DefaultSyncStatus holds the default value on creation for the sync_status field.
 	round.DefaultSyncStatus = roundDescSyncStatus.Default.(uint32)
 	// roundDescSyncMsg is the schema descriptor for sync_msg field.
-	roundDescSyncMsg := roundFields[9].Descriptor()
+	roundDescSyncMsg := roundFields[10].Descriptor()
 	// round.DefaultSyncMsg holds the default value on creation for the sync_msg field.
 	round.DefaultSyncMsg = roundDescSyncMsg.Default.(string)
 	roundinvestMixin := schema.RoundInvest{}.Mixin()

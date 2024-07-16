@@ -106,6 +106,8 @@ type WolflampClient interface {
 	ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error)
 	// group: player
 	GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error)
+	// group: pool
+	GetSum(ctx context.Context, in *GetSumReq, opts ...grpc.CallOption) (*GetSumResp, error)
 	// group: reward
 	CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: reward
@@ -148,6 +150,8 @@ type WolflampClient interface {
 	GetGoldenLambAllowTime(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HourTimeRangeResp, error)
 	// group: setting
 	GetGoldenLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error)
+	// group: setting
+	GetSliverLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error)
 	// group: setting
 	GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error)
 	// group: setting
@@ -550,6 +554,15 @@ func (c *wolflampClient) GetGcicsBalance(ctx context.Context, in *GetGcicsBalanc
 	return out, nil
 }
 
+func (c *wolflampClient) GetSum(ctx context.Context, in *GetSumReq, opts ...grpc.CallOption) (*GetSumResp, error) {
+	out := new(GetSumResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getSum", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createReward", in, out, opts...)
@@ -739,6 +752,15 @@ func (c *wolflampClient) GetGoldenLambNumRange(ctx context.Context, in *Empty, o
 	return out, nil
 }
 
+func (c *wolflampClient) GetSliverLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error) {
+	out := new(NumRangeResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getSliverLambNumRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error) {
 	out := new(PoolMinNumThenSilverResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getPoolMinNumThenSilver", in, out, opts...)
@@ -890,6 +912,8 @@ type WolflampServer interface {
 	ValidateGcicsSign(context.Context, *ValidateGcicsSignReq) (*ValidateGcicsSignResp, error)
 	// group: player
 	GetGcicsBalance(context.Context, *GetGcicsBalanceReq) (*GetGcicsBalanceResp, error)
+	// group: pool
+	GetSum(context.Context, *GetSumReq) (*GetSumResp, error)
 	// group: reward
 	CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error)
 	// group: reward
@@ -932,6 +956,8 @@ type WolflampServer interface {
 	GetGoldenLambAllowTime(context.Context, *Empty) (*HourTimeRangeResp, error)
 	// group: setting
 	GetGoldenLambNumRange(context.Context, *Empty) (*NumRangeResp, error)
+	// group: setting
+	GetSliverLambNumRange(context.Context, *Empty) (*NumRangeResp, error)
 	// group: setting
 	GetPoolMinNumThenSilver(context.Context, *Empty) (*PoolMinNumThenSilverResp, error)
 	// group: setting
@@ -1079,6 +1105,9 @@ func (UnimplementedWolflampServer) ValidateGcicsSign(context.Context, *ValidateG
 func (UnimplementedWolflampServer) GetGcicsBalance(context.Context, *GetGcicsBalanceReq) (*GetGcicsBalanceResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGcicsBalance not implemented")
 }
+func (UnimplementedWolflampServer) GetSum(context.Context, *GetSumReq) (*GetSumResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSum not implemented")
+}
 func (UnimplementedWolflampServer) CreateReward(context.Context, *CreateRewardReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateReward not implemented")
 }
@@ -1141,6 +1170,9 @@ func (UnimplementedWolflampServer) GetGoldenLambAllowTime(context.Context, *Empt
 }
 func (UnimplementedWolflampServer) GetGoldenLambNumRange(context.Context, *Empty) (*NumRangeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGoldenLambNumRange not implemented")
+}
+func (UnimplementedWolflampServer) GetSliverLambNumRange(context.Context, *Empty) (*NumRangeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSliverLambNumRange not implemented")
 }
 func (UnimplementedWolflampServer) GetPoolMinNumThenSilver(context.Context, *Empty) (*PoolMinNumThenSilverResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPoolMinNumThenSilver not implemented")
@@ -1932,6 +1964,24 @@ func _Wolflamp_GetGcicsBalance_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetSum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSumReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetSum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getSum",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetSum(ctx, req.(*GetSumReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRewardReq)
 	if err := dec(in); err != nil {
@@ -2310,6 +2360,24 @@ func _Wolflamp_GetGoldenLambNumRange_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetSliverLambNumRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetSliverLambNumRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getSliverLambNumRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetSliverLambNumRange(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_GetPoolMinNumThenSilver_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
@@ -2612,6 +2680,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Wolflamp_GetGcicsBalance_Handler,
 		},
 		{
+			MethodName: "getSum",
+			Handler:    _Wolflamp_GetSum_Handler,
+		},
+		{
 			MethodName: "createReward",
 			Handler:    _Wolflamp_CreateReward_Handler,
 		},
@@ -2694,6 +2766,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getGoldenLambNumRange",
 			Handler:    _Wolflamp_GetGoldenLambNumRange_Handler,
+		},
+		{
+			MethodName: "getSliverLambNumRange",
+			Handler:    _Wolflamp_GetSliverLambNumRange_Handler,
 		},
 		{
 			MethodName: "getPoolMinNumThenSilver",

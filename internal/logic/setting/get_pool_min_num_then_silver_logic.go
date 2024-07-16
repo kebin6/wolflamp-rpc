@@ -30,7 +30,7 @@ func NewGetPoolMinNumThenSilverLogic(ctx context.Context, svcCtx *svc.ServiceCon
 func (l *GetPoolMinNumThenSilverLogic) GetPoolMinNumThenSilver(in *wolflamp.Empty) (*wolflamp.PoolMinNumThenSilverResp, error) {
 
 	if l.svcCtx.Redis.Exists(l.ctx, enum.PoolMinNumThenSilver.CacheKey()).Val() == 0 {
-		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).FindSetting(&wolflamp.FindSettingReq{Module: enum.PoolMinNumThenSilver.Val()})
+		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).FindSetting(&wolflamp.FindSettingReq{Module: enum.PlatformSetting.Val()})
 		if err != nil {
 			return nil, err
 		}
@@ -38,7 +38,7 @@ func (l *GetPoolMinNumThenSilverLogic) GetPoolMinNumThenSilver(in *wolflamp.Empt
 		if err := json.Unmarshal([]byte(setting.JsonString), &platformSetting); err != nil {
 			return nil, err
 		}
-		_ = l.svcCtx.Redis.Set(l.ctx, enum.PoolMinNumThenSilver.CacheKey(), platformSetting.MinWithdrawNum, 0)
+		_ = l.svcCtx.Redis.Set(l.ctx, enum.PoolMinNumThenSilver.CacheKey(), platformSetting.PoolMinNumThenSilver, 0)
 	}
 
 	cached, err := l.svcCtx.Redis.Get(l.ctx, enum.PoolMinNumThenSilver.CacheKey()).Result()

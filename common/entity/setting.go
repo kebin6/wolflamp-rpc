@@ -31,6 +31,8 @@ type PlatformSetting struct {
 	PoolMinNumThenSilver uint32 `json:"poolMinNumThenSilver"`
 	// 银羊触发概率（%）
 	SliverOccurPercent float32 `json:"sliverOccurPercent"`
+	// 银羊数量区间设定
+	SliverLambNum GoldenLambNum `json:"sliverLambNum"`
 }
 
 type GoldenLambNum struct {

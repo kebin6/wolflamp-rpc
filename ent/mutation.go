@@ -8583,6 +8583,8 @@ type RoundMutation struct {
 	mode                 *string
 	compute_amount       *float64
 	addcompute_amount    *float64
+	open_type            *uint32
+	addopen_type         *int32
 	sync_status          *uint32
 	addsync_status       *int32
 	sync_msg             *string
@@ -9226,6 +9228,62 @@ func (m *RoundMutation) ResetComputeAmount() {
 	m.addcompute_amount = nil
 }
 
+// SetOpenType sets the "open_type" field.
+func (m *RoundMutation) SetOpenType(u uint32) {
+	m.open_type = &u
+	m.addopen_type = nil
+}
+
+// OpenType returns the value of the "open_type" field in the mutation.
+func (m *RoundMutation) OpenType() (r uint32, exists bool) {
+	v := m.open_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpenType returns the old "open_type" field's value of the Round entity.
+// If the Round object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoundMutation) OldOpenType(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpenType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpenType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpenType: %w", err)
+	}
+	return oldValue.OpenType, nil
+}
+
+// AddOpenType adds u to the "open_type" field.
+func (m *RoundMutation) AddOpenType(u int32) {
+	if m.addopen_type != nil {
+		*m.addopen_type += u
+	} else {
+		m.addopen_type = &u
+	}
+}
+
+// AddedOpenType returns the value that was added to the "open_type" field in this mutation.
+func (m *RoundMutation) AddedOpenType() (r int32, exists bool) {
+	v := m.addopen_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOpenType resets all changes to the "open_type" field.
+func (m *RoundMutation) ResetOpenType() {
+	m.open_type = nil
+	m.addopen_type = nil
+}
+
 // SetSyncStatus sets the "sync_status" field.
 func (m *RoundMutation) SetSyncStatus(u uint32) {
 	m.sync_status = &u
@@ -9460,7 +9518,7 @@ func (m *RoundMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoundMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 14)
 	if m.created_at != nil {
 		fields = append(fields, round.FieldCreatedAt)
 	}
@@ -9493,6 +9551,9 @@ func (m *RoundMutation) Fields() []string {
 	}
 	if m.compute_amount != nil {
 		fields = append(fields, round.FieldComputeAmount)
+	}
+	if m.open_type != nil {
+		fields = append(fields, round.FieldOpenType)
 	}
 	if m.sync_status != nil {
 		fields = append(fields, round.FieldSyncStatus)
@@ -9530,6 +9591,8 @@ func (m *RoundMutation) Field(name string) (ent.Value, bool) {
 		return m.Mode()
 	case round.FieldComputeAmount:
 		return m.ComputeAmount()
+	case round.FieldOpenType:
+		return m.OpenType()
 	case round.FieldSyncStatus:
 		return m.SyncStatus()
 	case round.FieldSyncMsg:
@@ -9565,6 +9628,8 @@ func (m *RoundMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldMode(ctx)
 	case round.FieldComputeAmount:
 		return m.OldComputeAmount(ctx)
+	case round.FieldOpenType:
+		return m.OldOpenType(ctx)
 	case round.FieldSyncStatus:
 		return m.OldSyncStatus(ctx)
 	case round.FieldSyncMsg:
@@ -9655,6 +9720,13 @@ func (m *RoundMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetComputeAmount(v)
 		return nil
+	case round.FieldOpenType:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpenType(v)
+		return nil
 	case round.FieldSyncStatus:
 		v, ok := value.(uint32)
 		if !ok {
@@ -9692,6 +9764,9 @@ func (m *RoundMutation) AddedFields() []string {
 	if m.addcompute_amount != nil {
 		fields = append(fields, round.FieldComputeAmount)
 	}
+	if m.addopen_type != nil {
+		fields = append(fields, round.FieldOpenType)
+	}
 	if m.addsync_status != nil {
 		fields = append(fields, round.FieldSyncStatus)
 	}
@@ -9713,6 +9788,8 @@ func (m *RoundMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedSelectedFold()
 	case round.FieldComputeAmount:
 		return m.AddedComputeAmount()
+	case round.FieldOpenType:
+		return m.AddedOpenType()
 	case round.FieldSyncStatus:
 		return m.AddedSyncStatus()
 	}
@@ -9758,6 +9835,13 @@ func (m *RoundMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddComputeAmount(v)
+		return nil
+	case round.FieldOpenType:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOpenType(v)
 		return nil
 	case round.FieldSyncStatus:
 		v, ok := value.(int32)
@@ -9840,6 +9924,9 @@ func (m *RoundMutation) ResetField(name string) error {
 		return nil
 	case round.FieldComputeAmount:
 		m.ResetComputeAmount()
+		return nil
+	case round.FieldOpenType:
+		m.ResetOpenType()
 		return nil
 	case round.FieldSyncStatus:
 		m.ResetSyncStatus()

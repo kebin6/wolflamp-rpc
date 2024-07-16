@@ -50,6 +50,10 @@ func (Round) Fields() []ent.Field {
 			Default(0).
 			Comment("计算得出用于回传的羊只数量").
 			Annotations(entsql.WithComments(true)),
+		field.Uint32("open_type").
+			Default(0).
+			Comment("开奖类型：0-未开奖；1-单狼猎杀；2-金羊奖励；3-银羊奖励；4-多狼猎杀").
+			Annotations(entsql.WithComments(true)),
 		field.Uint32("sync_status").
 			Default(0).
 			Comment("回传状态").

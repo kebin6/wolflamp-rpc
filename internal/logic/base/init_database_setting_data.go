@@ -54,6 +54,10 @@ func (l *InitDatabaseLogic) insertSettingData() error {
 			},
 			PoolMinNumThenSilver: 0,
 			SliverOccurPercent:   0,
+			SliverLambNum: entity.GoldenLambNum{
+				Max: 0,
+				Min: 0,
+			},
 		}
 
 		gameRuleJsonByte, err := json.Marshal(setting)

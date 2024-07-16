@@ -347,6 +347,16 @@ message GetOverviewResp {
   OverviewInfo data = 1;
 }
 
+message GetSumReq {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+}
+
+message GetSumResp {
+  double amount = 1;
+}
+
 message HourTimeRangeResp {
   string startTime = 1;
   string endTime = 2;
@@ -687,6 +697,7 @@ message RoundInfo {
   uint64 total_round_count = 11;
   repeated InvestInfo invests = 12;
   string mode = 13;
+  uint32 openType = 14;
 }
 
 message StatementInfo {
@@ -905,6 +916,8 @@ service Wolflamp {
   rpc validateGcicsSign(ValidateGcicsSignReq) returns (ValidateGcicsSignResp);
   //  group: player
   rpc getGcicsBalance(GetGcicsBalanceReq) returns (GetGcicsBalanceResp);
+  //  group: pool
+  rpc getSum(GetSumReq) returns (GetSumResp);
   //  group: reward
   rpc createReward(CreateRewardReq) returns (BaseIDResp);
   //  group: reward
@@ -947,6 +960,8 @@ service Wolflamp {
   rpc getGoldenLambAllowTime(Empty) returns (HourTimeRangeResp);
   //  group: setting
   rpc getGoldenLambNumRange(Empty) returns (NumRangeResp);
+  //  group: setting
+  rpc getSliverLambNumRange(Empty) returns (NumRangeResp);
   //  group: setting
   rpc getPoolMinNumThenSilver(Empty) returns (PoolMinNumThenSilverResp);
   //  group: setting

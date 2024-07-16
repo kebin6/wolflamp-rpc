@@ -273,6 +273,7 @@ var (
 		{Name: "selected_fold", Type: field.TypeUint32, Comment: "选中的羊圈号码", Default: 0},
 		{Name: "mode", Type: field.TypeString, Comment: "游戏类型：coin,token", Default: ""},
 		{Name: "compute_amount", Type: field.TypeFloat64, Comment: "计算得出用于回传的羊只数量", Default: 0},
+		{Name: "open_type", Type: field.TypeUint32, Comment: "开奖类型：0-未开奖；1-单狼猎杀；2-金羊奖励；3-银羊奖励；4-多狼猎杀", Default: 0},
 		{Name: "sync_status", Type: field.TypeUint32, Comment: "回传状态", Default: 0},
 		{Name: "sync_msg", Type: field.TypeString, Comment: "回传结果信息", Default: ""},
 	}

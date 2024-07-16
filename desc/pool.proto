@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package wolflamp;
+option go_package="./wolflamp";
+
+message GetSumReq {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+}
+
+message GetSumResp {
+  double amount = 1;
+}
+
+service Wolflamp {
+  // group: pool
+  rpc getSum (GetSumReq) returns (GetSumResp);
+}

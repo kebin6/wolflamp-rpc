@@ -115,6 +115,7 @@ func (l *FindRoundLogic) Po2Vo(po *ent.Round) (vo *wolflamp.RoundInfo) {
 		RoundCount:      po.RoundCount,
 		Folds:           folds,
 		Mode:            po.Mode,
+		OpenType:        po.OpenType,
 	}
 
 }

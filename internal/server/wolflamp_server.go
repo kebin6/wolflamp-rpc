@@ -13,6 +13,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/internal/logic/order"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/overview"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/player"
+	"github.com/kebin6/wolflamp-rpc/internal/logic/pool"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/reward"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/statement"
@@ -241,6 +242,11 @@ func (s *WolflampServer) GetGcicsBalance(ctx context.Context, in *wolflamp.GetGc
 	return l.GetGcicsBalance(in)
 }
 
+func (s *WolflampServer) GetSum(ctx context.Context, in *wolflamp.GetSumReq) (*wolflamp.GetSumResp, error) {
+	l := pool.NewGetSumLogic(ctx, s.svcCtx)
+	return l.GetSum(in)
+}
+
 func (s *WolflampServer) CreateReward(ctx context.Context, in *wolflamp.CreateRewardReq) (*wolflamp.BaseIDResp, error) {
 	l := reward.NewCreateRewardLogic(ctx, s.svcCtx)
 	return l.CreateReward(in)
@@ -344,6 +350,11 @@ func (s *WolflampServer) GetGoldenLambAllowTime(ctx context.Context, in *wolflam
 func (s *WolflampServer) GetGoldenLambNumRange(ctx context.Context, in *wolflamp.Empty) (*wolflamp.NumRangeResp, error) {
 	l := setting.NewGetGoldenLambNumRangeLogic(ctx, s.svcCtx)
 	return l.GetGoldenLambNumRange(in)
+}
+
+func (s *WolflampServer) GetSliverLambNumRange(ctx context.Context, in *wolflamp.Empty) (*wolflamp.NumRangeResp, error) {
+	l := setting.NewGetSliverLambNumRangeLogic(ctx, s.svcCtx)
+	return l.GetSliverLambNumRange(in)
 }
 
 func (s *WolflampServer) GetPoolMinNumThenSilver(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PoolMinNumThenSilverResp, error) {

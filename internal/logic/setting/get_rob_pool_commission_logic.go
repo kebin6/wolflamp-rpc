@@ -30,7 +30,7 @@ func NewGetRobPoolCommissionLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *GetRobPoolCommissionLogic) GetRobPoolCommission(in *wolflamp.Empty) (*wolflamp.CommissionResp, error) {
 
 	if l.svcCtx.Redis.Exists(l.ctx, enum.RobPoolCommission.CacheKey()).Val() == 0 {
-		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).FindSetting(&wolflamp.FindSettingReq{Module: enum.RobPoolCommission.Val()})
+		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).FindSetting(&wolflamp.FindSettingReq{Module: enum.PlatformSetting.Val()})
 		if err != nil {
 			return nil, err
 		}
@@ -38,7 +38,7 @@ func (l *GetRobPoolCommissionLogic) GetRobPoolCommission(in *wolflamp.Empty) (*w
 		if err := json.Unmarshal([]byte(setting.JsonString), &platformSetting); err != nil {
 			return nil, err
 		}
-		_ = l.svcCtx.Redis.Set(l.ctx, enum.RobPoolCommission.CacheKey(), platformSetting.WithdrawCommission, 0)
+		_ = l.svcCtx.Redis.Set(l.ctx, enum.RobPoolCommission.CacheKey(), platformSetting.RobPoolCommission, 0)
 	}
 
 	cached, err := l.svcCtx.Redis.Get(l.ctx, enum.RobPoolCommission.CacheKey()).Result()

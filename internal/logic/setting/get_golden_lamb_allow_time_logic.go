@@ -29,7 +29,8 @@ func NewGetGoldenLambAllowTimeLogic(ctx context.Context, svcCtx *svc.ServiceCont
 func (l *GetGoldenLambAllowTimeLogic) GetGoldenLambAllowTime(in *wolflamp.Empty) (*wolflamp.HourTimeRangeResp, error) {
 
 	if l.svcCtx.Redis.Exists(l.ctx, enum.GoldenLambAllowTime.CacheKey()).Val() == 0 {
-		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).FindSetting(&wolflamp.FindSettingReq{Module: enum.GoldenLambAllowTime.Val()})
+		setting, err := NewFindSettingLogic(l.ctx, l.svcCtx).
+			FindSetting(&wolflamp.FindSettingReq{Module: enum.PlatformSetting.Val()})
 		if err != nil {
 			return nil, err
 		}
@@ -37,7 +38,7 @@ func (l *GetGoldenLambAllowTimeLogic) GetGoldenLambAllowTime(in *wolflamp.Empty)
 		if err := json.Unmarshal([]byte(setting.JsonString), &platformSetting); err != nil {
 			return nil, err
 		}
-		settingJson, err := json.Marshal(platformSetting.GoldenLambNum)
+		settingJson, err := json.Marshal(platformSetting.GoldenLambAllowTime)
 		if err != nil {
 			return nil, err
 		}

@@ -110,6 +110,11 @@ func ComputeAmount(v float64) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldComputeAmount, v))
 }
 
+// OpenType applies equality check predicate on the "open_type" field. It's identical to OpenTypeEQ.
+func OpenType(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldOpenType, v))
+}
+
 // SyncStatus applies equality check predicate on the "sync_status" field. It's identical to SyncStatusEQ.
 func SyncStatus(v uint32) predicate.Round {
 	return predicate.Round(sql.FieldEQ(FieldSyncStatus, v))
@@ -603,6 +608,46 @@ func ComputeAmountLT(v float64) predicate.Round {
 // ComputeAmountLTE applies the LTE predicate on the "compute_amount" field.
 func ComputeAmountLTE(v float64) predicate.Round {
 	return predicate.Round(sql.FieldLTE(FieldComputeAmount, v))
+}
+
+// OpenTypeEQ applies the EQ predicate on the "open_type" field.
+func OpenTypeEQ(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldEQ(FieldOpenType, v))
+}
+
+// OpenTypeNEQ applies the NEQ predicate on the "open_type" field.
+func OpenTypeNEQ(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldNEQ(FieldOpenType, v))
+}
+
+// OpenTypeIn applies the In predicate on the "open_type" field.
+func OpenTypeIn(vs ...uint32) predicate.Round {
+	return predicate.Round(sql.FieldIn(FieldOpenType, vs...))
+}
+
+// OpenTypeNotIn applies the NotIn predicate on the "open_type" field.
+func OpenTypeNotIn(vs ...uint32) predicate.Round {
+	return predicate.Round(sql.FieldNotIn(FieldOpenType, vs...))
+}
+
+// OpenTypeGT applies the GT predicate on the "open_type" field.
+func OpenTypeGT(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldGT(FieldOpenType, v))
+}
+
+// OpenTypeGTE applies the GTE predicate on the "open_type" field.
+func OpenTypeGTE(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldGTE(FieldOpenType, v))
+}
+
+// OpenTypeLT applies the LT predicate on the "open_type" field.
+func OpenTypeLT(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldLT(FieldOpenType, v))
+}
+
+// OpenTypeLTE applies the LTE predicate on the "open_type" field.
+func OpenTypeLTE(v uint32) predicate.Round {
+	return predicate.Round(sql.FieldLTE(FieldOpenType, v))
 }
 
 // SyncStatusEQ applies the EQ predicate on the "sync_status" field.

@@ -36,6 +36,8 @@ const (
 	FieldMode = "mode"
 	// FieldComputeAmount holds the string denoting the compute_amount field in the database.
 	FieldComputeAmount = "compute_amount"
+	// FieldOpenType holds the string denoting the open_type field in the database.
+	FieldOpenType = "open_type"
 	// FieldSyncStatus holds the string denoting the sync_status field in the database.
 	FieldSyncStatus = "sync_status"
 	// FieldSyncMsg holds the string denoting the sync_msg field in the database.
@@ -76,6 +78,7 @@ var Columns = []string{
 	FieldSelectedFold,
 	FieldMode,
 	FieldComputeAmount,
+	FieldOpenType,
 	FieldSyncStatus,
 	FieldSyncMsg,
 }
@@ -107,6 +110,8 @@ var (
 	DefaultMode string
 	// DefaultComputeAmount holds the default value on creation for the "compute_amount" field.
 	DefaultComputeAmount float64
+	// DefaultOpenType holds the default value on creation for the "open_type" field.
+	DefaultOpenType uint32
 	// DefaultSyncStatus holds the default value on creation for the "sync_status" field.
 	DefaultSyncStatus uint32
 	// DefaultSyncMsg holds the default value on creation for the "sync_msg" field.
@@ -174,6 +179,11 @@ func ByMode(opts ...sql.OrderTermOption) OrderOption {
 // ByComputeAmount orders the results by the compute_amount field.
 func ByComputeAmount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldComputeAmount, opts...).ToFunc()
+}
+
+// ByOpenType orders the results by the open_type field.
+func ByOpenType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOpenType, opts...).ToFunc()
 }
 
 // BySyncStatus orders the results by the sync_status field.

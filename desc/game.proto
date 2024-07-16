@@ -18,6 +18,7 @@ message RoundInfo {
   uint64 total_round_count = 11;
   repeated InvestInfo invests = 12;
   string mode = 13;
+  uint32 openType = 14;
 }
 
 message CreateRoundReq {

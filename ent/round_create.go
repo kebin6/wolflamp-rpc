@@ -144,6 +144,20 @@ func (rc *RoundCreate) SetNillableComputeAmount(f *float64) *RoundCreate {
 	return rc
 }
 
+// SetOpenType sets the "open_type" field.
+func (rc *RoundCreate) SetOpenType(u uint32) *RoundCreate {
+	rc.mutation.SetOpenType(u)
+	return rc
+}
+
+// SetNillableOpenType sets the "open_type" field if the given value is not nil.
+func (rc *RoundCreate) SetNillableOpenType(u *uint32) *RoundCreate {
+	if u != nil {
+		rc.SetOpenType(*u)
+	}
+	return rc
+}
+
 // SetSyncStatus sets the "sync_status" field.
 func (rc *RoundCreate) SetSyncStatus(u uint32) *RoundCreate {
 	rc.mutation.SetSyncStatus(u)
@@ -271,6 +285,10 @@ func (rc *RoundCreate) defaults() {
 		v := round.DefaultComputeAmount
 		rc.mutation.SetComputeAmount(v)
 	}
+	if _, ok := rc.mutation.OpenType(); !ok {
+		v := round.DefaultOpenType
+		rc.mutation.SetOpenType(v)
+	}
 	if _, ok := rc.mutation.SyncStatus(); !ok {
 		v := round.DefaultSyncStatus
 		rc.mutation.SetSyncStatus(v)
@@ -309,6 +327,9 @@ func (rc *RoundCreate) check() error {
 	}
 	if _, ok := rc.mutation.ComputeAmount(); !ok {
 		return &ValidationError{Name: "compute_amount", err: errors.New(`ent: missing required field "Round.compute_amount"`)}
+	}
+	if _, ok := rc.mutation.OpenType(); !ok {
+		return &ValidationError{Name: "open_type", err: errors.New(`ent: missing required field "Round.open_type"`)}
 	}
 	if _, ok := rc.mutation.SyncStatus(); !ok {
 		return &ValidationError{Name: "sync_status", err: errors.New(`ent: missing required field "Round.sync_status"`)}
@@ -391,6 +412,10 @@ func (rc *RoundCreate) createSpec() (*Round, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.ComputeAmount(); ok {
 		_spec.SetField(round.FieldComputeAmount, field.TypeFloat64, value)
 		_node.ComputeAmount = value
+	}
+	if value, ok := rc.mutation.OpenType(); ok {
+		_spec.SetField(round.FieldOpenType, field.TypeUint32, value)
+		_node.OpenType = value
 	}
 	if value, ok := rc.mutation.SyncStatus(); ok {
 		_spec.SetField(round.FieldSyncStatus, field.TypeUint32, value)

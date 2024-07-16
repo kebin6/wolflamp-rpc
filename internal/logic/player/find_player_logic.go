@@ -67,6 +67,7 @@ func (l *FindPlayerLogic) Po2Vo(po *ent.Player) (vo *wolflamp.PlayerInfo) {
 		SystemCommission:    po.SystemCommission,
 		GcicsUserId:         po.GcicsUserID,
 		GcicsToken:          po.GcicsToken,
+		ReturnUrl:           po.GcicsReturnURL,
 	}
 
 }

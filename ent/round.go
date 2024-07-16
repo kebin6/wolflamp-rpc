@@ -39,6 +39,8 @@ type Round struct {
 	Mode string `json:"mode,omitempty"`
 	// 计算得出用于回传的羊只数量
 	ComputeAmount float64 `json:"compute_amount,omitempty"`
+	// 开奖类型：0-未开奖；1-单狼猎杀；2-金羊奖励；3-银羊奖励；4-多狼猎杀
+	OpenType uint32 `json:"open_type,omitempty"`
 	// 回传状态
 	SyncStatus uint32 `json:"sync_status,omitempty"`
 	// 回传结果信息
@@ -85,7 +87,7 @@ func (*Round) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case round.FieldComputeAmount:
 			values[i] = new(sql.NullFloat64)
-		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldTotalRoundCount, round.FieldSelectedFold, round.FieldSyncStatus:
+		case round.FieldID, round.FieldStatus, round.FieldRoundCount, round.FieldTotalRoundCount, round.FieldSelectedFold, round.FieldOpenType, round.FieldSyncStatus:
 			values[i] = new(sql.NullInt64)
 		case round.FieldMode, round.FieldSyncMsg:
 			values[i] = new(sql.NullString)
@@ -178,6 +180,12 @@ func (r *Round) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.ComputeAmount = value.Float64
 			}
+		case round.FieldOpenType:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field open_type", values[i])
+			} else if value.Valid {
+				r.OpenType = uint32(value.Int64)
+			}
 		case round.FieldSyncStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sync_status", values[i])
@@ -268,6 +276,9 @@ func (r *Round) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("compute_amount=")
 	builder.WriteString(fmt.Sprintf("%v", r.ComputeAmount))
+	builder.WriteString(", ")
+	builder.WriteString("open_type=")
+	builder.WriteString(fmt.Sprintf("%v", r.OpenType))
 	builder.WriteString(", ")
 	builder.WriteString("sync_status=")
 	builder.WriteString(fmt.Sprintf("%v", r.SyncStatus))

@@ -3,6 +3,7 @@ package game
 import (
 	"context"
 	"fmt"
+	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
 	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
@@ -86,6 +87,17 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 					AddTokenLamb(-float32(in.LambNum)).
 					Exec(l.ctx)
 			}
+			if err != nil {
+				return err
+			}
+		} else {
+			// 机器人投注需要扣除机器人池数量
+			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+				SetStatus(1).SetRoundID(roundInfo.Id).
+				SetType(poolenum.Robot.Val()).
+				SetLambNum(-float64(in.LambNum)).
+				SetRemark("机器人投注").
+				Exec(l.ctx)
 			if err != nil {
 				return err
 			}

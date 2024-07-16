@@ -129,6 +129,9 @@ service Wolflamp {
   rpc getGoldenLambNumRange (Empty) returns (NumRangeResp);
 
   // group: setting
+  rpc getSliverLambNumRange (Empty) returns (NumRangeResp);
+
+  // group: setting
   rpc getPoolMinNumThenSilver (Empty) returns (PoolMinNumThenSilverResp);
 
   // group: setting
