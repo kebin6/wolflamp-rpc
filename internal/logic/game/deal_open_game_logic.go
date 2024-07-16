@@ -110,8 +110,20 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 		fmt.Printf("ProcessOpen[%s]: check golden allow time, error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
-	nowTime := time.Now().Format("15:04:05")
-	if nowTime < allowTimeRange.StartTime && nowTime > allowTimeRange.EndTime {
+
+	layout := "15:04:05"
+	nowTime, _ := time.Parse(layout, fmt.Sprintf("%d:%d:%d", time.Now().Hour(), time.Now().Minute(), time.Now().Second()))
+	startTime, err := time.Parse(layout, allowTimeRange.StartTime)
+	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden allow start time, error: %s, exit\n", mode, err.Error())
+		return nil, err
+	}
+	endTime, err := time.Parse(layout, allowTimeRange.EndTime)
+	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden allow end time, error: %s, exit\n", mode, err.Error())
+		return nil, err
+	}
+	if nowTime.Before(startTime) || nowTime.After(endTime) {
 		fmt.Printf("ProcessOpen[%s]: check golden allow time, no match, exit\n", mode)
 		return nil, err
 	}
@@ -165,7 +177,6 @@ func (l *DealOpenGameLogic) DealGoldenCase(mode string, invests []*ent.RoundInve
 
 	num, err := l.GetGoldenNum(mode)
 	if err != nil || num == nil {
-		fmt.Printf("ProcessOpen[%s]: get golden num error: %s, exit\n", mode, err.Error())
 		return 0, 0, nil, err
 	}
 	// 符合触发条件，计算出中奖羊圈
