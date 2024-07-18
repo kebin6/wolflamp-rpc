@@ -46,9 +46,10 @@ type BalanceData struct {
 }
 
 type GcicsApi struct {
-	Ctx    context.Context
-	SvcCtx *svc.ServiceContext
-	UserId uint64
+	Ctx       context.Context
+	SvcCtx    *svc.ServiceContext
+	UserId    uint64
+	GameToken string
 }
 
 func (g GcicsApi) CheckStatus(status int64, code int64, msg string) error {
@@ -123,7 +124,7 @@ func (g GcicsApi) GetBalance(gameToken string) (*BalanceData, error) {
 }
 
 type GeneratePaymentLinkReq struct {
-	OrderId    string  `json:"order_id"`
+	OrderId    string  `json:"orderid"`
 	Ref        string  `json:"ref"`
 	Coin       string  `json:"coin"`
 	Amount     float64 `json:"amount"`
@@ -136,7 +137,7 @@ type GeneratePaymentLinkReq struct {
 type GeneratePaymentLinkResp struct {
 	BaseResponse
 	Data string `json:"data"`
-	Link string `json:"link"`
+	Link string `json:"url"`
 }
 
 // GeneratePaymentLink 请求生成支付链接
@@ -152,7 +153,7 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 	// 定义要发送的数据
 	data := &GeneratePaymentLinkReq{
 		OrderId:    strconv.FormatUint(exchangeId, 10),
-		Ref:        "xxx",
+		Ref:        "Game",
 		Coin:       coinType,
 		Amount:     amount,
 		Time:       timestamp,
@@ -176,6 +177,8 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 	// 设置请求头
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-PD-SIGN", sign)
+	req.Header.Set("APP-ID", c.AppId)
+	req.Header.Set("GameToken", g.GameToken)
 
 	// 发送请求
 	client := &http.Client{}
@@ -197,11 +200,15 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 
 	// 解析JSON响应到BaseResponse结构体
 	var basePesp BaseResponse
+	err = json.Unmarshal(body, &basePesp)
+	if err != nil {
+		return nil, errorx.NewCodeInternalError(fmt.Sprintf("Error unmarshalling JSON: %s", err.Error()))
+	}
 	if err = g.CheckStatus(basePesp.Status, basePesp.Code, basePesp.Msg); err != nil {
 		return nil, err
 	}
 	var postResp GeneratePaymentLinkResp
-	err = json.Unmarshal(body, &basePesp)
+	err = json.Unmarshal(body, &postResp)
 	if err != nil {
 		return nil, errorx.NewCodeInternalError(fmt.Sprintf("Error unmarshalling JSON: %s", err.Error()))
 	}

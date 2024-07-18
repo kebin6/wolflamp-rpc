@@ -92,7 +92,8 @@ func (l *ExchangeLogic) DoExchange(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 	// 获取GCICS平台用户的钱包余额信息
 	gcicsApi := api.GcicsApi{
 		Ctx: l.ctx, SvcCtx: l.svcCtx,
-		UserId: info.ID,
+		UserId:    info.ID,
+		GameToken: info.GcicsToken,
 	}
 	resp, err := gcicsApi.GeneratePaymentLink(exchageInfo.ID, in.Mode, float64(in.CoinAmount))
 	if err != nil {
