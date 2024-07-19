@@ -3,6 +3,7 @@ package overview
 import (
 	"context"
 	"entgo.io/ent/dialect/sql"
+	"fmt"
 	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
@@ -92,12 +93,14 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 	}
 	totalPlatformProfitAmount, err := todayPlatformProfitAmountQuery.Aggregate(ent.Sum(statement.FieldAmount)).Float64(l.ctx)
 	if err != nil {
+		fmt.Printf("get platform profit amount error: %v\n", err)
 		totalPlatformProfitAmount = 0
 	}
 
 	// 平台累积人数
 	playerCount, err := l.svcCtx.DB.Player.Query().Count(l.ctx)
 	if err != nil {
+		fmt.Printf("get player count error: %v\n", err)
 		return nil, err
 	}
 
@@ -106,6 +109,7 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		Where(pool.Type(poolenum.Robot.Val())).
 		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
 	if err != nil {
+		fmt.Printf("get coin robot pool rest num error: %v\n", err)
 		coinRobotPoolRestNum = 0
 	}
 
@@ -114,7 +118,8 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		Where(pool.Type(poolenum.Robot.Val())).
 		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
 	if err != nil {
-		coinRobotPoolRestNum = 0
+		fmt.Printf("get token robot pool rest num error: %v\n", err)
+		tokenRobotPoolRestNum = 0
 	}
 
 	// coin奖金池剩余量
@@ -122,7 +127,8 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		Where(pool.Type(poolenum.Reward.Val())).
 		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
 	if err != nil {
-		coinRobotPoolRestNum = 0
+		fmt.Printf("get coin reward pool rest num error: %v\n", err)
+		coinRewardPoolRestNum = 0
 	}
 
 	// coin奖金池剩余量
@@ -130,7 +136,8 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		Where(pool.Type(poolenum.Reward.Val())).
 		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
 	if err != nil {
-		coinRobotPoolRestNum = 0
+		fmt.Printf("get token reward pool rest num error: %v\n", err)
+		tokenRewardPoolRestNum = 0
 	}
 
 	return &wolflamp.GetOverviewResp{
