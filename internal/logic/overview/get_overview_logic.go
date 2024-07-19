@@ -4,10 +4,12 @@ import (
 	"context"
 	"entgo.io/ent/dialect/sql"
 	"github.com/jinzhu/now"
+	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
 	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
+	"github.com/kebin6/wolflamp-rpc/ent/pool"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/statement"
@@ -68,7 +70,7 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		s.Where(sql.GTE(roundTable.C(round.FieldStartAt), now.BeginningOfDay()))
 	}).Where(roundinvest.ProfitAndLossLT(0)).Aggregate(ent.Sum(roundinvest.FieldLambNum)).Int(l.ctx)
 	if err != nil {
-		return nil, err
+		todayEatCount = 0
 	}
 
 	// 今日平台收益
@@ -76,7 +78,7 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		statement.PlayerID(0), statement.InoutType(statementenum.Income.Val()), statement.Module(statementenum.System.Val())).
 		Aggregate(ent.Sum(statement.FieldAmount)).Float64(l.ctx)
 	if err != nil {
-		return nil, err
+		todayPlatformProfitAmount = 0
 	}
 
 	// 平台累积收益（可按月查询明细）
@@ -90,10 +92,7 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 	}
 	totalPlatformProfitAmount, err := todayPlatformProfitAmountQuery.Aggregate(ent.Sum(statement.FieldAmount)).Float64(l.ctx)
 	if err != nil {
-		return nil, err
-	}
-	if err != nil {
-		return nil, err
+		totalPlatformProfitAmount = 0
 	}
 
 	// 平台累积人数
@@ -102,15 +101,51 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 		return nil, err
 	}
 
+	// coin机器人池剩余量
+	coinRobotPoolRestNum, err := l.svcCtx.DB.Pool.Query().Where(pool.Mode("coin")).
+		Where(pool.Type(poolenum.Robot.Val())).
+		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
+	if err != nil {
+		coinRobotPoolRestNum = 0
+	}
+
+	// token机器人池剩余量
+	tokenRobotPoolRestNum, err := l.svcCtx.DB.Pool.Query().Where(pool.Mode("token")).
+		Where(pool.Type(poolenum.Robot.Val())).
+		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
+	if err != nil {
+		coinRobotPoolRestNum = 0
+	}
+
+	// coin奖金池剩余量
+	coinRewardPoolRestNum, err := l.svcCtx.DB.Pool.Query().Where(pool.Mode("coin")).
+		Where(pool.Type(poolenum.Reward.Val())).
+		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
+	if err != nil {
+		coinRobotPoolRestNum = 0
+	}
+
+	// coin奖金池剩余量
+	tokenRewardPoolRestNum, err := l.svcCtx.DB.Pool.Query().Where(pool.Mode("token")).
+		Where(pool.Type(poolenum.Reward.Val())).
+		Aggregate(ent.Sum(pool.FieldLambNum)).Float64(l.ctx)
+	if err != nil {
+		coinRobotPoolRestNum = 0
+	}
+
 	return &wolflamp.GetOverviewResp{
 		Data: &wolflamp.OverviewInfo{
-			TodayParticipateCount: uint64(todayParticipateCount),
-			TodayNewPlayerCount:   uint64(todayNewPlayerCount),
-			TodayRoundCount:       uint64(todayRoundCount),
-			TodayEatCount:         uint64(todayEatCount),
-			TodayPlatformProfit:   uint64(todayPlatformProfitAmount),
-			TotalPlatformProfit:   uint64(totalPlatformProfitAmount),
-			TotalPlayerCount:      uint64(playerCount),
+			TodayParticipateCount:  uint64(todayParticipateCount),
+			TodayNewPlayerCount:    uint64(todayNewPlayerCount),
+			TodayRoundCount:        uint64(todayRoundCount),
+			TodayEatCount:          uint64(todayEatCount),
+			TodayPlatformProfit:    uint64(todayPlatformProfitAmount),
+			TotalPlatformProfit:    uint64(totalPlatformProfitAmount),
+			TotalPlayerCount:       uint64(playerCount),
+			CoinRobotPoolRestNum:   float32(coinRobotPoolRestNum),
+			TokenRobotPoolRestNum:  float32(tokenRobotPoolRestNum),
+			CoinRewardPoolRestNum:  float32(coinRewardPoolRestNum),
+			TokenRewardPoolRestNum: float32(tokenRewardPoolRestNum),
 		},
 	}, nil
 

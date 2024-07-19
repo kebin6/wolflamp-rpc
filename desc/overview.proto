@@ -11,6 +11,14 @@ message OverviewInfo {
   uint64 today_platform_profit = 5;
   uint64 total_platform_profit = 6;
   uint64 total_player_count = 7;
+  // coin机器人池剩余数量
+  float coin_robot_pool_rest_num = 8;
+  // coin奖金池剩余数量
+  float coin_reward_pool_rest_num = 9;
+  // token机器人池剩余数量
+  float token_robot_pool_rest_num = 10;
+  // token奖金池剩余数量
+  float token_reward_pool_rest_num = 11;
 }
 
 message GetOverviewReq {

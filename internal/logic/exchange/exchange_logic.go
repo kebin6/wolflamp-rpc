@@ -83,6 +83,7 @@ func (l *ExchangeLogic) DoExchange(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 		return nil, errorx.NewInvalidArgumentError("wallet.insufficientCoin")
 	}
 
+	in.LampAmount = in.CoinAmount * 10
 	// 创建交易单
 	exchageInfo, err := l.CreateExchangeLog(in)
 	if err != nil {

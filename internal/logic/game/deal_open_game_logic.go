@@ -233,6 +233,7 @@ func (l *DealOpenGameLogic) DealGoldenCase(mode string, invests []*ent.RoundInve
 	return maxInvestFoldNo, float64(*num), investResult, nil
 }
 
+// GetSliverNum 计算银羊奖励数量
 func (l *DealOpenGameLogic) GetSliverNum(mode string) (sliverNum *uint32, err error) {
 	minResp, err := setting.NewGetPoolMinNumThenSilverLogic(l.ctx, l.svcCtx).GetPoolMinNumThenSilver(&wolflamp.Empty{})
 	if err != nil {
@@ -516,9 +517,13 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		{RoundId: round.Id, LambFoldNo: 8, LambNum: 0, ProfitAndLoss: 0},
 	}
 	// 统计回合结果
-	for _, v := range investResult {
+	for i, v := range investResult {
 		lambFoldResult[v.LambFoldNo-1].LambNum += v.LambNum
 		lambFoldResult[v.LambFoldNo-1].ProfitAndLoss += v.ProfitAndLoss
+		// 计算赢的玩家能分到的奖励
+		if v.Proportion > 0 {
+			investResult[i].ProfitAndLoss = float32(totalRewardNum) * v.Proportion
+		}
 	}
 
 	statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
