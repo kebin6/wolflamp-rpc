@@ -9,6 +9,7 @@ const (
 	NotYet  SyncStatus = 1 // 未同步
 	Success SyncStatus = 2 // 已同步
 	Failed  SyncStatus = 3 // 同步失败
+	NoNeed  SyncStatus = 4 // 无需同步
 )
 
 func NewSyncStatus(val uint32) SyncStatus {
@@ -21,6 +22,8 @@ func NewSyncStatus(val uint32) SyncStatus {
 		return Success
 	case 3:
 		return Failed
+	case 4:
+		return NoNeed
 	default:
 		return Created
 	}
@@ -40,6 +43,8 @@ func (p SyncStatus) Desc() string {
 		return "已同步"
 	case Failed:
 		return "同步失败"
+	case NoNeed:
+		return "无需同步"
 	default:
 		return "未知"
 	}
@@ -51,5 +56,6 @@ func (p SyncStatus) DescMap() map[SyncStatus]string {
 		NotYet:  "未同步",
 		Success: "已同步",
 		Failed:  "同步失败",
+		NoNeed:  "无需同步",
 	}
 }

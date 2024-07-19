@@ -426,6 +426,20 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		return nil, err
 	}
 
+	if len(allInvests) == 0 {
+		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
+			SetStatus(uint8(roundenum.Opening.Val())).
+			SetComputeAmount(0).
+			SetOpenType(roundenum.SingleWolf.Val()).
+			SetSyncStatus(uint32(roundenum.NoNeed)).
+			SetSelectedFold(uint32(rand.Intn(8) + 1)).Exec(l.ctx)
+		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: update round error : %s", in.Mode, err.Error())
+			return nil, err
+		}
+		return &wolflamp.BaseIDResp{}, nil
+	}
+
 	openType := uint32(0)
 	// 先触发金羊逻辑
 	choiceFoldNo, totalRewardNum, investResult, err := l.DealGoldenCase(in.Mode, allInvests)
@@ -646,12 +660,14 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				}
 			} else {
 				if investInfo.ProfitAndLoss > 0 {
+					// 机器人赢的钱，分给上级的奖励重新添加到机器人池
 					playerInvitorCommission := invitorCommissionNum * float64(investInfo.Proportion)
-					computedAmount -= playerInvitorCommission
+					// 分给上级的奖励需要扣除掉机器人那部分
+					computedAmount = computedAmount - playerInvitorCommission
 					// 机器人赢的钱回归到机器人池
 					err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
 						SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
-						SetLambNum(float64(investInfo.ProfitAndLoss)).SetRemark("机器人获胜").Exec(l.ctx)
+						SetLambNum(float64(investInfo.ProfitAndLoss) + playerInvitorCommission).SetRemark(fmt.Sprintf("机器人获胜+%f上级奖励", invitorCommissionNum)).Exec(l.ctx)
 					if err != nil {
 						fmt.Printf("ProcessOpen[%s]: create robot pool invest error : %s", in.Mode, err.Error())
 						return err
@@ -660,10 +676,10 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
 						Mode:     in.Mode,
 						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
+						Amount: float64(investInfo.ProfitAndLoss) + playerInvitorCommission, InoutType: statementenum.Income.Val(),
 						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
-						Remark: pointy.GetPointer(fmt.Sprintf("机器人获胜：%f*%f=%f",
-							float32(totalRewardNum), investInfo.Proportion, float64(investInfo.ProfitAndLoss))),
+						Remark: pointy.GetPointer(fmt.Sprintf("机器人获胜：%f*%f+%f*%f=%f",
+							float32(totalRewardNum), investInfo.Proportion, invitorCommissionNum, float64(investInfo.Proportion), float64(investInfo.ProfitAndLoss)+playerInvitorCommission)),
 					})
 				} else if investInfo.ProfitAndLoss < 0 {
 					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{

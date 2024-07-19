@@ -42,6 +42,7 @@ func (l *FindRoundLogic) FindRound(in *wolflamp.FindRoundReq) (*wolflamp.RoundIn
 	if in.Id == nil || *in.Id == 0 {
 		return nil, errorx.NewInternalError("game.roundNotFound")
 	}
+
 	query = l.svcCtx.DB.Round.Query().Where(round.ID(*in.Id))
 
 	result, err := query.WithFold().First(l.ctx)
