@@ -47,6 +47,7 @@ func (l *UpdateSettingLogic) UpdateSetting(in *wolflamp.UpdateSettingReq) (*wolf
 	l.svcCtx.Redis.Del(l.ctx, enum.GoldenLambNum.CacheKey())
 	l.svcCtx.Redis.Del(l.ctx, enum.PoolMinNumThenSilver.CacheKey())
 	l.svcCtx.Redis.Del(l.ctx, enum.SliverOccurPercent.CacheKey())
+	l.svcCtx.Redis.Del(l.ctx, enum.SliverLambNum.CacheKey())
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
