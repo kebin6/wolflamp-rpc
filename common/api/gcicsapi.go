@@ -162,6 +162,7 @@ func (g GcicsApi) GeneratePaymentLink(exchangeId uint64, coinType string, amount
 		FailUrl:    fmt.Sprintf(c.FailUrl, exchangeId),
 	}
 
+	fmt.Printf("send GeneratePaymentLinkReq: notifyurl=%s", c.NotifyUrl)
 	// 将数据转换为 JSON 格式
 	jsonData, err := json.Marshal(data)
 	if err != nil {
