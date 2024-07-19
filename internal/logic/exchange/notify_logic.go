@@ -36,14 +36,18 @@ func (l *NotifyLogic) Notify(in *wolflamp.NotifyExchangeReq) (*wolflamp.BaseIDRe
 	if float64(exchangeLog.LampNum) != in.Amount {
 		return nil, errorx.NewCodeInvalidArgumentError("lamb amount not match")
 	}
-
-	if in.IsPaid {
-		exchangeLog.Status = uint8(exchangeenum.Completed)
-	} else {
-		exchangeLog.Status = uint8(exchangeenum.Failed)
+	if exchangeLog.Status != uint8(exchangeenum.Created) {
+		return nil, errorx.NewCodeInvalidArgumentError("Forbidden")
 	}
 
-	err = exchangeLog.Update().Exec(l.ctx)
+	updateQuery := exchangeLog.Update()
+	if in.IsPaid {
+		updateQuery.SetStatus(uint8(exchangeenum.Completed))
+	} else {
+		updateQuery.SetStatus(uint8(exchangeenum.Failed))
+	}
+
+	err = updateQuery.Exec(l.ctx)
 	if err != nil {
 		return nil, errorx.NewCodeInternalError(err.Error())
 	}
