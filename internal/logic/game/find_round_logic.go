@@ -6,6 +6,7 @@ import (
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/round"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
+	"github.com/suyuan32/simple-admin-common/msg/errormsg"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"time"
 
@@ -65,7 +66,7 @@ func (l *FindRoundLogic) GetCurrentRoundId(mode string) (uint64, error) {
 		return 0, err
 	}
 	if len(listResp.List) == 0 {
-		return 0, errorx.NewInternalError("game.roundNotFound")
+		return 0, errorx.NewCodeNotFoundError(errormsg.TargetNotFound)
 	}
 	newestOne := listResp.List[0]
 	nowTime := time.Now().Unix()
@@ -83,7 +84,7 @@ func (l *FindRoundLogic) GetCurrentRoundId(mode string) (uint64, error) {
 		l.svcCtx.Redis.Set(l.ctx, cachekey.CurrentGameRound.ModeVal(mode), newestOne.ID, 0)
 		return newestOne.ID, nil
 	}
-	return 0, errorx.NewInternalError("game.roundNotFound")
+	return 0, errorx.NewCodeNotFoundError(errormsg.TargetNotFound)
 }
 
 func (l *FindRoundLogic) Po2Vo(po *ent.Round) (vo *wolflamp.RoundInfo) {

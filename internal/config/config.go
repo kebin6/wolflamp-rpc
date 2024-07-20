@@ -17,6 +17,7 @@ type GcicsConf struct {
 	Host       string
 	AppId      string
 	AppSecret  string
+	PaymentKey string
 	NotifyUrl  string
 	SuccessUrl string
 	FailUrl    string

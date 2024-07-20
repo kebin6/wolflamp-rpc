@@ -101,7 +101,7 @@ func (l *ExchangeLogic) DoExchange(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 		return nil, err
 	}
 
-	sign, err := util.GenerateSHA1Signature(resp.Data, l.svcCtx.Config.GcicsConf.AppId, l.svcCtx.Config.GcicsConf.AppSecret)
+	sign, err := util.GenPaymentSign(resp.Data, l.svcCtx.Config.GcicsConf.PaymentKey)
 	if err != nil {
 		return nil, err
 	}
