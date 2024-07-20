@@ -3,7 +3,9 @@ package exchange
 import (
 	"context"
 	"github.com/kebin6/wolflamp-rpc/common/enum/exchangeenum"
+	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
+	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/zeromicro/go-zero/core/errorx"
 
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
@@ -40,16 +42,34 @@ func (l *NotifyLogic) Notify(in *wolflamp.NotifyExchangeReq) (*wolflamp.BaseIDRe
 		return nil, errorx.NewCodeInvalidArgumentError("Forbidden")
 	}
 
-	updateQuery := exchangeLog.Update()
-	if in.IsPaid {
-		updateQuery.SetStatus(uint8(exchangeenum.Completed))
-	} else {
-		updateQuery.SetStatus(uint8(exchangeenum.Failed))
-	}
+	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
+		updateQuery := exchangeLog.Update()
+		updatePlayer := l.svcCtx.DB.Player.UpdateOneID(exchangeLog.PlayerID)
+		if in.IsPaid {
+			updateQuery.SetStatus(uint8(exchangeenum.Completed))
+			if exchangeLog.Mode == "coin" {
+				updatePlayer.AddCoinLamb(float32(in.Amount))
+			} else {
+				updatePlayer.AddTokenLamb(float32(in.Amount))
+			}
+			err := updateQuery.Exec(l.ctx)
+			if err != nil {
+				return err
+			}
+		} else {
+			updateQuery.SetStatus(uint8(exchangeenum.Failed))
+		}
 
-	err = updateQuery.Exec(l.ctx)
+		err = updateQuery.Exec(l.ctx)
+		if err != nil {
+			return errorx.NewCodeInternalError(err.Error())
+		}
+
+		return nil
+	})
+
 	if err != nil {
-		return nil, errorx.NewCodeInternalError(err.Error())
+		return nil, err
 	}
 	return &wolflamp.BaseIDResp{Id: in.Id}, nil
 
