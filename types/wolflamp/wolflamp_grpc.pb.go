@@ -72,6 +72,8 @@ type WolflampClient interface {
 	GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 	// group: game
 	DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: game
+	SyncGcics(ctx context.Context, in *SyncGcicsReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: order
 	CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: order
@@ -395,6 +397,15 @@ func (c *wolflampClient) GetLambFoldAggregateV2(ctx context.Context, in *GetLamb
 func (c *wolflampClient) DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/dealOpenGame", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) SyncGcics(ctx context.Context, in *SyncGcicsReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/syncGcics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -878,6 +889,8 @@ type WolflampServer interface {
 	GetLambFoldAggregateV2(context.Context, *GetLambFoldAggregateV2Req) (*GetLambFoldAggregateResp, error)
 	// group: game
 	DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error)
+	// group: game
+	SyncGcics(context.Context, *SyncGcicsReq) (*BaseIDResp, error)
 	// group: order
 	CreateOrder(context.Context, *CreateOrderReq) (*BaseIDResp, error)
 	// group: order
@@ -1053,6 +1066,9 @@ func (UnimplementedWolflampServer) GetLambFoldAggregateV2(context.Context, *GetL
 }
 func (UnimplementedWolflampServer) DealOpenGame(context.Context, *DealOpenGameReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DealOpenGame not implemented")
+}
+func (UnimplementedWolflampServer) SyncGcics(context.Context, *SyncGcicsReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncGcics not implemented")
 }
 func (UnimplementedWolflampServer) CreateOrder(context.Context, *CreateOrderReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
@@ -1654,6 +1670,24 @@ func _Wolflamp_DealOpenGame_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WolflampServer).DealOpenGame(ctx, req.(*DealOpenGameReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_SyncGcics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncGcicsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).SyncGcics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/syncGcics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).SyncGcics(ctx, req.(*SyncGcicsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2610,6 +2644,10 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "dealOpenGame",
 			Handler:    _Wolflamp_DealOpenGame_Handler,
+		},
+		{
+			MethodName: "syncGcics",
+			Handler:    _Wolflamp_SyncGcics_Handler,
 		},
 		{
 			MethodName: "createOrder",

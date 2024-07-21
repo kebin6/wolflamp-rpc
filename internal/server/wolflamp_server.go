@@ -157,6 +157,11 @@ func (s *WolflampServer) DealOpenGame(ctx context.Context, in *wolflamp.DealOpen
 	return l.DealOpenGame(in)
 }
 
+func (s *WolflampServer) SyncGcics(ctx context.Context, in *wolflamp.SyncGcicsReq) (*wolflamp.BaseIDResp, error) {
+	l := game.NewSyncGcicsLogic(ctx, s.svcCtx)
+	return l.SyncGcics(in)
+}
+
 func (s *WolflampServer) CreateOrder(ctx context.Context, in *wolflamp.CreateOrderReq) (*wolflamp.BaseIDResp, error) {
 	l := order.NewCreateOrderLogic(ctx, s.svcCtx)
 	return l.CreateOrder(in)

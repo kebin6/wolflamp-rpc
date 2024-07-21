@@ -120,6 +120,7 @@ type (
 	RobotNumResp                = wolflamp.RobotNumResp
 	RoundInfo                   = wolflamp.RoundInfo
 	StatementInfo               = wolflamp.StatementInfo
+	SyncGcicsReq                = wolflamp.SyncGcicsReq
 	UUIDReq                     = wolflamp.UUIDReq
 	UUIDsReq                    = wolflamp.UUIDsReq
 	UpdateBannerReq             = wolflamp.UpdateBannerReq
@@ -161,6 +162,7 @@ type (
 		GetLambFoldAggregate(ctx context.Context, in *GetLambFoldAggregateReq, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		GetLambFoldAggregateV2(ctx context.Context, in *GetLambFoldAggregateV2Req, opts ...grpc.CallOption) (*GetLambFoldAggregateResp, error)
 		DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		SyncGcics(ctx context.Context, in *SyncGcicsReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateOrder(ctx context.Context, in *UpdateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteOrder(ctx context.Context, in *DeleteOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -344,6 +346,11 @@ func (m *defaultWolflamp) GetLambFoldAggregateV2(ctx context.Context, in *GetLam
 func (m *defaultWolflamp) DealOpenGame(ctx context.Context, in *DealOpenGameReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.DealOpenGame(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) SyncGcics(ctx context.Context, in *SyncGcicsReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.SyncGcics(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

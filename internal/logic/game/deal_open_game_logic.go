@@ -711,11 +711,12 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				return err
 			}
 		}
-		// 更新回合状态
+
 		syncStatus := roundenum.NotYet
 		if !hasRealPlayer {
 			syncStatus = roundenum.NoNeed
 		}
+		// 更新回合状态
 		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
 			SetStatus(uint8(roundenum.Opening.Val())).
 			SetComputeAmount(computedAmount / invitorCommission).

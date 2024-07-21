@@ -840,6 +840,10 @@ message dealOpenGameReq {
   string mode = 2;
 }
 
+message syncGcicsReq {
+  uint32 chunkSize = 1;
+}
+
 service Wolflamp {
   //  group: banner
   rpc createBanner(CreateBannerReq) returns (BaseIDResp);
@@ -891,6 +895,8 @@ service Wolflamp {
   rpc getLambFoldAggregateV2(GetLambFoldAggregateV2Req) returns (GetLambFoldAggregateResp);
   //  group: game
   rpc dealOpenGame(dealOpenGameReq) returns (BaseIDResp);
+  //  group: game
+  rpc syncGcics(syncGcicsReq) returns (BaseIDResp);
   //  group: order
   rpc createOrder(CreateOrderReq) returns (BaseIDResp);
   //  group: order

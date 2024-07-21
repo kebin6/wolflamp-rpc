@@ -236,7 +236,7 @@ type WithdrawResp struct {
 
 func (g GcicsApi) Withdraw(coinType string, lambAmount float64) error {
 	c := g.SvcCtx.Config.GcicsConf
-	postUrl := c.Host + "/Game/api/withdrawal"
+	postUrl := c.Host + "/game/api/withdrawal"
 	timestamp := time.Now().Unix()
 	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
@@ -265,9 +265,10 @@ func (g GcicsApi) Withdraw(coinType string, lambAmount float64) error {
 	// 设置请求头
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-PD-SIGN", sign)
+	req.Header.Set("APP-ID", c.AppId)
 	req.Header.Set("GameToken", g.GameToken)
 
-	fmt.Printf("send WithdrawReq: Header=%v; params=%v\n", req.Header, req.Body)
+	fmt.Printf("send WithdrawReq: Url=%s; Header=%v; params=%v\n", req.URL, req.Header, req.Body)
 	// 发送请求
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -300,30 +301,38 @@ type CommissionInfo struct {
 	UserId     uint64  `json:"user_id"`
 	LambAmount float64 `json:"amount"`
 }
+
 type CommissionReq struct {
-	Coin string           `json:"coin"`
-	Time int64            `json:"time"`
-	Data []CommissionInfo `json:"data"`
+	Coin                   string  `json:"coin"`
+	InvitorTotalLambAmount float64 `json:"amount"`
+	Time                   int64   `json:"time"`
+	Data                   string  `json:"data"`
 }
 
-func (g GcicsApi) Commission(coinType string, commissionList []CommissionInfo) error {
+func (g GcicsApi) Commission(coinType string, invitorTotalLambAmount float64, commissionList []CommissionInfo) error {
 	c := g.SvcCtx.Config.GcicsConf
-	postUrl := c.Host + "/Game/manage/commission"
+	postUrl := c.Host + "/game/manage/commission"
 	timestamp := time.Now().Unix()
 	sign, err := util.GenerateSHA1Signature(strconv.FormatInt(timestamp, 10), c.AppId, c.AppSecret)
 	if err != nil {
 		return err
 	}
 
+	// 将数据转换为 JSON 格式
+	jsonData, err := json.Marshal(commissionList)
+	if err != nil {
+		return err
+	}
 	// 定义要发送的数据
 	data := &CommissionReq{
-		Coin: coinType,
-		Time: timestamp,
-		Data: commissionList,
+		Coin:                   coinType,
+		Time:                   timestamp,
+		InvitorTotalLambAmount: invitorTotalLambAmount,
+		Data:                   string(jsonData),
 	}
 
 	// 将数据转换为 JSON 格式
-	jsonData, err := json.Marshal(data)
+	jsonData, err = json.Marshal(data)
 	if err != nil {
 		return err
 	}
@@ -337,6 +346,7 @@ func (g GcicsApi) Commission(coinType string, commissionList []CommissionInfo) e
 	// 设置请求头
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-PD-SIGN", sign)
+	req.Header.Set("APP-ID", c.AppId)
 
 	// 发送请求
 	client := &http.Client{}
@@ -353,7 +363,7 @@ func (g GcicsApi) Commission(coinType string, commissionList []CommissionInfo) e
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return errorx.NewCodeInternalError(fmt.Sprintf("Failed to withdraw[%d]", resp.StatusCode))
+		return errorx.NewCodeInternalError(fmt.Sprintf("Failed to commission[%d]", resp.StatusCode))
 	}
 
 	// 解析JSON响应到BaseResponse结构体
