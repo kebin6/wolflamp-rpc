@@ -45,6 +45,7 @@ func (l *CreateStatementLogic) CreateStatement(in *wolflamp.CreateStatementReq) 
 		SetInoutType(in.InoutType).
 		SetReferID(in.ReferId).
 		SetNillableRemark(in.Remark).
+		SetMode(in.Mode).
 		Save(l.ctx)
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
