@@ -719,7 +719,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		// 更新回合状态
 		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
 			SetStatus(uint8(roundenum.Opening.Val())).
-			SetComputeAmount(computedAmount / invitorCommission).
+			SetComputeAmount(computedAmount).
 			SetOpenType(openType).
 			SetSyncStatus(uint32(syncStatus)).
 			SetSelectedFold(choiceFoldNo).Exec(l.ctx)
