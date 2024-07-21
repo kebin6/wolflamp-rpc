@@ -146,19 +146,20 @@ func (l *ExchangeLogic) DoWithdraw(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 	// 获取GCICS平台用户的钱包余额信息
 	gcicsApi := api.GcicsApi{
 		Ctx: l.ctx, SvcCtx: l.svcCtx,
-		UserId: info.ID,
+		UserId:    info.ID,
+		GameToken: info.GcicsToken,
 	}
 
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		err = gcicsApi.Withdraw(in.Mode, float64(in.LampAmount))
 		if err != nil {
-			exchageInfo.Status = uint8(exchangeenum.Failed)
-			exchageInfo.Remark = "gcics occur an error: " + err.Error()
-			err := exchageInfo.Update().Exec(l.ctx)
-			if err != nil {
+			updateErr := exchageInfo.Update().
+				SetRemark("gcics occur an error: " + err.Error()).
+				SetStatus(uint8(exchangeenum.Failed)).Exec(l.ctx)
+			if updateErr != nil {
 				return err
 			}
-			return nil
+			return err
 		}
 
 		// 更新用户表数据

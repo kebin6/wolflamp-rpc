@@ -265,7 +265,9 @@ func (g GcicsApi) Withdraw(coinType string, lambAmount float64) error {
 	// 设置请求头
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-PD-SIGN", sign)
+	req.Header.Set("GameToken", g.GameToken)
 
+	fmt.Printf("send WithdrawReq: Header=%v; params=%v\n", req.Header, req.Body)
 	// 发送请求
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -285,7 +287,7 @@ func (g GcicsApi) Withdraw(coinType string, lambAmount float64) error {
 	}
 
 	// 解析JSON响应到BaseResponse结构体
-	var postResp GeneratePaymentLinkResp
+	var postResp WithdrawResp
 	err = json.Unmarshal(body, &postResp)
 	if err != nil {
 		return errorx.NewCodeInternalError(fmt.Sprintf("Error unmarshalling JSON: %s", err.Error()))
