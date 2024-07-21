@@ -52,7 +52,7 @@ func (l *NotifyLogic) Notify(in *wolflamp.NotifyExchangeReq) (*wolflamp.BaseIDRe
 			} else {
 				updatePlayer.AddTokenLamb(float32(in.Amount))
 			}
-			err := updateQuery.Exec(l.ctx)
+			err := updatePlayer.Exec(l.ctx)
 			if err != nil {
 				return err
 			}
