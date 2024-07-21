@@ -34,7 +34,7 @@ func (l *SyncGcicsLogic) SyncGcics(in *wolflamp.SyncGcicsReq) (*wolflamp.BaseIDR
 		WithInvest().
 		Where(round.SyncStatus(roundenum.NotYet.Val())).
 		Limit(int(in.ChunkSize)).
-		Select(round.FieldID, round.FieldSyncStatus, round.FieldComputeAmount).
+		Select(round.FieldID, round.FieldSyncStatus, round.FieldComputeAmount, round.FieldMode).
 		All(l.ctx)
 	if err != nil {
 		return nil, err
@@ -85,6 +85,10 @@ func (l *SyncGcicsLogic) ProcessSync(syncItem *ent.Round) error {
 		SvcCtx: l.svcCtx,
 	}
 	err := gcicsApi.Commission(syncItem.Mode, syncItem.ComputeAmount, commissonInfoList)
+	if err != nil {
+		return err
+	}
+	err = l.svcCtx.DB.Round.UpdateOneID(syncItem.ID).SetSyncStatus(roundenum.Success.Val()).Exec(l.ctx)
 	if err != nil {
 		return err
 	}

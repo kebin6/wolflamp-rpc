@@ -644,7 +644,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 							Mode:     in.Mode,
 							PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
 							Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
-							ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
+							ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
 							Remark: pointy.GetPointer(fmt.Sprintf("玩家获胜：%f*%f=%f", float32(totalRewardNum), investInfo.Proportion, investInfo.ProfitAndLoss)),
 						})
 					}
@@ -653,7 +653,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						Mode:     in.Mode,
 						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
 						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
-						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
+						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
 					})
 				}
 				if err != nil {
@@ -661,17 +661,20 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					return err
 				}
 			} else {
-				if investInfo.ProfitAndLoss > 0 {
-					// 机器人赢的钱，分给上级的奖励重新添加到机器人池
-					playerInvitorCommission := invitorCommissionNum * float64(investInfo.Proportion)
-					// 分给上级的奖励需要扣除掉机器人那部分
-					computedAmount = computedAmount - playerInvitorCommission
+				if investInfo.ProfitAndLoss >= 0 {
+					playerInvitorCommission := float64(0)
+					if investInfo.Proportion > 0 {
+						// 机器人赢的钱，分给上级的奖励重新添加到机器人池
+						playerInvitorCommission = invitorCommissionNum * float64(investInfo.Proportion)
+						// 分给上级的奖励需要扣除掉机器人那部分
+						computedAmount = computedAmount - playerInvitorCommission
+					}
 					// 机器人赢的钱回归到机器人池
 					err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
 						SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
 						SetLambNum(float64(investInfo.LambNum) + float64(investInfo.ProfitAndLoss) + playerInvitorCommission).
 						SetRemark(fmt.Sprintf("机器人获胜, 投注本金%f+投注奖励%f+上级分佣%f", float64(investInfo.LambNum),
-							float64(investInfo.ProfitAndLoss), invitorCommissionNum)).Exec(l.ctx)
+							float64(investInfo.ProfitAndLoss), playerInvitorCommission)).Exec(l.ctx)
 					if err != nil {
 						fmt.Printf("ProcessOpen[%s]: create robot pool invest error : %s", in.Mode, err.Error())
 						return err
@@ -681,7 +684,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						Mode:     in.Mode,
 						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
 						Amount: float64(investInfo.ProfitAndLoss) + playerInvitorCommission, InoutType: statementenum.Income.Val(),
-						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
+						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
 						Remark: pointy.GetPointer(fmt.Sprintf("机器人获胜：%f*%f+%f*%f=%f",
 							float32(totalRewardNum), investInfo.Proportion, invitorCommissionNum, float64(investInfo.Proportion), float64(investInfo.ProfitAndLoss)+playerInvitorCommission)),
 					})
@@ -690,7 +693,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						Mode:     in.Mode,
 						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
 						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
-						ReferId: strconv.FormatUint(investInfo.InvestId, 10), Prefix: pointy.GetPointer("IV"),
+						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
 					})
 				}
 
