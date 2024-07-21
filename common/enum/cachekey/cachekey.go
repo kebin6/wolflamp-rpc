@@ -13,6 +13,7 @@ const (
 	CurrentGameRobotLambNum    CacheKey = "current_game:robot_lamb_num"    // 机器人投入羊数量
 	PreviousSelectedLambFoldNo CacheKey = "current_game:previous_selected" // 上一局被选中的羊圈
 	TodayGoldenLambLock        CacheKey = "today_golden_lamb_lock"         // 记录今日是否出现过黄金羊
+	CurrentGameInvestLock      CacheKey = "current_game:invest_lock"       // 投注锁
 )
 
 func (p CacheKey) Val() string {

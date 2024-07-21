@@ -339,7 +339,7 @@ func (l *DealOpenGameLogic) DealSliverCase(mode string, invests []*ent.RoundInve
 			})
 		}
 	}
-	fmt.Printf("ProcessOpen[%s]: Silver Lamb Choose LambFold: %d\n", mode, maxInvestFoldNo)
+	fmt.Printf("ProcessOpen[%s]: Silver Lamb Choose LambFold: %d； Num=%d \n", mode, maxInvestFoldNo, *sliverNum)
 	return maxInvestFoldNo, float64(*sliverNum), investResult, nil
 }
 
@@ -440,6 +440,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		return &wolflamp.BaseIDResp{}, nil
 	}
 
+	openLambRewardNum := float64(0)
 	openType := uint32(0)
 	// 先触发金羊逻辑
 	choiceFoldNo, totalRewardNum, investResult, err := l.DealGoldenCase(in.Mode, allInvests)
@@ -449,6 +450,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		choiceFoldNo, totalRewardNum, investResult, err = l.DealSliverCase(in.Mode, allInvests)
 	} else {
 		openType = roundenum.GoldenLamb.Val()
+		openLambRewardNum = totalRewardNum
 	}
 
 	if investResult == nil {
@@ -460,6 +462,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		}
 	} else if openType == roundenum.NoOpen.Val() {
 		openType = roundenum.SliverLamb.Val()
+		openLambRewardNum = totalRewardNum
 	}
 
 	if openType == roundenum.NoOpen.Val() {
@@ -542,6 +545,17 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 
 	statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
+		// 奖金羊扣减奖金池记录
+		if openLambRewardNum > 0 {
+			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Reward.Val()).
+				SetLambNum(-openLambRewardNum).SetRemark("奖金羊开奖扣减").
+				Exec(l.ctx)
+			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: create reward lamb error : %s", in.Mode, err.Error())
+				return err
+			}
+		}
 		// 记录资金池记录
 		if robPoolCommissionNum > 0 {
 			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
