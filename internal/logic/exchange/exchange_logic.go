@@ -179,8 +179,7 @@ func (l *ExchangeLogic) DoWithdraw(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 			}
 		}
 
-		exchageInfo.Status = uint8(exchangeenum.Completed)
-		return exchageInfo.Update().Exec(l.ctx)
+		return exchageInfo.Update().SetStatus(uint8(exchangeenum.Completed)).Exec(l.ctx)
 	})
 
 	return &wolflamp.ExchangeResp{
