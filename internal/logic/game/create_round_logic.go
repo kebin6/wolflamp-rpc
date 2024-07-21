@@ -2,14 +2,13 @@ package game
 
 import (
 	"context"
-	"errors"
 	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/suyuan32/simple-admin-common/i18n"
-	"github.com/zeromicro/go-zero/core/errorx"
+	"github.com/suyuan32/simple-admin-common/msg/errormsg"
 	"strconv"
 	"time"
 
@@ -37,7 +36,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 
 	// 获取当前轮次信息
 	roundInfo, err := NewFindRoundLogic(l.ctx, l.svcCtx).FindRound(&wolflamp.FindRoundReq{Mode: in.Mode})
-	if err != nil && !errors.Is(err, errorx.NewInternalError("game.roundNotFound")) {
+	if err != nil && err.Error() != errormsg.TargetNotFound {
 		return nil, err
 	}
 	idStr := time.Now().Format("060102150405")

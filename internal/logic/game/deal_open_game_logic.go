@@ -615,6 +615,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 
 		// 回传第三方的总数量=真实用户上级总分佣
 		computedAmount := invitorCommissionNum
+		hasRealPlayer := false
 		// 更新投注记录的盈亏数据
 		for _, investInfo := range investResult {
 			err := l.svcCtx.DB.RoundInvest.Update().Where(roundinvest.ID(investInfo.InvestId)).
@@ -624,6 +625,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				return err
 			}
 			if util.IsRealPlayer(investInfo.PlayerId) {
+				hasRealPlayer = true
 				// 真实用户将收益及投注本金加回账户
 				if investInfo.ProfitAndLoss >= 0 {
 					if in.Mode == "coin" {
@@ -667,7 +669,9 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					// 机器人赢的钱回归到机器人池
 					err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
 						SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
-						SetLambNum(float64(investInfo.ProfitAndLoss) + playerInvitorCommission).SetRemark(fmt.Sprintf("机器人获胜+%f上级奖励", invitorCommissionNum)).Exec(l.ctx)
+						SetLambNum(float64(investInfo.LambNum) + float64(investInfo.ProfitAndLoss) + playerInvitorCommission).
+						SetRemark(fmt.Sprintf("机器人获胜, 投注本金%f+投注奖励%f+上级分佣%f", float64(investInfo.LambNum),
+							float64(investInfo.ProfitAndLoss), invitorCommissionNum)).Exec(l.ctx)
 					if err != nil {
 						fmt.Printf("ProcessOpen[%s]: create robot pool invest error : %s", in.Mode, err.Error())
 						return err
@@ -708,11 +712,15 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			}
 		}
 		// 更新回合状态
+		syncStatus := roundenum.NotYet
+		if !hasRealPlayer {
+			syncStatus = roundenum.NoNeed
+		}
 		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
 			SetStatus(uint8(roundenum.Opening.Val())).
 			SetComputeAmount(computedAmount / invitorCommission).
 			SetOpenType(openType).
-			SetSyncStatus(uint32(roundenum.NotYet)).
+			SetSyncStatus(uint32(syncStatus)).
 			SetSelectedFold(choiceFoldNo).Exec(l.ctx)
 		if err != nil {
 			fmt.Printf("ProcessOpen[%s]: update round error : %s", in.Mode, err.Error())
