@@ -626,7 +626,6 @@ message PlayerInfo {
   float coin_lamb = 6;
   float token_lamb = 7;
   uint32 rank = 8;
-  double amount = 9;
   uint32 invited_num = 10;
   double total_income = 11;
   float profit_and_loss = 12;
@@ -642,6 +641,18 @@ message PlayerInfo {
   uint64 gcics_user_id = 22;
   string gcics_token = 23;
   string return_url = 24;
+  double coin_amount = 25;
+  double token_amount = 26;
+  float coin_win_percent = 27;
+  uint32 coin_total_lose_count = 28;
+  uint32 coin_total_win_count = 29;
+  double coin_total_win_amount = 30;
+  double coin_total_lose_amount = 31;
+  float token_win_percent = 32;
+  uint32 token_total_lose_count = 33;
+  uint32 token_total_win_count = 34;
+  double token_total_win_amount = 35;
+  double token_total_lose_amount = 36;
 }
 
 message PoolMinNumThenSilverResp {

@@ -730,7 +730,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		}
 
 		syncStatus := roundenum.NotYet
-		if !hasRealPlayer {
+		if !hasRealPlayer || fmt.Sprintf("%.4f", computedAmount) == "0.0000" {
 			syncStatus = roundenum.NoNeed
 		}
 		// 更新回合状态
