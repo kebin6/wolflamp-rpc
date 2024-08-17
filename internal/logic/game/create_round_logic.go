@@ -60,12 +60,12 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		if roundInfo != nil {
-			err := l.svcCtx.DB.Round.UpdateOneID(roundInfo.Id).SetStatus(uint8(roundenum.Completed.Val())).Exec(l.ctx)
+			err := tx.Round.UpdateOneID(roundInfo.Id).SetStatus(uint8(roundenum.Completed.Val())).Exec(l.ctx)
 			if err != nil {
 				return err
 			}
 		}
-		result, err := l.svcCtx.DB.Round.Create().
+		result, err := tx.Round.Create().
 			SetID(id).
 			SetStatus(uint8(roundenum.Investing.Val())).
 			SetStartAt(time.Unix(in.StartAt, 0)).
@@ -90,7 +90,7 @@ func (l *CreateRoundLogic) CreateRound(in *wolflamp.CreateRoundReq) (*wolflamp.B
 				SetLambNum(uint32(0)).
 				SetProfitAndLoss(float32(0)).SetMode(in.Mode))
 		}
-		err = l.svcCtx.DB.RoundLambFold.CreateBulk(folds...).Exec(l.ctx)
+		err = tx.RoundLambFold.CreateBulk(folds...).Exec(l.ctx)
 		if err != nil {
 			return err
 		}

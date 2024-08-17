@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/kebin6/wolflamp-rpc/common/enum/exchangeenum"
 	"github.com/kebin6/wolflamp-rpc/ent"
+	"github.com/kebin6/wolflamp-rpc/ent/exchange"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/dberrorhandler"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/zeromicro/go-zero/core/errorx"
@@ -43,8 +44,8 @@ func (l *NotifyLogic) Notify(in *wolflamp.NotifyExchangeReq) (*wolflamp.BaseIDRe
 	}
 
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-		updateQuery := exchangeLog.Update()
-		updatePlayer := l.svcCtx.DB.Player.UpdateOneID(exchangeLog.PlayerID)
+		updateQuery := tx.Exchange.Update().Where(exchange.ID(in.Id))
+		updatePlayer := tx.Player.UpdateOneID(exchangeLog.PlayerID)
 		if in.IsPaid {
 			updateQuery.SetStatus(uint8(exchangeenum.Completed))
 			if exchangeLog.Mode == "coin" {

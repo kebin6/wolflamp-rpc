@@ -66,7 +66,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 
-		investedOne, err := l.svcCtx.DB.RoundInvest.Query().
+		investedOne, err := tx.RoundInvest.Query().
 			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId)).First(l.ctx)
 		if err != nil && !ent.IsNotFound(err) {
 			return err
@@ -79,11 +79,11 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		if player != nil {
 			playerEmail = player.Email
 			if in.Mode == "coin" {
-				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+				err = tx.Player.UpdateOneID(in.PlayerId).
 					AddCoinLamb(-float32(in.LambNum)).
 					Exec(l.ctx)
 			} else {
-				err = l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+				err = tx.Player.UpdateOneID(in.PlayerId).
 					AddTokenLamb(-float32(in.LambNum)).
 					Exec(l.ctx)
 			}
@@ -92,7 +92,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 			}
 		} else {
 			// 机器人投注需要扣除机器人池数量
-			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+			err := tx.Pool.Create().SetMode(in.Mode).
 				SetStatus(1).SetRoundID(roundInfo.Id).
 				SetType(poolenum.Robot.Val()).
 				SetLambNum(-float64(in.LambNum)).
@@ -103,7 +103,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 			}
 		}
 		if investedOne == nil {
-			result, err = l.svcCtx.DB.RoundInvest.Create().
+			result, err = tx.RoundInvest.Create().
 				SetMode(in.Mode).
 				SetPlayerID(in.PlayerId).
 				SetPlayerEmail(playerEmail).
@@ -121,7 +121,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		if err != nil {
 			return err
 		}
-		err = l.svcCtx.DB.RoundLambFold.Update().
+		err = tx.RoundLambFold.Update().
 			Where(roundlambfold.RoundID(in.RoundId), roundlambfold.FoldNo(in.FoldNo)).
 			AddLambNum(int32(in.LambNum)).Exec(l.ctx)
 		if err != nil {

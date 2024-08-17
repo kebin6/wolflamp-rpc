@@ -8,20 +8,17 @@ import (
 	"github.com/kebin6/wolflamp-rpc/common/enum/cachekey"
 	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
-	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
 	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/pool"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
-	"github.com/kebin6/wolflamp-rpc/internal/logic/statement"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/redis/go-redis/v9"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
@@ -543,11 +540,11 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		}
 	}
 
-	statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
+	//statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		// 奖金羊扣减奖金池记录
 		if openLambRewardNum > 0 {
-			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+			err := tx.Pool.Create().SetMode(in.Mode).
 				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Reward.Val()).
 				SetLambNum(-openLambRewardNum).SetRemark("奖金羊开奖扣减").
 				Exec(l.ctx)
@@ -558,7 +555,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		}
 		// 记录资金池记录
 		if robPoolCommissionNum > 0 {
-			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+			err := tx.Pool.Create().SetMode(in.Mode).
 				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
 				SetLambNum(robPoolCommissionNum).SetRemark("机器人池预留").
 				Exec(l.ctx)
@@ -568,7 +565,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			}
 		}
 		if rewardPoolCommissionNum > 0 {
-			err := l.svcCtx.DB.Pool.Create().
+			err := tx.Pool.Create().
 				SetMode(in.Mode).
 				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Reward.Val()).
 				SetLambNum(rewardPoolCommissionNum).
@@ -580,7 +577,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			}
 		}
 		if restPoolCommissionNum > 0 {
-			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+			err := tx.Pool.Create().SetMode(in.Mode).
 				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Other.Val()).
 				SetLambNum(restPoolCommissionNum).Exec(l.ctx)
 			if err != nil {
@@ -589,50 +586,50 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			}
 		}
 		// 记录资金池预留收益账单
-		_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-			Mode:     in.Mode,
-			PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.Pool.Val(),
-			Amount: poolCommissionNum, InoutType: statementenum.Income.Val(),
-			ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
-			Remark: pointy.GetPointer(fmt.Sprintf("资金池预留：%f*%f=%f", float32(totalRewardNum), poolCommission/100, poolCommissionNum)),
-		})
-		if err != nil {
-			fmt.Printf("ProcessOpen[%s]: create pool statement error : %s", in.Mode, err.Error())
-			return err
-		}
+		//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+		//	Mode:     in.Mode,
+		//	PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.Pool.Val(),
+		//	Amount: poolCommissionNum, InoutType: statementenum.Income.Val(),
+		//	ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
+		//	Remark: pointy.GetPointer(fmt.Sprintf("资金池预留：%f*%f=%f", float32(totalRewardNum), poolCommission/100, poolCommissionNum)),
+		//})
+		//if err != nil {
+		//	fmt.Printf("ProcessOpen[%s]: create pool statement error : %s", in.Mode, err.Error())
+		//	return err
+		//}
 
 		// 记录平台收益账单
-		_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-			Mode:     in.Mode,
-			PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.System.Val(),
-			Amount: systemCommissionNum, InoutType: statementenum.Income.Val(),
-			ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
-			Remark: pointy.GetPointer(fmt.Sprintf("平台收益：%f*%f=%f", float32(totalRewardNum), systemCommission/100, systemCommissionNum)),
-		})
-		if err != nil {
-			fmt.Printf("ProcessOpen[%s]: create system commission statement error : %s", in.Mode, err.Error())
-			return err
-		}
+		//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+		//	Mode:     in.Mode,
+		//	PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.System.Val(),
+		//	Amount: systemCommissionNum, InoutType: statementenum.Income.Val(),
+		//	ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
+		//	Remark: pointy.GetPointer(fmt.Sprintf("平台收益：%f*%f=%f", float32(totalRewardNum), systemCommission/100, systemCommissionNum)),
+		//})
+		//if err != nil {
+		//	fmt.Printf("ProcessOpen[%s]: create system commission statement error : %s", in.Mode, err.Error())
+		//	return err
+		//}
 
 		// 记录预留给上级佣金账单
-		_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-			Mode:     in.Mode,
-			PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.Reward.Val(),
-			Amount: invitorCommissionNum, InoutType: statementenum.Income.Val(),
-			ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
-			Remark: pointy.GetPointer(fmt.Sprintf("上级总分佣：%f*%f=%f", float32(totalRewardNum), invitorCommission, invitorCommissionNum)),
-		})
-		if err != nil {
-			fmt.Printf("ProcessOpen[%s]: create invitor reward commission statement error : %s", in.Mode, err.Error())
-			return err
-		}
+		//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+		//	Mode:     in.Mode,
+		//	PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.Reward.Val(),
+		//	Amount: invitorCommissionNum, InoutType: statementenum.Income.Val(),
+		//	ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
+		//	Remark: pointy.GetPointer(fmt.Sprintf("上级总分佣：%f*%f=%f", float32(totalRewardNum), invitorCommission, invitorCommissionNum)),
+		//})
+		//if err != nil {
+		//	fmt.Printf("ProcessOpen[%s]: create invitor reward commission statement error : %s", in.Mode, err.Error())
+		//	return err
+		//}
 
 		// 回传第三方的总数量=真实用户上级总分佣
 		computedAmount := invitorCommissionNum
 		hasRealPlayer := false
 		// 更新投注记录的盈亏数据
 		for _, investInfo := range investResult {
-			err := l.svcCtx.DB.RoundInvest.Update().Where(roundinvest.ID(investInfo.InvestId)).
+			err := tx.RoundInvest.Update().Where(roundinvest.ID(investInfo.InvestId)).
 				SetProfitAndLoss(investInfo.ProfitAndLoss).Exec(l.ctx)
 			if err != nil {
 				fmt.Printf("ProcessOpen[%s]: update invest error : %s", in.Mode, err.Error())
@@ -643,9 +640,9 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 				// 真实用户将收益及投注本金加回账户
 				if investInfo.ProfitAndLoss >= 0 {
 					if in.Mode == "coin" {
-						err = l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddCoinLamb(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
+						err = tx.Player.UpdateOneID(investInfo.PlayerId).AddCoinLamb(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
 					} else {
-						err = l.svcCtx.DB.Player.UpdateOneID(investInfo.PlayerId).AddTokenLamb(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
+						err = tx.Player.UpdateOneID(investInfo.PlayerId).AddTokenLamb(float32(investInfo.LambNum) + investInfo.ProfitAndLoss).Exec(l.ctx)
 					}
 
 					if err != nil {
@@ -654,21 +651,21 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 					}
 					// 赢亏为正的，则记录流水账单
 					if investInfo.ProfitAndLoss > 0 {
-						_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-							Mode:     in.Mode,
-							PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-							Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
-							ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
-							Remark: pointy.GetPointer(fmt.Sprintf("玩家获胜：%f*%f=%f", float32(totalRewardNum), investInfo.Proportion, investInfo.ProfitAndLoss)),
-						})
+						//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+						//	Mode:     in.Mode,
+						//	PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
+						//	Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Income.Val(),
+						//	ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
+						//	Remark: pointy.GetPointer(fmt.Sprintf("玩家获胜：%f*%f=%f", float32(totalRewardNum), investInfo.Proportion, investInfo.ProfitAndLoss)),
+						//})
 					}
 				} else if investInfo.ProfitAndLoss < 0 {
-					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-						Mode:     in.Mode,
-						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
-						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
-					})
+					//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+					//	Mode:     in.Mode,
+					//	PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
+					//	Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
+					//	ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
+					//})
 				}
 				if err != nil {
 					fmt.Printf("ProcessOpen[%s]: create player invest statement error : %s", in.Mode, err.Error())
@@ -684,7 +681,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						computedAmount = computedAmount - playerInvitorCommission
 					}
 					// 机器人赢的钱回归到机器人池
-					err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+					err := tx.Pool.Create().SetMode(in.Mode).
 						SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
 						SetLambNum(float64(investInfo.LambNum) + float64(investInfo.ProfitAndLoss) + playerInvitorCommission).
 						SetRemark(fmt.Sprintf("机器人获胜, 投注本金%f+投注奖励%f+上级分佣%f", float64(investInfo.LambNum),
@@ -694,21 +691,21 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 						return err
 					}
 
-					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-						Mode:     in.Mode,
-						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-						Amount: float64(investInfo.ProfitAndLoss) + playerInvitorCommission, InoutType: statementenum.Income.Val(),
-						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
-						Remark: pointy.GetPointer(fmt.Sprintf("机器人获胜：%f*%f+%f*%f=%f",
-							float32(totalRewardNum), investInfo.Proportion, invitorCommissionNum, float64(investInfo.Proportion), float64(investInfo.ProfitAndLoss)+playerInvitorCommission)),
-					})
+					//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+					//	Mode:     in.Mode,
+					//	PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
+					//	Amount: float64(investInfo.ProfitAndLoss) + playerInvitorCommission, InoutType: statementenum.Income.Val(),
+					//	ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
+					//	Remark: pointy.GetPointer(fmt.Sprintf("机器人获胜：%f*%f+%f*%f=%f",
+					//		float32(totalRewardNum), investInfo.Proportion, invitorCommissionNum, float64(investInfo.Proportion), float64(investInfo.ProfitAndLoss)+playerInvitorCommission)),
+					//})
 				} else if investInfo.ProfitAndLoss < 0 {
-					_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-						Mode:     in.Mode,
-						PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
-						Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
-						ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
-					})
+					//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+					//	Mode:     in.Mode,
+					//	PlayerId: investInfo.PlayerId, Status: statementenum.Completed.Val(), Module: statementenum.Invest.Val(),
+					//	Amount: float64(investInfo.ProfitAndLoss), InoutType: statementenum.Expense.Val(),
+					//	ReferId: strconv.FormatUint(investInfo.RoundId, 10), Prefix: pointy.GetPointer("IV"),
+					//})
 				}
 
 				if err != nil {
@@ -721,7 +718,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		// 更新羊圈的盈亏数据
 		for _, foldInfo := range lambFoldResult {
 			// 更新羊圈投注记录
-			err := l.svcCtx.DB.RoundLambFold.Update().Where(roundlambfold.RoundID(round.Id), roundlambfold.FoldNo(foldInfo.LambFoldNo)).
+			err := tx.RoundLambFold.Update().Where(roundlambfold.RoundID(round.Id), roundlambfold.FoldNo(foldInfo.LambFoldNo)).
 				SetLambNum(foldInfo.LambNum).SetProfitAndLoss(foldInfo.ProfitAndLoss).Exec(l.ctx)
 			if err != nil {
 				fmt.Printf("ProcessOpen[%s]: update fold error : %s", in.Mode, err.Error())
@@ -734,7 +731,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 			syncStatus = roundenum.NoNeed
 		}
 		// 更新回合状态
-		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
+		err := tx.Round.UpdateOneID(round.Id).
 			SetStatus(uint8(roundenum.Opening.Val())).
 			SetComputeAmount(computedAmount).
 			SetOpenType(openType).

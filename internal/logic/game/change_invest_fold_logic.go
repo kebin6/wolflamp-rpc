@@ -52,16 +52,16 @@ func (l *ChangeInvestFoldLogic) ChangeInvestFold(in *wolflamp.ChangeInvestFoldRe
 	}
 
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-		err := l.svcCtx.DB.RoundInvest.UpdateOneID(invest.Id).SetFoldNo(in.FoldNo).Exec(l.ctx)
+		err := tx.RoundInvest.UpdateOneID(invest.Id).SetFoldNo(in.FoldNo).Exec(l.ctx)
 		if err != nil {
 			return err
 		}
-		err = l.svcCtx.DB.RoundLambFold.Update().Where(roundlambfold.RoundID(roundInfo.Id), roundlambfold.FoldNo(invest.FoldNo)).
+		err = tx.RoundLambFold.Update().Where(roundlambfold.RoundID(roundInfo.Id), roundlambfold.FoldNo(invest.FoldNo)).
 			AddLambNum(-int32(invest.LambNum)).Exec(l.ctx)
 		if err != nil {
 			return err
 		}
-		err = l.svcCtx.DB.RoundLambFold.Update().Where(roundlambfold.RoundID(roundInfo.Id), roundlambfold.FoldNo(in.FoldNo)).
+		err = tx.RoundLambFold.Update().Where(roundlambfold.RoundID(roundInfo.Id), roundlambfold.FoldNo(in.FoldNo)).
 			AddLambNum(int32(invest.LambNum)).Exec(l.ctx)
 		if err != nil {
 			return err

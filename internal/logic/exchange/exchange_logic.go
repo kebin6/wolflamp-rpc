@@ -151,27 +151,16 @@ func (l *ExchangeLogic) DoWithdraw(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 	}
 
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-		err = gcicsApi.Withdraw(in.Mode, float64(in.LampAmount))
-		if err != nil {
-			updateErr := exchageInfo.Update().
-				SetRemark("gcics occur an error: " + err.Error()).
-				SetStatus(uint8(exchangeenum.Failed)).Exec(l.ctx)
-			if updateErr != nil {
-				return err
-			}
-			return err
-		}
-
 		// 更新用户表数据
 		if in.Mode == "coin" {
-			_, err := l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+			_, err := tx.Player.UpdateOneID(in.PlayerId).
 				AddCoinLamb(-float32(in.LampAmount)).
 				Save(l.ctx)
 			if err != nil {
 				return err
 			}
 		} else {
-			_, err := l.svcCtx.DB.Player.UpdateOneID(in.PlayerId).
+			_, err := tx.Player.UpdateOneID(in.PlayerId).
 				AddTokenLamb(-float32(in.LampAmount)).
 				Save(l.ctx)
 			if err != nil {
@@ -179,8 +168,22 @@ func (l *ExchangeLogic) DoWithdraw(in *wolflamp.ExchangeReq) (*wolflamp.Exchange
 			}
 		}
 
-		return exchageInfo.Update().SetStatus(uint8(exchangeenum.Completed)).Exec(l.ctx)
+		tx.Exchange.UpdateOneID(exchageInfo.ID).SetStatus(uint8(exchangeenum.Completed)).Exec(l.ctx)
+		err = gcicsApi.Withdraw(in.Mode, float64(in.LampAmount))
+		if err != nil {
+			updateErr := tx.Exchange.UpdateOneID(exchageInfo.ID).
+				SetRemark("gcics occur an error: " + err.Error()).
+				SetStatus(uint8(exchangeenum.Failed)).Exec(l.ctx)
+			if updateErr != nil {
+				return err
+			}
+			return err
+		}
+		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &wolflamp.ExchangeResp{
 		Id: exchageInfo.ID,
