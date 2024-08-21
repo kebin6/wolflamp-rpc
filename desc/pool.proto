@@ -13,7 +13,46 @@ message GetSumResp {
   double amount = 1;
 }
 
+message PoolInfo {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+  double lambNum = 4;
+  string remark = 5;
+  uint64 id = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+}
+
+message CreatePoolReq {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+  double lambNum = 4;
+  string remark = 5;
+}
+
+message ListPoolReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string mode = 3;
+  optional uint32 status = 4;
+  optional uint32 type = 5;
+  optional string remark = 6;
+}
+
+message ListPoolResp {
+  uint64 total = 1;
+  repeated PoolInfo data = 2;
+}
+
 service Wolflamp {
   // group: pool
   rpc getSum (GetSumReq) returns (GetSumResp);
+
+  // group: pool
+  rpc createPool (CreatePoolReq) returns (BaseIDResp);
+
+  // group: pool
+  rpc listPool (ListPoolReq) returns (ListPoolResp);
 }

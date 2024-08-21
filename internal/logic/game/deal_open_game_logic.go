@@ -125,14 +125,20 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 		return nil, err
 	}
 
-	numRange, err := setting.NewGetGoldenLambNumRangeLogic(l.ctx, l.svcCtx).GetGoldenLambNumRange(&wolflamp.Empty{})
-	if err != nil {
-		fmt.Printf("ProcessOpen[%s]: check golden num range error: %s, exit\n", mode, err.Error())
-		return nil, err
-	}
+	//numRange, err := setting.NewGetGoldenLambNumRangeLogic(l.ctx, l.svcCtx).GetGoldenLambNumRange(&wolflamp.Empty{})
+	//if err != nil {
+	//	fmt.Printf("ProcessOpen[%s]: check golden num range error: %s, exit\n", mode, err.Error())
+	//	return nil, err
+	//}
+	//
+	//if numRange.Min < numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
+	//	fmt.Printf("ProcessOpen[%s]: check golden num, invalid, exit\n", mode)
+	//	return nil, err
+	//}
 
-	if numRange.Min < numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
-		fmt.Printf("ProcessOpen[%s]: check golden num, invalid, exit\n", mode)
+	numPercent, err := setting.NewGetGoldenLambPercentLogic(l.ctx, l.svcCtx).GetGoldenLambPercent(&wolflamp.Empty{})
+	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden num percent error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
 
@@ -146,15 +152,21 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 		fmt.Printf("ProcessOpen[%s]: check golden, reward pool error: %s, exit\n", mode, err.Error())
 		return nil, err
 	}
-	if sumResp.Amount < float64(numRange.Min) {
+	//if sumResp.Amount < float64(numRange.Min) {
+	//	fmt.Printf("ProcessOpen[%s]: check golden, reward pool not enough, exit\n", mode)
+	//	return nil, nil
+	//}
+	//if sumResp.Amount < float64(numRange.Max) {
+	//	numRange.Max = uint32(sumResp.Amount)
+	//}
+	//rand.Seed(time.Now().UnixNano())
+	//goldenNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
+	goldenNumCal := uint32(sumResp.Amount * float64(numPercent.Percent))
+	if goldenNumCal == 0 {
 		fmt.Printf("ProcessOpen[%s]: check golden, reward pool not enough, exit\n", mode)
 		return nil, nil
 	}
-	if sumResp.Amount < float64(numRange.Max) {
-		numRange.Max = uint32(sumResp.Amount)
-	}
-	rand.Seed(time.Now().UnixNano())
-	goldenNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
+	goldenNum = pointy.GetPointer(goldenNumCal)
 	return goldenNum, nil
 
 }
@@ -266,26 +278,37 @@ func (l *DealOpenGameLogic) GetSliverNum(mode string) (sliverNum *uint32, err er
 		return nil, nil
 	}
 
-	numRange, err := setting.NewGetSliverLambNumRangeLogic(l.ctx, l.svcCtx).GetSliverLambNumRange(&wolflamp.Empty{})
+	//numRange, err := setting.NewGetSliverLambNumRangeLogic(l.ctx, l.svcCtx).GetSliverLambNumRange(&wolflamp.Empty{})
+	//if err != nil {
+	//	fmt.Printf("ProcessOpen[%s]: checking sliver, no sliver num range setting, exit\n", mode)
+	//	return nil, err
+	//}
+	//
+	//if numRange.Min > numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
+	//	fmt.Printf("ProcessOpen[%s]: checking sliver, num range setting is invalid, exit\n", mode)
+	//	return nil, err
+	//}
+	//
+	//if sumResp.Amount < float64(numRange.Min) {
+	//	fmt.Printf("ProcessOpen[%s]: checking sliver, sliver num is not enough, exit\n", mode)
+	//	return nil, nil
+	//}
+	//if sumResp.Amount < float64(numRange.Max) {
+	//	numRange.Max = uint32(sumResp.Amount)
+	//}
+	//rand.Seed(time.Now().UnixNano())
+	//sliverNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
+	numPercent, err := setting.NewGetSliverLambPercentLogic(l.ctx, l.svcCtx).GetSliverLambPercent(&wolflamp.Empty{})
 	if err != nil {
-		fmt.Printf("ProcessOpen[%s]: checking sliver, no sliver num range setting, exit\n", mode)
+		fmt.Printf("ProcessOpen[%s]: checking sliver, no sliver num percent setting, exit\n", mode)
 		return nil, err
 	}
-
-	if numRange.Min > numRange.Max || numRange.Min <= 0 || numRange.Max <= 0 {
-		fmt.Printf("ProcessOpen[%s]: checking sliver, num range setting is invalid, exit\n", mode)
-		return nil, err
-	}
-
-	if sumResp.Amount < float64(numRange.Min) {
-		fmt.Printf("ProcessOpen[%s]: checking sliver, sliver num is not enough, exit\n", mode)
+	sliverNumCal := uint32(sumResp.Amount * float64(numPercent.Percent))
+	if sliverNumCal == 0 {
+		fmt.Printf("ProcessOpen[%s]: check sliver, reward pool not enough, exit\n", mode)
 		return nil, nil
 	}
-	if sumResp.Amount < float64(numRange.Max) {
-		numRange.Max = uint32(sumResp.Amount)
-	}
-	rand.Seed(time.Now().UnixNano())
-	sliverNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
+	sliverNum = pointy.GetPointer(sliverNumCal)
 	return sliverNum, nil
 }
 

@@ -50,6 +50,8 @@ const (
 	PoolMinNumThenSilver SettingKey = "pool_min_num_then_silver"
 	SliverOccurPercent   SettingKey = "sliver_occur_percent"
 	SliverLambNum        SettingKey = "sliver_lamb_num"
+	SliverLambPercent    SettingKey = "sliver_lamb_percent"
+	GoldenLambPercent    SettingKey = "golden_lamb_percent"
 )
 
 func (p SettingKey) Val() string {
@@ -90,6 +92,10 @@ func (p SettingKey) Desc() string {
 		return "银羊出现概率(%)"
 	case SliverLambNum:
 		return "银羊触发数量"
+	case SliverLambPercent:
+		return "银羊触发数量(%)"
+	case GoldenLambPercent:
+		return "金羊触发数量(%)"
 	default:
 		return "未知配置项"
 	}
@@ -113,6 +119,8 @@ func (p SettingKey) DescMap() map[SettingKey]string {
 		PoolMinNumThenSilver: PoolMinNumThenSilver.Desc(),
 		SliverOccurPercent:   SliverOccurPercent.Desc(),
 		SliverLambNum:        SliverLambNum.Desc(),
+		SliverLambPercent:    SliverLambPercent.Desc(),
+		GoldenLambPercent:    GoldenLambPercent.Desc(),
 	}
 }
 

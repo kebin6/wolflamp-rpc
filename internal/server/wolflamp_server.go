@@ -252,6 +252,16 @@ func (s *WolflampServer) GetSum(ctx context.Context, in *wolflamp.GetSumReq) (*w
 	return l.GetSum(in)
 }
 
+func (s *WolflampServer) CreatePool(ctx context.Context, in *wolflamp.CreatePoolReq) (*wolflamp.BaseIDResp, error) {
+	l := pool.NewCreatePoolLogic(ctx, s.svcCtx)
+	return l.CreatePool(in)
+}
+
+func (s *WolflampServer) ListPool(ctx context.Context, in *wolflamp.ListPoolReq) (*wolflamp.ListPoolResp, error) {
+	l := pool.NewListPoolLogic(ctx, s.svcCtx)
+	return l.ListPool(in)
+}
+
 func (s *WolflampServer) CreateReward(ctx context.Context, in *wolflamp.CreateRewardReq) (*wolflamp.BaseIDResp, error) {
 	l := reward.NewCreateRewardLogic(ctx, s.svcCtx)
 	return l.CreateReward(in)
@@ -370,6 +380,16 @@ func (s *WolflampServer) GetPoolMinNumThenSilver(ctx context.Context, in *wolfla
 func (s *WolflampServer) GetSliverOccurPercent(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PercentResp, error) {
 	l := setting.NewGetSliverOccurPercentLogic(ctx, s.svcCtx)
 	return l.GetSliverOccurPercent(in)
+}
+
+func (s *WolflampServer) GetSliverLambPercent(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PercentResp, error) {
+	l := setting.NewGetSliverLambPercentLogic(ctx, s.svcCtx)
+	return l.GetSliverLambPercent(in)
+}
+
+func (s *WolflampServer) GetGoldenLambPercent(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PercentResp, error) {
+	l := setting.NewGetGoldenLambPercentLogic(ctx, s.svcCtx)
+	return l.GetGoldenLambPercent(in)
 }
 
 func (s *WolflampServer) CreateStatement(ctx context.Context, in *wolflamp.CreateStatementReq) (*wolflamp.BaseIDResp, error) {

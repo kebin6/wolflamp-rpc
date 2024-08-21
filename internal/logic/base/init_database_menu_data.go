@@ -184,5 +184,35 @@ func (l *InitDatabaseLogic) insertMenuData() error {
 		}
 	}
 
+	// 资金池管理
+	path = "/platform_management/pool"
+	if _, ok := menuList[path]; !ok {
+		_, err = l.svcCtx.CoreRpc.CreateMenu(l.ctx, &core.MenuInfo{
+			Level:       pointy.GetPointer(uint32(2)),
+			ParentId:    pointy.GetPointer(parentId),
+			Path:        pointy.GetPointer(path),
+			Name:        pointy.GetPointer("PoolManagement"),
+			Component:   pointy.GetPointer("/platform_management/pool/index"),
+			Sort:        pointy.GetPointer(uint32(1)),
+			Disabled:    pointy.GetPointer(false),
+			ServiceName: pointy.GetPointer("WolfLamp"),
+			Meta: &core.Meta{
+				Title:              pointy.GetPointer("route.poolManagement"),
+				Icon:               pointy.GetPointer("lets-icons:money"),
+				HideMenu:           pointy.GetPointer(false),
+				HideBreadcrumb:     pointy.GetPointer(false),
+				IgnoreKeepAlive:    pointy.GetPointer(false),
+				HideTab:            pointy.GetPointer(false),
+				CarryParam:         pointy.GetPointer(false),
+				HideChildrenInMenu: pointy.GetPointer(false),
+				Affix:              pointy.GetPointer(false),
+			},
+			MenuType: pointy.GetPointer(uint32(1)),
+		})
+
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

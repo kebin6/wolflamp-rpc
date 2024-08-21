@@ -29,6 +29,7 @@ type (
 	CreateInvestReq             = wolflamp.CreateInvestReq
 	CreateOrderReq              = wolflamp.CreateOrderReq
 	CreatePlayerReq             = wolflamp.CreatePlayerReq
+	CreatePoolReq               = wolflamp.CreatePoolReq
 	CreateRewardReq             = wolflamp.CreateRewardReq
 	CreateRoundReq              = wolflamp.CreateRoundReq
 	CreateStatementReq          = wolflamp.CreateStatementReq
@@ -98,6 +99,8 @@ type (
 	ListOrderResp               = wolflamp.ListOrderResp
 	ListPlayerReq               = wolflamp.ListPlayerReq
 	ListPlayerResp              = wolflamp.ListPlayerResp
+	ListPoolReq                 = wolflamp.ListPoolReq
+	ListPoolResp                = wolflamp.ListPoolResp
 	ListRewardReq               = wolflamp.ListRewardReq
 	ListRewardResp              = wolflamp.ListRewardResp
 	ListStatementReq            = wolflamp.ListStatementReq
@@ -110,6 +113,7 @@ type (
 	PageInfoReq                 = wolflamp.PageInfoReq
 	PercentResp                 = wolflamp.PercentResp
 	PlayerInfo                  = wolflamp.PlayerInfo
+	PoolInfo                    = wolflamp.PoolInfo
 	PoolMinNumThenSilverResp    = wolflamp.PoolMinNumThenSilverResp
 	PreviousRoundReq            = wolflamp.PreviousRoundReq
 	PreviousRoundResp           = wolflamp.PreviousRoundResp
@@ -181,6 +185,8 @@ type (
 		ValidateGcicsSign(ctx context.Context, in *ValidateGcicsSignReq, opts ...grpc.CallOption) (*ValidateGcicsSignResp, error)
 		GetGcicsBalance(ctx context.Context, in *GetGcicsBalanceReq, opts ...grpc.CallOption) (*GetGcicsBalanceResp, error)
 		GetSum(ctx context.Context, in *GetSumReq, opts ...grpc.CallOption) (*GetSumResp, error)
+		CreatePool(ctx context.Context, in *CreatePoolReq, opts ...grpc.CallOption) (*BaseIDResp, error)
+		ListPool(ctx context.Context, in *ListPoolReq, opts ...grpc.CallOption) (*ListPoolResp, error)
 		CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateReward(ctx context.Context, in *UpdateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteReward(ctx context.Context, in *DeleteRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -205,6 +211,8 @@ type (
 		GetSliverLambNumRange(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NumRangeResp, error)
 		GetPoolMinNumThenSilver(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error)
 		GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
+		GetSliverLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
+		GetGoldenLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
 		CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		UpdateStatement(ctx context.Context, in *UpdateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 		DeleteStatement(ctx context.Context, in *DeleteStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
@@ -443,6 +451,16 @@ func (m *defaultWolflamp) GetSum(ctx context.Context, in *GetSumReq, opts ...grp
 	return client.GetSum(ctx, in, opts...)
 }
 
+func (m *defaultWolflamp) CreatePool(ctx context.Context, in *CreatePoolReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.CreatePool(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) ListPool(ctx context.Context, in *ListPoolReq, opts ...grpc.CallOption) (*ListPoolResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.ListPool(ctx, in, opts...)
+}
+
 func (m *defaultWolflamp) CreateReward(ctx context.Context, in *CreateRewardReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.CreateReward(ctx, in, opts...)
@@ -561,6 +579,16 @@ func (m *defaultWolflamp) GetPoolMinNumThenSilver(ctx context.Context, in *Empty
 func (m *defaultWolflamp) GetSliverOccurPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error) {
 	client := wolflamp.NewWolflampClient(m.cli.Conn())
 	return client.GetSliverOccurPercent(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetSliverLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetSliverLambPercent(ctx, in, opts...)
+}
+
+func (m *defaultWolflamp) GetGoldenLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error) {
+	client := wolflamp.NewWolflampClient(m.cli.Conn())
+	return client.GetGoldenLambPercent(ctx, in, opts...)
 }
 
 func (m *defaultWolflamp) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {

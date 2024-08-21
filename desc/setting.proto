@@ -136,4 +136,10 @@ service Wolflamp {
 
   // group: setting
   rpc getSliverOccurPercent (Empty) returns (PercentResp);
+
+  // group: setting
+  rpc getSliverLambPercent (Empty) returns (PercentResp);
+
+  // group: setting
+  rpc getGoldenLambPercent (Empty) returns (PercentResp);
 }

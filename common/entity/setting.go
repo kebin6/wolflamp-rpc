@@ -33,6 +33,10 @@ type PlatformSetting struct {
 	SliverOccurPercent float32 `json:"sliverOccurPercent"`
 	// 银羊数量区间设定
 	SliverLambNum GoldenLambNum `json:"sliverLambNum"`
+	// 银羊触发数量比例
+	SliverLambPercent float32 `json:"sliverLambPercent"`
+	// 金羊触发数量比例
+	GoldenLambPercent float32 `json:"goldenLambPercent"`
 }
 
 type GoldenLambNum struct {

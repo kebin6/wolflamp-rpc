@@ -125,6 +125,14 @@ message CreatePlayerReq {
   string return_url = 20;
 }
 
+message CreatePoolReq {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+  double lambNum = 4;
+  string remark = 5;
+}
+
 message CreateRewardReq {
   uint32 status = 4;
   uint64 contributor_id = 5;
@@ -526,6 +534,20 @@ message ListPlayerResp {
   repeated PlayerInfo data = 2;
 }
 
+message ListPoolReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string mode = 3;
+  optional uint32 status = 4;
+  optional uint32 type = 5;
+  optional string remark = 6;
+}
+
+message ListPoolResp {
+  uint64 total = 1;
+  repeated PoolInfo data = 2;
+}
+
 message ListRewardReq {
   uint64 page = 1;
   uint64 page_size = 2;
@@ -653,6 +675,17 @@ message PlayerInfo {
   uint32 token_total_win_count = 34;
   double token_total_win_amount = 35;
   double token_total_lose_amount = 36;
+}
+
+message PoolInfo {
+  string mode = 1;
+  uint32 status = 2;
+  uint32 type = 3;
+  double lambNum = 4;
+  string remark = 5;
+  uint64 id = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
 }
 
 message PoolMinNumThenSilverResp {
@@ -944,6 +977,10 @@ service Wolflamp {
   rpc getGcicsBalance(GetGcicsBalanceReq) returns (GetGcicsBalanceResp);
   //  group: pool
   rpc getSum(GetSumReq) returns (GetSumResp);
+  //  group: pool
+  rpc createPool(CreatePoolReq) returns (BaseIDResp);
+  //  group: pool
+  rpc listPool(ListPoolReq) returns (ListPoolResp);
   //  group: reward
   rpc createReward(CreateRewardReq) returns (BaseIDResp);
   //  group: reward
@@ -992,6 +1029,10 @@ service Wolflamp {
   rpc getPoolMinNumThenSilver(Empty) returns (PoolMinNumThenSilverResp);
   //  group: setting
   rpc getSliverOccurPercent(Empty) returns (PercentResp);
+  //  group: setting
+  rpc getSliverLambPercent(Empty) returns (PercentResp);
+  //  group: setting
+  rpc getGoldenLambPercent(Empty) returns (PercentResp);
   //  group: statement
   rpc createStatement(CreateStatementReq) returns (BaseIDResp);
   //  group: statement

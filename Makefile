@@ -113,4 +113,3 @@ help: # Show help | 显示帮助
 deploy:
 	make build-linux
 	make docker
-	make publish-docker

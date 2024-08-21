@@ -306,5 +306,34 @@ func (l *InitDatabaseLogic) insertApiData() error {
 		}
 	}
 
+	// POOL
+	path = "/pool/create_pool"
+	if _, ok := apiList[path]; !ok {
+		_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
+			ServiceName: pointy.GetPointer("WolfLamp"),
+			Path:        pointy.GetPointer(path),
+			Description: pointy.GetPointer("apiDesc.createPool"),
+			ApiGroup:    pointy.GetPointer("pool"),
+			Method:      pointy.GetPointer("POST"),
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	path = "/pool/list_pool"
+	if _, ok := apiList[path]; !ok {
+		_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
+			ServiceName: pointy.GetPointer("WolfLamp"),
+			Path:        pointy.GetPointer(path),
+			Description: pointy.GetPointer("apiDesc.listPool"),
+			ApiGroup:    pointy.GetPointer("pool"),
+			Method:      pointy.GetPointer("POST"),
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	return err
 }
