@@ -303,13 +303,14 @@ type CommissionInfo struct {
 }
 
 type CommissionReq struct {
+	ID                     uint64  `json:"id"`
 	Coin                   string  `json:"coin"`
 	InvitorTotalLambAmount float64 `json:"amount"`
 	Time                   int64   `json:"time"`
 	Data                   string  `json:"data"`
 }
 
-func (g GcicsApi) Commission(coinType string, invitorTotalLambAmount float64, commissionList []CommissionInfo) error {
+func (g GcicsApi) Commission(id uint64, coinType string, invitorTotalLambAmount float64, commissionList []CommissionInfo) error {
 	c := g.SvcCtx.Config.GcicsConf
 	postUrl := c.Host + "/game/manage/commission"
 	timestamp := time.Now().Unix()
@@ -325,6 +326,7 @@ func (g GcicsApi) Commission(coinType string, invitorTotalLambAmount float64, co
 	}
 	// 定义要发送的数据
 	data := &CommissionReq{
+		ID:                     id,
 		Coin:                   coinType,
 		Time:                   timestamp,
 		InvitorTotalLambAmount: invitorTotalLambAmount,

@@ -84,11 +84,17 @@ func (l *SyncGcicsLogic) ProcessSync(syncItem *ent.Round) error {
 		Ctx:    l.ctx,
 		SvcCtx: l.svcCtx,
 	}
-	err := gcicsApi.Commission(syncItem.Mode, syncItem.ComputeAmount, commissonInfoList)
+	err := gcicsApi.Commission(syncItem.ID, syncItem.Mode, syncItem.ComputeAmount, commissonInfoList)
+	syncStatus := roundenum.Success.Val()
+	syncMsg := ""
 	if err != nil {
-		return err
+		syncStatus = roundenum.Failed.Val()
+		syncMsg = err.Error()
 	}
-	err = l.svcCtx.DB.Round.UpdateOneID(syncItem.ID).SetSyncStatus(roundenum.Success.Val()).Exec(l.ctx)
+	err = l.svcCtx.DB.Round.UpdateOneID(syncItem.ID).
+		SetSyncStatus(syncStatus).
+		SetSyncMsg(syncMsg).
+		Exec(l.ctx)
 	if err != nil {
 		return err
 	}

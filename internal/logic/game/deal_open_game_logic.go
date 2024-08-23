@@ -161,7 +161,7 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 	//}
 	//rand.Seed(time.Now().UnixNano())
 	//goldenNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
-	goldenNumCal := uint32(sumResp.Amount * float64(numPercent.Percent))
+	goldenNumCal := uint32(sumResp.Amount * float64(numPercent.Percent/100))
 	if goldenNumCal == 0 {
 		fmt.Printf("ProcessOpen[%s]: check golden, reward pool not enough, exit\n", mode)
 		return nil, nil
@@ -303,7 +303,7 @@ func (l *DealOpenGameLogic) GetSliverNum(mode string) (sliverNum *uint32, err er
 		fmt.Printf("ProcessOpen[%s]: checking sliver, no sliver num percent setting, exit\n", mode)
 		return nil, err
 	}
-	sliverNumCal := uint32(sumResp.Amount * float64(numPercent.Percent))
+	sliverNumCal := uint32(sumResp.Amount * float64(numPercent.Percent/100))
 	if sliverNumCal == 0 {
 		fmt.Printf("ProcessOpen[%s]: check sliver, reward pool not enough, exit\n", mode)
 		return nil, nil

@@ -57,11 +57,15 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 	if in.RoundId != roundInfo.Id {
 		return nil, errorx.NewInvalidArgumentError(fmt.Sprintf("round id %d has expired", in.RoundId))
 	}
+
 	// 不在投注阶段
 	if roundInfo.Status != roundenum.Investing.Val() || roundInfo.StartAt > time.Now().Unix() ||
 		roundInfo.OpenAt < time.Now().Unix() {
 		return nil, errorx.NewInvalidArgumentError(fmt.Sprint("investing time over"))
 	}
+
+	// 判断当前真人投注羊圈是否大于等于3
+	//l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId))
 
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
