@@ -307,19 +307,19 @@ func (l *InitDatabaseLogic) insertApiData() error {
 	}
 
 	// POOL
-	path = "/pool/create_pool"
-	if _, ok := apiList[path]; !ok {
-		_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
-			ServiceName: pointy.GetPointer("WolfLamp"),
-			Path:        pointy.GetPointer(path),
-			Description: pointy.GetPointer("apiDesc.createPool"),
-			ApiGroup:    pointy.GetPointer("pool"),
-			Method:      pointy.GetPointer("POST"),
-		})
-		if err != nil {
-			return err
-		}
-	}
+	//path = "/pool/create_pool"
+	//if _, ok := apiList[path]; !ok {
+	//	_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
+	//		ServiceName: pointy.GetPointer("WolfLamp"),
+	//		Path:        pointy.GetPointer(path),
+	//		Description: pointy.GetPointer("apiDesc.createPool"),
+	//		ApiGroup:    pointy.GetPointer("pool"),
+	//		Method:      pointy.GetPointer("POST"),
+	//	})
+	//	if err != nil {
+	//		return err
+	//	}
+	//}
 
 	path = "/pool/list_pool"
 	if _, ok := apiList[path]; !ok {
@@ -335,5 +335,33 @@ func (l *InitDatabaseLogic) insertApiData() error {
 		}
 	}
 
+	// Notice
+	path = "/notice/update"
+	if _, ok := apiList[path]; !ok {
+		_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
+			ServiceName: pointy.GetPointer("WolfLamp"),
+			Path:        pointy.GetPointer(path),
+			Description: pointy.GetPointer("apiDesc.updateNotice"),
+			ApiGroup:    pointy.GetPointer("notice"),
+			Method:      pointy.GetPointer("POST"),
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	path = "/notice/find"
+	if _, ok := apiList[path]; !ok {
+		_, err = l.svcCtx.CoreRpc.CreateApi(l.ctx, &core.ApiInfo{
+			ServiceName: pointy.GetPointer("WolfLamp"),
+			Path:        pointy.GetPointer(path),
+			Description: pointy.GetPointer("apiDesc.findNotice"),
+			ApiGroup:    pointy.GetPointer("notice"),
+			Method:      pointy.GetPointer("POST"),
+		})
+		if err != nil {
+			return err
+		}
+	}
 	return err
 }

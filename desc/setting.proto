@@ -73,6 +73,14 @@ message PercentResp {
   float percent = 1;
 }
 
+message GetNoticeResp {
+  string notice = 1;
+}
+
+message UpdateNoticeReq {
+  string notice = 1;
+}
+
 service Wolflamp {
   // group: setting
   //rpc createSetting (CreateSettingReq) returns (BaseIDResp);
@@ -142,4 +150,13 @@ service Wolflamp {
 
   // group: setting
   rpc getGoldenLambPercent (Empty) returns (PercentResp);
+
+  // group: setting
+  rpc getPoolMinNumThenGolden (Empty) returns (PoolMinNumThenSilverResp);
+
+  // group: setting
+  rpc getNotice (Empty) returns (GetNoticeResp);
+
+  // group: setting
+  rpc updateNotice (UpdateNoticeReq) returns (BaseIDResp);
 }

@@ -136,12 +136,6 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 	//	return nil, err
 	//}
 
-	numPercent, err := setting.NewGetGoldenLambPercentLogic(l.ctx, l.svcCtx).GetGoldenLambPercent(&wolflamp.Empty{})
-	if err != nil {
-		fmt.Printf("ProcessOpen[%s]: check golden num percent error: %s, exit\n", mode, err.Error())
-		return nil, err
-	}
-
 	// 获取当前奖励池剩余量
 	sumResp, err := pool.NewGetSumLogic(l.ctx, l.svcCtx).GetSum(&wolflamp.GetSumReq{
 		Mode:   mode,
@@ -161,9 +155,26 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 	//}
 	//rand.Seed(time.Now().UnixNano())
 	//goldenNum = pointy.GetPointer(uint32(rand.Intn(int(numRange.Max-numRange.Min+1)) + int(numRange.Min)))
+
+	goldenMinPool, err := setting.NewGetPoolMinNumThenGoldenLogic(l.ctx, l.svcCtx).GetPoolMinNumThenGolden(&wolflamp.Empty{})
+	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check pool min num then golden error: %s, exit\n", mode, err.Error())
+		return nil, err
+	}
+	if sumResp.Amount < float64(goldenMinPool.Min) {
+		fmt.Printf("ProcessOpen[%s]: check pool min num then golden, reward pool not enough, exit\n", mode)
+		return nil, nil
+	}
+
+	numPercent, err := setting.NewGetGoldenLambPercentLogic(l.ctx, l.svcCtx).GetGoldenLambPercent(&wolflamp.Empty{})
+	if err != nil {
+		fmt.Printf("ProcessOpen[%s]: check golden num percent error: %s, exit\n", mode, err.Error())
+		return nil, err
+	}
+
 	goldenNumCal := uint32(sumResp.Amount * float64(numPercent.Percent/100))
 	if goldenNumCal == 0 {
-		fmt.Printf("ProcessOpen[%s]: check golden, reward pool not enough, exit\n", mode)
+		fmt.Printf("ProcessOpen[%s]: check golden, golen num cal is zero, exit\n", mode)
 		return nil, nil
 	}
 	goldenNum = pointy.GetPointer(goldenNumCal)

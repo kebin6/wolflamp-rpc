@@ -346,6 +346,10 @@ message GetLambFoldAggregateV2Req {
   string mode = 3;
 }
 
+message GetNoticeResp {
+  string notice = 1;
+}
+
 message GetOverviewReq {
   optional int64 start_time = 1;
   optional int64 end_time = 2;
@@ -801,6 +805,10 @@ message UpdateInvestReq {
   optional float profit_and_loss = 2;
 }
 
+message UpdateNoticeReq {
+  string notice = 1;
+}
+
 message UpdateOrderReq {
   uint64 id = 1;
   optional uint32 status = 4;
@@ -1033,6 +1041,12 @@ service Wolflamp {
   rpc getSliverLambPercent(Empty) returns (PercentResp);
   //  group: setting
   rpc getGoldenLambPercent(Empty) returns (PercentResp);
+  //  group: setting
+  rpc getPoolMinNumThenGolden(Empty) returns (PoolMinNumThenSilverResp);
+  //  group: setting
+  rpc getNotice(Empty) returns (GetNoticeResp);
+  //  group: setting
+  rpc updateNotice(UpdateNoticeReq) returns (BaseIDResp);
   //  group: statement
   rpc createStatement(CreateStatementReq) returns (BaseIDResp);
   //  group: statement

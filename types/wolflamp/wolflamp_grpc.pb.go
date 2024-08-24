@@ -166,6 +166,12 @@ type WolflampClient interface {
 	GetSliverLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
 	// group: setting
 	GetGoldenLambPercent(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PercentResp, error)
+	// group: setting
+	GetPoolMinNumThenGolden(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error)
+	// group: setting
+	GetNotice(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetNoticeResp, error)
+	// group: setting
+	UpdateNotice(ctx context.Context, in *UpdateNoticeReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: statement
 	CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error)
 	// group: statement
@@ -834,6 +840,33 @@ func (c *wolflampClient) GetGoldenLambPercent(ctx context.Context, in *Empty, op
 	return out, nil
 }
 
+func (c *wolflampClient) GetPoolMinNumThenGolden(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolMinNumThenSilverResp, error) {
+	out := new(PoolMinNumThenSilverResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getPoolMinNumThenGolden", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) GetNotice(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetNoticeResp, error) {
+	out := new(GetNoticeResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/getNotice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wolflampClient) UpdateNotice(ctx context.Context, in *UpdateNoticeReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/updateNotice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *wolflampClient) CreateStatement(ctx context.Context, in *CreateStatementReq, opts ...grpc.CallOption) (*BaseIDResp, error) {
 	out := new(BaseIDResp)
 	err := c.cc.Invoke(ctx, "/wolflamp.Wolflamp/createStatement", in, out, opts...)
@@ -1027,6 +1060,12 @@ type WolflampServer interface {
 	GetSliverLambPercent(context.Context, *Empty) (*PercentResp, error)
 	// group: setting
 	GetGoldenLambPercent(context.Context, *Empty) (*PercentResp, error)
+	// group: setting
+	GetPoolMinNumThenGolden(context.Context, *Empty) (*PoolMinNumThenSilverResp, error)
+	// group: setting
+	GetNotice(context.Context, *Empty) (*GetNoticeResp, error)
+	// group: setting
+	UpdateNotice(context.Context, *UpdateNoticeReq) (*BaseIDResp, error)
 	// group: statement
 	CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error)
 	// group: statement
@@ -1259,6 +1298,15 @@ func (UnimplementedWolflampServer) GetSliverLambPercent(context.Context, *Empty)
 }
 func (UnimplementedWolflampServer) GetGoldenLambPercent(context.Context, *Empty) (*PercentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGoldenLambPercent not implemented")
+}
+func (UnimplementedWolflampServer) GetPoolMinNumThenGolden(context.Context, *Empty) (*PoolMinNumThenSilverResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoolMinNumThenGolden not implemented")
+}
+func (UnimplementedWolflampServer) GetNotice(context.Context, *Empty) (*GetNoticeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNotice not implemented")
+}
+func (UnimplementedWolflampServer) UpdateNotice(context.Context, *UpdateNoticeReq) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateNotice not implemented")
 }
 func (UnimplementedWolflampServer) CreateStatement(context.Context, *CreateStatementReq) (*BaseIDResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStatement not implemented")
@@ -2584,6 +2632,60 @@ func _Wolflamp_GetGoldenLambPercent_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wolflamp_GetPoolMinNumThenGolden_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetPoolMinNumThenGolden(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getPoolMinNumThenGolden",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetPoolMinNumThenGolden(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_GetNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).GetNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/getNotice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).GetNotice(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Wolflamp_UpdateNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateNoticeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WolflampServer).UpdateNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wolflamp.Wolflamp/updateNotice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WolflampServer).UpdateNotice(ctx, req.(*UpdateNoticeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Wolflamp_CreateStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateStatementReq)
 	if err := dec(in); err != nil {
@@ -2968,6 +3070,18 @@ var Wolflamp_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getGoldenLambPercent",
 			Handler:    _Wolflamp_GetGoldenLambPercent_Handler,
+		},
+		{
+			MethodName: "getPoolMinNumThenGolden",
+			Handler:    _Wolflamp_GetPoolMinNumThenGolden_Handler,
+		},
+		{
+			MethodName: "getNotice",
+			Handler:    _Wolflamp_GetNotice_Handler,
+		},
+		{
+			MethodName: "updateNotice",
+			Handler:    _Wolflamp_UpdateNotice_Handler,
 		},
 		{
 			MethodName: "createStatement",

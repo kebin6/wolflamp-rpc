@@ -37,6 +37,8 @@ type PlatformSetting struct {
 	SliverLambPercent float32 `json:"sliverLambPercent"`
 	// 金羊触发数量比例
 	GoldenLambPercent float32 `json:"goldenLambPercent"`
+	// 金羊触发条件-奖金池最低阈值
+	PoolMinNumThenGolden uint32 `json:"poolMinNumThenGolden"`
 }
 
 type GoldenLambNum struct {

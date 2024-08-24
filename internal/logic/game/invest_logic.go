@@ -65,11 +65,20 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 	}
 
 	// 判断当前真人投注羊圈是否大于等于3
-	//l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId))
+	realInvestLambFoldNum, err := l.svcCtx.DB.RoundInvest.Query().
+		Where(roundinvest.PlayerIDLT(util.PlayerMaxId), roundinvest.RoundID(240822033258)).
+		Select(roundinvest.FieldFoldNo).
+		Unique(true).
+		Count(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+	if realInvestLambFoldNum >= 3 {
+		return nil, errorx.NewInvalidArgumentError("game.investLambFoldNumLimit")
+	}
 
 	var result *ent.RoundInvest
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
-
 		investedOne, err := tx.RoundInvest.Query().
 			Where(roundinvest.PlayerID(in.PlayerId), roundinvest.RoundID(in.RoundId)).First(l.ctx)
 		if err != nil && !ent.IsNotFound(err) {

@@ -392,6 +392,21 @@ func (s *WolflampServer) GetGoldenLambPercent(ctx context.Context, in *wolflamp.
 	return l.GetGoldenLambPercent(in)
 }
 
+func (s *WolflampServer) GetPoolMinNumThenGolden(ctx context.Context, in *wolflamp.Empty) (*wolflamp.PoolMinNumThenSilverResp, error) {
+	l := setting.NewGetPoolMinNumThenGoldenLogic(ctx, s.svcCtx)
+	return l.GetPoolMinNumThenGolden(in)
+}
+
+func (s *WolflampServer) GetNotice(ctx context.Context, in *wolflamp.Empty) (*wolflamp.GetNoticeResp, error) {
+	l := setting.NewGetNoticeLogic(ctx, s.svcCtx)
+	return l.GetNotice(in)
+}
+
+func (s *WolflampServer) UpdateNotice(ctx context.Context, in *wolflamp.UpdateNoticeReq) (*wolflamp.BaseIDResp, error) {
+	l := setting.NewUpdateNoticeLogic(ctx, s.svcCtx)
+	return l.UpdateNotice(in)
+}
+
 func (s *WolflampServer) CreateStatement(ctx context.Context, in *wolflamp.CreateStatementReq) (*wolflamp.BaseIDResp, error) {
 	l := statement.NewCreateStatementLogic(ctx, s.svcCtx)
 	return l.CreateStatement(in)
