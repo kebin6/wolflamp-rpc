@@ -2,12 +2,10 @@ package overview
 
 import (
 	"context"
-	"entgo.io/ent/dialect/sql"
 	"fmt"
 	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
-	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
 	"github.com/kebin6/wolflamp-rpc/ent/pool"
@@ -38,19 +36,34 @@ func NewGetOverviewLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOv
 func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.GetOverviewResp, error) {
 
 	// 统计今日参与玩家数
-	players, err := l.svcCtx.DB.RoundInvest.Query().
-		Select(roundinvest.FieldPlayerID).
-		Where(func(s *sql.Selector) {
-			roundTable := sql.Table(round.Table)
-			s.Join(roundTable).On(s.C(roundinvest.FieldRoundID), roundTable.C(round.FieldID))
-			s.Where(sql.GTE(roundTable.C(round.FieldStartAt), now.BeginningOfDay()))
-		}).Where(roundinvest.PlayerIDLT(util.PlayerMaxId)).All(l.ctx)
+	todayRounds, err := l.svcCtx.DB.Round.Query().
+		Where(round.CreatedAtGTE(now.BeginningOfDay())).
+		Select(round.FieldID).All(l.ctx)
 	if err != nil {
 		return nil, err
 	}
+	todayRoundIds := make([]uint64, len(todayRounds))
+	for i, v := range todayRounds {
+		todayRoundIds[i] = v.ID
+	}
+	todayInvests, err := l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.RoundIDIn(todayRoundIds...)).
+		Select(roundinvest.FieldPlayerID, roundinvest.FieldMode, roundinvest.FieldProfitAndLoss,
+			roundinvest.FieldLambNum).
+		All(l.ctx)
+
+	//players, err := l.svcCtx.DB.RoundInvest.Query().
+	//	Select(roundinvest.FieldPlayerID).
+	//	Where(func(s *sql.Selector) {
+	//		roundTable := sql.Table(round.Table)
+	//		s.Join(roundTable).On(s.C(roundinvest.FieldRoundID), roundTable.C(round.FieldID))
+	//		s.Where(sql.GTE(roundTable.C(round.FieldStartAt), now.BeginningOfDay()))
+	//	}).Where(roundinvest.PlayerIDLT(util.PlayerMaxId)).All(l.ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
 	// 去重
 	todayParticipates := make(map[uint64]bool)
-	for _, v := range players {
+	for _, v := range todayInvests {
 		todayParticipates[v.PlayerID] = true
 	}
 	todayParticipateCount := len(todayParticipates)
@@ -62,16 +75,23 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 	}
 
 	// 今日游戏开局次数
-	todayRoundCount, err := l.svcCtx.DB.Round.Query().Where(round.StartAtGTE(now.BeginningOfDay())).Count(l.ctx)
+	todayRoundCount := len(todayRoundIds)
+	//todayRoundCount, err := l.svcCtx.DB.Round.Query().Where(round.StartAtGTE(now.BeginningOfDay())).Count(l.ctx)
 
 	// 今日累积吃羊数
-	todayEatCount, err := l.svcCtx.DB.RoundInvest.Query().Where(func(s *sql.Selector) {
-		roundTable := sql.Table(round.Table)
-		s.Join(roundTable).On(s.C(roundinvest.FieldRoundID), roundTable.C(round.FieldID))
-		s.Where(sql.GTE(roundTable.C(round.FieldStartAt), now.BeginningOfDay()))
-	}).Where(roundinvest.ProfitAndLossLT(0)).Aggregate(ent.Sum(roundinvest.FieldLambNum)).Int(l.ctx)
-	if err != nil {
-		todayEatCount = 0
+	//todayEatCount, err := l.svcCtx.DB.RoundInvest.Query().Where(func(s *sql.Selector) {
+	//	roundTable := sql.Table(round.Table)
+	//	s.Join(roundTable).On(s.C(roundinvest.FieldRoundID), roundTable.C(round.FieldID))
+	//	s.Where(sql.GTE(roundTable.C(round.FieldStartAt), now.BeginningOfDay()))
+	//}).Where(roundinvest.ProfitAndLossLT(0)).Aggregate(ent.Sum(roundinvest.FieldLambNum)).Int(l.ctx)
+	//if err != nil {
+	//	todayEatCount = 0
+	//}
+	todayEatCount := 0
+	for _, v := range todayInvests {
+		if v.ProfitAndLoss < 0 {
+			todayEatCount += int(v.LambNum)
+		}
 	}
 
 	// 今日平台收益

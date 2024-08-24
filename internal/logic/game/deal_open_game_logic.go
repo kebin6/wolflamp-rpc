@@ -8,17 +8,20 @@ import (
 	"github.com/kebin6/wolflamp-rpc/common/enum/cachekey"
 	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/roundenum"
+	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
 	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/roundinvest"
 	"github.com/kebin6/wolflamp-rpc/ent/roundlambfold"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/pool"
 	"github.com/kebin6/wolflamp-rpc/internal/logic/setting"
+	"github.com/kebin6/wolflamp-rpc/internal/logic/statement"
 	"github.com/kebin6/wolflamp-rpc/internal/utils/entx"
 	"github.com/redis/go-redis/v9"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/errorx"
 	"math/rand"
+	"strconv"
 	"time"
 
 	"github.com/kebin6/wolflamp-rpc/internal/svc"
@@ -574,7 +577,7 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		}
 	}
 
-	//statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
+	statementCreateLogic := statement.NewCreateStatementLogic(l.ctx, l.svcCtx)
 	err = entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
 		// 奖金羊扣减奖金池记录
 		if openLambRewardNum > 0 {
@@ -633,17 +636,17 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		//}
 
 		// 记录平台收益账单
-		//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
-		//	Mode:     in.Mode,
-		//	PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.System.Val(),
-		//	Amount: systemCommissionNum, InoutType: statementenum.Income.Val(),
-		//	ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
-		//	Remark: pointy.GetPointer(fmt.Sprintf("平台收益：%f*%f=%f", float32(totalRewardNum), systemCommission/100, systemCommissionNum)),
-		//})
-		//if err != nil {
-		//	fmt.Printf("ProcessOpen[%s]: create system commission statement error : %s", in.Mode, err.Error())
-		//	return err
-		//}
+		_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
+			Mode:     in.Mode,
+			PlayerId: 0, Status: statementenum.Completed.Val(), Module: statementenum.System.Val(),
+			Amount: systemCommissionNum, InoutType: statementenum.Income.Val(),
+			ReferId: strconv.FormatUint(round.Id, 10), Prefix: pointy.GetPointer("IV"),
+			Remark: pointy.GetPointer(fmt.Sprintf("平台收益：%f*%f=%f", float32(totalRewardNum), systemCommission/100, systemCommissionNum)),
+		})
+		if err != nil {
+			fmt.Printf("ProcessOpen[%s]: create system commission statement error : %s", in.Mode, err.Error())
+			return err
+		}
 
 		// 记录预留给上级佣金账单
 		//_, err = statementCreateLogic.CreateStatement(&wolflamp.CreateStatementReq{
