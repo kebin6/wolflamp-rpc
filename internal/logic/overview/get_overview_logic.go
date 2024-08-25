@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/now"
 	"github.com/kebin6/wolflamp-rpc/common/enum/poolenum"
 	"github.com/kebin6/wolflamp-rpc/common/enum/statementenum"
+	"github.com/kebin6/wolflamp-rpc/common/util"
 	"github.com/kebin6/wolflamp-rpc/ent"
 	"github.com/kebin6/wolflamp-rpc/ent/player"
 	"github.com/kebin6/wolflamp-rpc/ent/pool"
@@ -46,7 +47,9 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 	for i, v := range todayRounds {
 		todayRoundIds[i] = v.ID
 	}
-	todayInvests, err := l.svcCtx.DB.RoundInvest.Query().Where(roundinvest.RoundIDIn(todayRoundIds...)).
+	todayInvests, err := l.svcCtx.DB.RoundInvest.Query().
+		Where(roundinvest.PlayerIDLT(util.PlayerMaxId)).
+		Where(roundinvest.RoundIDIn(todayRoundIds...)).
 		Select(roundinvest.FieldPlayerID, roundinvest.FieldMode, roundinvest.FieldProfitAndLoss,
 			roundinvest.FieldLambNum).
 		All(l.ctx)
