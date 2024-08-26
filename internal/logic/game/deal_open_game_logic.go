@@ -112,8 +112,8 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 	}
 
 	layout := "15:04:05"
-	nowTime, _ := time.Parse(layout, fmt.Sprintf("%d:%d:%d", time.Now().Hour(), time.Now().Minute(), time.Now().Second()))
-	nowTime = nowTime.In(time.Local)
+	// 由于start_time和end_time是以东八区来设置时分秒的，所以这里需要转换一下
+	nowTime, _ := time.Parse(layout, fmt.Sprintf("%d:%d:%d", (time.Now().Hour()+8)%24, time.Now().Minute(), time.Now().Second()))
 	startTime, err := time.Parse(layout, allowTimeRange.StartTime)
 	if err != nil {
 		fmt.Printf("ProcessOpen[%s]: check golden allow start time, error: %s, exit\n", mode, err.Error())
