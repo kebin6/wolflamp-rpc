@@ -73,7 +73,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 	if err != nil {
 		return nil, err
 	}
-	if realInvestLambFoldNum >= 3 {
+	if realInvestLambFoldNum >= 3 && in.PlayerId >= util.PlayerMaxId {
 		return nil, errorx.NewInvalidArgumentError("game.investLambFoldNumLimit")
 	}
 

@@ -124,7 +124,7 @@ func (l *DealOpenGameLogic) GetGoldenNum(mode string) (goldenNum *uint32, err er
 		return nil, err
 	}
 	if nowTime.Before(startTime) || nowTime.After(endTime) {
-		fmt.Printf("ProcessOpen[%s]: check golden allow time, no match, exit\n", mode)
+		fmt.Printf("ProcessOpen[%s]: check golden allow time[%s ~ %s], no match[%s], exit\n", mode, startTime, endTime, nowTime)
 		return nil, err
 	}
 
