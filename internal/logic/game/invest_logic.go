@@ -66,7 +66,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 
 	// 判断当前真人投注羊圈是否大于等于3
 	realInvestLambFoldNum, err := l.svcCtx.DB.RoundInvest.Query().
-		Where(roundinvest.PlayerIDLT(util.PlayerMaxId), roundinvest.RoundID(240822033258)).
+		Where(roundinvest.PlayerIDLT(util.PlayerMaxId), roundinvest.RoundID(roundInfo.Id)).
 		Select(roundinvest.FieldFoldNo).
 		Unique(true).
 		Count(l.ctx)
