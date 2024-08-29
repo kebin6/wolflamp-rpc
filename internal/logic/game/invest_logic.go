@@ -44,7 +44,9 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		if err != nil {
 			return nil, err
 		}
-		if playerInfo.CoinLamb < float32(in.LambNum) {
+		if in.Mode == "coin" && playerInfo.CoinLamb < float32(in.LambNum) {
+			return nil, errorx.NewInvalidArgumentError("game.lambNotEnough")
+		} else if in.Mode == "token" && playerInfo.TokenLamb < float32(in.LambNum) {
 			return nil, errorx.NewInvalidArgumentError("game.lambNotEnough")
 		}
 		player = playerInfo

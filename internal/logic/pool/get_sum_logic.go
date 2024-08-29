@@ -25,7 +25,7 @@ func NewGetSumLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetSumLogi
 }
 
 func (l *GetSumLogic) GetSum(in *wolflamp.GetSumReq) (*wolflamp.GetSumResp, error) {
-
+	// TODO:: 待优化
 	amount, _ := l.svcCtx.DB.Pool.Query().
 		Where(pool.Mode(in.Mode)).
 		Where(pool.Status(uint8(in.Status))).
