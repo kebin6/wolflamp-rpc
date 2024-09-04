@@ -46,6 +46,9 @@ func (l *ChangeInvestFoldLogic) ChangeInvestFold(in *wolflamp.ChangeInvestFoldRe
 	if len(investResp.Data) > 1 {
 		return nil, errorx.NewInternalError("player has twice invest in a round")
 	}
+	if len(investResp.Data) == 0 {
+		return &wolflamp.BaseIDResp{}, nil
+	}
 	invest := investResp.Data[0]
 	if invest.FoldNo == in.FoldNo {
 		return &wolflamp.BaseIDResp{}, nil
