@@ -4,21 +4,34 @@ package wolflamp;
 option go_package="./wolflamp";
 
 message OverviewInfo {
-  uint64 today_participate_count = 1;
-  uint64 today_new_player_count = 2;
-  uint64 today_round_count = 3;
-  uint64 today_eat_count = 4;
-  uint64 today_platform_profit = 5;
-  uint64 total_platform_profit = 6;
-  uint64 total_player_count = 7;
-  // coin机器人池剩余数量
-  float coin_robot_pool_rest_num = 8;
-  // coin奖金池剩余数量
-  float coin_reward_pool_rest_num = 9;
-  // token机器人池剩余数量
-  float token_robot_pool_rest_num = 10;
-  // token奖金池剩余数量
-  float token_reward_pool_rest_num = 11;
+  uint64 today_new_player_count = 1;
+  uint64 total_player_count = 2;
+  uint64 coin_today_participate_count = 3;
+  uint64 token_today_participate_count = 16;
+  // 今日游戏开局次数(coin场)
+  uint64 coin_today_round_count = 4;
+  // 今日累积吃羊数(coin场)
+  uint64 coin_today_eat_count = 5;
+  // 今日平台收益(coin场)
+  uint64 coin_today_platform_profit = 6;
+  // 平台累积收益(coin场)
+  uint64 coin_total_platform_profit = 7;
+  // 机器人池剩余数量(coin场)
+  double coin_robot_pool_rest_num = 8;
+  // 奖金池剩余数量(coin场)
+  double coin_reward_pool_rest_num = 9;
+  // 今日游戏开局次数(token场)
+  uint64 token_today_round_count = 10;
+  // 今日累积吃羊数(token场)
+  uint64 token_today_eat_count = 11;
+  // 今日平台收益(token场)
+  uint64 token_today_platform_profit = 12;
+  // 平台累积收益(token场)
+  uint64 token_total_platform_profit = 13;
+  // 机器人池剩余数量(token场)
+  double token_robot_pool_rest_num = 14;
+  // 奖金池剩余数量(token场)
+  double token_reward_pool_rest_num = 15;
 }
 
 message GetOverviewReq {

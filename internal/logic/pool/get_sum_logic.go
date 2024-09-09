@@ -92,7 +92,7 @@ func (l *GetSumLogic) GetLambSumCache(in *wolflamp.GetSumReq) (float64, error) {
 					Float64(l.ctx)
 				if err == nil {
 					amount += f
-					_ = l.svcCtx.Redis.Set(l.ctx, todayCacheKey, amount, time.Hour*24*3)
+					_ = l.svcCtx.Redis.Set(l.ctx, todayCacheKey, amount, time.Hour*24*2)
 					return amount, err
 				}
 			}
@@ -106,13 +106,12 @@ func (l *GetSumLogic) GetLambSumCache(in *wolflamp.GetSumReq) (float64, error) {
 		Aggregate(ent.Sum(pool.FieldLambNum)).
 		Float64(l.ctx)
 	if err != nil {
-		return 0, err
+		if !strings.Contains(err.Error(), "converting NULL to float64 is unsupported") {
+			return 0, err
+		}
+		return 0, nil
 	}
 	// 保存3天
-	_ = l.svcCtx.Redis.Set(l.ctx, todayCacheKey, amount, time.Hour*24*3)
-
-	if err != nil {
-		return 0, err
-	}
+	_ = l.svcCtx.Redis.Set(l.ctx, todayCacheKey, amount, time.Hour*24*2)
 	return amount, nil
 }
