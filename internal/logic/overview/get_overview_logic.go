@@ -201,6 +201,7 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 			CoinTodayPlatformProfit:    uint64(coinTodayPlatformProfitAmount),
 			TokenTodayPlatformProfit:   uint64(tokenTodayPlatformProfitAmount),
 			CoinTotalPlatformProfit:    uint64(coinTotalPlatformProfitAmount),
+			TokenTotalPlatformProfit:   uint64(tokenTotalPlatformProfitAmount),
 			CoinRobotPoolRestNum:       coinRobotPoolRestNum,
 			TokenRobotPoolRestNum:      tokenRobotPoolRestNum,
 			CoinRewardPoolRestNum:      coinRewardPoolRestNum,
