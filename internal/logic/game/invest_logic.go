@@ -62,8 +62,8 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 
 	// 不在投注阶段
 	if roundInfo.Status != roundenum.Investing.Val() || roundInfo.StartAt > time.Now().Unix() ||
-		roundInfo.OpenAt < time.Now().Unix() {
-		return nil, errorx.NewInvalidArgumentError(fmt.Sprint("investing time over"))
+		roundInfo.OpenAt-3 < time.Now().Unix() {
+		return nil, errorx.NewCodeInternalError("game.investOvertime")
 	}
 
 	// 判断当前真人投注羊圈是否大于等于3
