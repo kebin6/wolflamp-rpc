@@ -62,7 +62,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 
 	// 不在投注阶段
 	if roundInfo.Status != roundenum.Investing.Val() || roundInfo.StartAt > time.Now().Unix() ||
-		roundInfo.OpenAt-3 < time.Now().Unix() {
+		roundInfo.OpenAt-3 <= time.Now().Unix() {
 		return nil, errorx.NewCodeInternalError("game.investOvertime")
 	}
 	fmt.Printf("[check time] open_at=%d --- now=%d \n", roundInfo.OpenAt, time.Now().Unix())
