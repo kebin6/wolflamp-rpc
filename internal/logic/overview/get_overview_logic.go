@@ -37,10 +37,11 @@ func NewGetOverviewLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOv
 
 func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.GetOverviewResp, error) {
 
+	todayTime := now.BeginningOfDay()
 	// 统计今日参与玩家数
 	todayRounds, err := l.svcCtx.DB.Round.Query().
-		Where(round.CreatedAtGTE(now.BeginningOfDay())).
-		Select(round.FieldID, round.FieldCreatedAt).All(l.ctx)
+		Where(round.CreatedAtGTE(todayTime)).
+		Select(round.FieldID, round.FieldMode).All(l.ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -211,10 +212,10 @@ func (l *GetOverviewLogic) GetOverview(in *wolflamp.GetOverviewReq) (*wolflamp.G
 
 // GetTotalPlatformProfitCache 统计平台今日以前累计收益
 func (l *GetOverviewLogic) GetTotalPlatformProfitCache(mode string) (float64, error) {
-	nowTime := now.BeginningOfDay().In(time.UTC)
+	nowTime := now.BeginningOfDay()
 
 	//yesterday := nowTime.AddDate(0, 0, -1)
-	format := "2006-01-02"
+	format := "2006_01_02_15_04_05"
 	formattedToday := nowTime.Format(format)
 	todayCacheKey := fmt.Sprintf("%s_platform_profit_sum:%s", mode, formattedToday)
 

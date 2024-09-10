@@ -54,10 +54,10 @@ func (l *GetSumLogic) GetSum(in *wolflamp.GetSumReq) (*wolflamp.GetSumResp, erro
 
 // GetLambSumCache 获取mode模式下，截止至昨天的总机器人池剩余数量 /*
 func (l *GetSumLogic) GetLambSumCache(in *wolflamp.GetSumReq) (float64, error) {
-	nowTime := now.BeginningOfDay().In(time.UTC)
+	nowTime := now.BeginningOfDay()
 
 	//yesterday := nowTime.AddDate(0, 0, -1)
-	format := "2006-01-02"
+	format := "2006_01_02_15_04_05"
 	formattedToday := nowTime.Format(format)
 	todayCacheKey := fmt.Sprintf("%s_%d_%d_lamb_pool_sum:%s", in.Mode, in.Type, in.Status, formattedToday)
 
