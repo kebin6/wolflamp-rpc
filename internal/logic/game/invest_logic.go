@@ -65,7 +65,7 @@ func (l *InvestLogic) Invest(in *wolflamp.CreateInvestReq) (*wolflamp.BaseIDResp
 		roundInfo.OpenAt-3 < time.Now().Unix() {
 		return nil, errorx.NewCodeInternalError("game.investOvertime")
 	}
-	fmt.Printf("[check time] open_at=%d --- now=%d", roundInfo.OpenAt, time.Now().Unix())
+	fmt.Printf("[check time] open_at=%d --- now=%d \n", roundInfo.OpenAt, time.Now().Unix())
 
 	// 判断当前真人投注羊圈是否大于等于3
 	realInvestLambFoldNum, err := l.svcCtx.DB.RoundInvest.Query().
