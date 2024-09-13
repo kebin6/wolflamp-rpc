@@ -58,6 +58,8 @@ const (
 	FieldGcicsToken = "gcics_token"
 	// FieldGcicsReturnURL holds the string denoting the gcics_return_url field in the database.
 	FieldGcicsReturnURL = "gcics_return_url"
+	// FieldGcicsUserName holds the string denoting the gcics_user_name field in the database.
+	FieldGcicsUserName = "gcics_user_name"
 	// EdgeInviter holds the string denoting the inviter edge name in mutations.
 	EdgeInviter = "inviter"
 	// EdgeInvitees holds the string denoting the invitees edge name in mutations.
@@ -99,6 +101,7 @@ var Columns = []string{
 	FieldGcicsUserID,
 	FieldGcicsToken,
 	FieldGcicsReturnURL,
+	FieldGcicsUserName,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -158,6 +161,8 @@ var (
 	DefaultGcicsToken string
 	// DefaultGcicsReturnURL holds the default value on creation for the "gcics_return_url" field.
 	DefaultGcicsReturnURL string
+	// DefaultGcicsUserName holds the default value on creation for the "gcics_user_name" field.
+	DefaultGcicsUserName string
 )
 
 // OrderOption defines the ordering options for the Player queries.
@@ -276,6 +281,11 @@ func ByGcicsToken(opts ...sql.OrderTermOption) OrderOption {
 // ByGcicsReturnURL orders the results by the gcics_return_url field.
 func ByGcicsReturnURL(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGcicsReturnURL, opts...).ToFunc()
+}
+
+// ByGcicsUserName orders the results by the gcics_user_name field.
+func ByGcicsUserName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldGcicsUserName, opts...).ToFunc()
 }
 
 // ByInviterField orders the results by inviter field.

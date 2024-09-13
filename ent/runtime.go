@@ -328,6 +328,10 @@ func init() {
 	playerDescGcicsReturnURL := playerFields[18].Descriptor()
 	// player.DefaultGcicsReturnURL holds the default value on creation for the gcics_return_url field.
 	player.DefaultGcicsReturnURL = playerDescGcicsReturnURL.Default.(string)
+	// playerDescGcicsUserName is the schema descriptor for gcics_user_name field.
+	playerDescGcicsUserName := playerFields[19].Descriptor()
+	// player.DefaultGcicsUserName holds the default value on creation for the gcics_user_name field.
+	player.DefaultGcicsUserName = playerDescGcicsUserName.Default.(string)
 	poolMixin := schema.Pool{}.Mixin()
 	poolMixinFields0 := poolMixin[0].Fields()
 	_ = poolMixinFields0

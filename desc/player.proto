@@ -39,6 +39,7 @@ message PlayerInfo {
   uint32 token_total_win_count = 34;
   double token_total_win_amount = 35;
   double token_total_lose_amount = 36;
+  string gcics_user_name = 37;
 }
 
 message CreatePlayerReq {
@@ -59,6 +60,7 @@ message CreatePlayerReq {
   uint64 gcics_user_id = 18;
   string gcics_token = 19;
   string return_url = 20;
+  string gcics_user_name = 21;
 }
 
 message UpdatePlayerReq {

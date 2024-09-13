@@ -4687,6 +4687,7 @@ type PlayerMutation struct {
 	addgcics_user_id     *int64
 	gcics_token          *string
 	gcics_return_url     *string
+	gcics_user_name      *string
 	clearedFields        map[string]struct{}
 	inviter              *uint64
 	clearedinviter       bool
@@ -5821,6 +5822,42 @@ func (m *PlayerMutation) ResetGcicsReturnURL() {
 	m.gcics_return_url = nil
 }
 
+// SetGcicsUserName sets the "gcics_user_name" field.
+func (m *PlayerMutation) SetGcicsUserName(s string) {
+	m.gcics_user_name = &s
+}
+
+// GcicsUserName returns the value of the "gcics_user_name" field in the mutation.
+func (m *PlayerMutation) GcicsUserName() (r string, exists bool) {
+	v := m.gcics_user_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGcicsUserName returns the old "gcics_user_name" field's value of the Player entity.
+// If the Player object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PlayerMutation) OldGcicsUserName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGcicsUserName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGcicsUserName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGcicsUserName: %w", err)
+	}
+	return oldValue.GcicsUserName, nil
+}
+
+// ResetGcicsUserName resets all changes to the "gcics_user_name" field.
+func (m *PlayerMutation) ResetGcicsUserName() {
+	m.gcics_user_name = nil
+}
+
 // ClearInviter clears the "inviter" edge to the Player entity.
 func (m *PlayerMutation) ClearInviter() {
 	m.clearedinviter = true
@@ -5936,7 +5973,7 @@ func (m *PlayerMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PlayerMutation) Fields() []string {
-	fields := make([]string, 0, 22)
+	fields := make([]string, 0, 23)
 	if m.created_at != nil {
 		fields = append(fields, player.FieldCreatedAt)
 	}
@@ -6003,6 +6040,9 @@ func (m *PlayerMutation) Fields() []string {
 	if m.gcics_return_url != nil {
 		fields = append(fields, player.FieldGcicsReturnURL)
 	}
+	if m.gcics_user_name != nil {
+		fields = append(fields, player.FieldGcicsUserName)
+	}
 	return fields
 }
 
@@ -6055,6 +6095,8 @@ func (m *PlayerMutation) Field(name string) (ent.Value, bool) {
 		return m.GcicsToken()
 	case player.FieldGcicsReturnURL:
 		return m.GcicsReturnURL()
+	case player.FieldGcicsUserName:
+		return m.GcicsUserName()
 	}
 	return nil, false
 }
@@ -6108,6 +6150,8 @@ func (m *PlayerMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldGcicsToken(ctx)
 	case player.FieldGcicsReturnURL:
 		return m.OldGcicsReturnURL(ctx)
+	case player.FieldGcicsUserName:
+		return m.OldGcicsUserName(ctx)
 	}
 	return nil, fmt.Errorf("unknown Player field %s", name)
 }
@@ -6270,6 +6314,13 @@ func (m *PlayerMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetGcicsReturnURL(v)
+		return nil
+	case player.FieldGcicsUserName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGcicsUserName(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)
@@ -6523,6 +6574,9 @@ func (m *PlayerMutation) ResetField(name string) error {
 		return nil
 	case player.FieldGcicsReturnURL:
 		m.ResetGcicsReturnURL()
+		return nil
+	case player.FieldGcicsUserName:
+		m.ResetGcicsUserName()
 		return nil
 	}
 	return fmt.Errorf("unknown Player field %s", name)

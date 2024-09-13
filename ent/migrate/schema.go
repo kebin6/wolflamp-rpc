@@ -167,6 +167,7 @@ var (
 		{Name: "gcics_user_id", Type: field.TypeUint64, Comment: "the user id of gcics system", Default: 0},
 		{Name: "gcics_token", Type: field.TypeString, Comment: "user game token from gcics system", Default: ""},
 		{Name: "gcics_return_url", Type: field.TypeString, Comment: "登陆失效后的跳转地址", Default: ""},
+		{Name: "gcics_user_name", Type: field.TypeString, Comment: "the user name of gcics system", Default: ""},
 		{Name: "inviter_id", Type: field.TypeUint64, Nullable: true, Comment: "the inviter id | 邀请人ID", Default: 0},
 	}
 	// WlPlayerTable holds the schema information for the "wl_player" table.
@@ -178,7 +179,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "wl_player_wl_player_invitees",
-				Columns:    []*schema.Column{WlPlayerColumns[22]},
+				Columns:    []*schema.Column{WlPlayerColumns[23]},
 				RefColumns: []*schema.Column{WlPlayerColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -202,7 +203,7 @@ var (
 			{
 				Name:    "idx_inviter_id",
 				Unique:  false,
-				Columns: []*schema.Column{WlPlayerColumns[22]},
+				Columns: []*schema.Column{WlPlayerColumns[23]},
 			},
 			{
 				Name:    "idx_invited_code",

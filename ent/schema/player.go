@@ -91,6 +91,9 @@ func (Player) Fields() []ent.Field {
 		field.String("gcics_return_url").
 			Default("").Comment("登陆失效后的跳转地址").
 			Annotations(entsql.WithComments(true)),
+		field.String("gcics_user_name").
+			Default("").Comment("the user name of gcics system").
+			Annotations(entsql.WithComments(true)),
 	}
 }
 

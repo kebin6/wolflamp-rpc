@@ -396,6 +396,20 @@ func (pu *PlayerUpdate) SetNillableGcicsReturnURL(s *string) *PlayerUpdate {
 	return pu
 }
 
+// SetGcicsUserName sets the "gcics_user_name" field.
+func (pu *PlayerUpdate) SetGcicsUserName(s string) *PlayerUpdate {
+	pu.mutation.SetGcicsUserName(s)
+	return pu
+}
+
+// SetNillableGcicsUserName sets the "gcics_user_name" field if the given value is not nil.
+func (pu *PlayerUpdate) SetNillableGcicsUserName(s *string) *PlayerUpdate {
+	if s != nil {
+		pu.SetGcicsUserName(*s)
+	}
+	return pu
+}
+
 // SetInviter sets the "inviter" edge to the Player entity.
 func (pu *PlayerUpdate) SetInviter(p *Player) *PlayerUpdate {
 	return pu.SetInviterID(p.ID)
@@ -585,6 +599,9 @@ func (pu *PlayerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.GcicsReturnURL(); ok {
 		_spec.SetField(player.FieldGcicsReturnURL, field.TypeString, value)
+	}
+	if value, ok := pu.mutation.GcicsUserName(); ok {
+		_spec.SetField(player.FieldGcicsUserName, field.TypeString, value)
 	}
 	if pu.mutation.InviterCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1048,6 +1065,20 @@ func (puo *PlayerUpdateOne) SetNillableGcicsReturnURL(s *string) *PlayerUpdateOn
 	return puo
 }
 
+// SetGcicsUserName sets the "gcics_user_name" field.
+func (puo *PlayerUpdateOne) SetGcicsUserName(s string) *PlayerUpdateOne {
+	puo.mutation.SetGcicsUserName(s)
+	return puo
+}
+
+// SetNillableGcicsUserName sets the "gcics_user_name" field if the given value is not nil.
+func (puo *PlayerUpdateOne) SetNillableGcicsUserName(s *string) *PlayerUpdateOne {
+	if s != nil {
+		puo.SetGcicsUserName(*s)
+	}
+	return puo
+}
+
 // SetInviter sets the "inviter" edge to the Player entity.
 func (puo *PlayerUpdateOne) SetInviter(p *Player) *PlayerUpdateOne {
 	return puo.SetInviterID(p.ID)
@@ -1267,6 +1298,9 @@ func (puo *PlayerUpdateOne) sqlSave(ctx context.Context) (_node *Player, err err
 	}
 	if value, ok := puo.mutation.GcicsReturnURL(); ok {
 		_spec.SetField(player.FieldGcicsReturnURL, field.TypeString, value)
+	}
+	if value, ok := puo.mutation.GcicsUserName(); ok {
+		_spec.SetField(player.FieldGcicsUserName, field.TypeString, value)
 	}
 	if puo.mutation.InviterCleared() {
 		edge := &sqlgraph.EdgeSpec{

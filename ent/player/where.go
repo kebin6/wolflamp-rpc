@@ -165,6 +165,11 @@ func GcicsReturnURL(v string) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldGcicsReturnURL, v))
 }
 
+// GcicsUserName applies equality check predicate on the "gcics_user_name" field. It's identical to GcicsUserNameEQ.
+func GcicsUserName(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsUserName, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Player {
 	return predicate.Player(sql.FieldEQ(FieldCreatedAt, v))
@@ -1268,6 +1273,71 @@ func GcicsReturnURLEqualFold(v string) predicate.Player {
 // GcicsReturnURLContainsFold applies the ContainsFold predicate on the "gcics_return_url" field.
 func GcicsReturnURLContainsFold(v string) predicate.Player {
 	return predicate.Player(sql.FieldContainsFold(FieldGcicsReturnURL, v))
+}
+
+// GcicsUserNameEQ applies the EQ predicate on the "gcics_user_name" field.
+func GcicsUserNameEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldEQ(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameNEQ applies the NEQ predicate on the "gcics_user_name" field.
+func GcicsUserNameNEQ(v string) predicate.Player {
+	return predicate.Player(sql.FieldNEQ(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameIn applies the In predicate on the "gcics_user_name" field.
+func GcicsUserNameIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldIn(FieldGcicsUserName, vs...))
+}
+
+// GcicsUserNameNotIn applies the NotIn predicate on the "gcics_user_name" field.
+func GcicsUserNameNotIn(vs ...string) predicate.Player {
+	return predicate.Player(sql.FieldNotIn(FieldGcicsUserName, vs...))
+}
+
+// GcicsUserNameGT applies the GT predicate on the "gcics_user_name" field.
+func GcicsUserNameGT(v string) predicate.Player {
+	return predicate.Player(sql.FieldGT(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameGTE applies the GTE predicate on the "gcics_user_name" field.
+func GcicsUserNameGTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldGTE(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameLT applies the LT predicate on the "gcics_user_name" field.
+func GcicsUserNameLT(v string) predicate.Player {
+	return predicate.Player(sql.FieldLT(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameLTE applies the LTE predicate on the "gcics_user_name" field.
+func GcicsUserNameLTE(v string) predicate.Player {
+	return predicate.Player(sql.FieldLTE(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameContains applies the Contains predicate on the "gcics_user_name" field.
+func GcicsUserNameContains(v string) predicate.Player {
+	return predicate.Player(sql.FieldContains(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameHasPrefix applies the HasPrefix predicate on the "gcics_user_name" field.
+func GcicsUserNameHasPrefix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasPrefix(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameHasSuffix applies the HasSuffix predicate on the "gcics_user_name" field.
+func GcicsUserNameHasSuffix(v string) predicate.Player {
+	return predicate.Player(sql.FieldHasSuffix(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameEqualFold applies the EqualFold predicate on the "gcics_user_name" field.
+func GcicsUserNameEqualFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldEqualFold(FieldGcicsUserName, v))
+}
+
+// GcicsUserNameContainsFold applies the ContainsFold predicate on the "gcics_user_name" field.
+func GcicsUserNameContainsFold(v string) predicate.Player {
+	return predicate.Player(sql.FieldContainsFold(FieldGcicsUserName, v))
 }
 
 // HasInviter applies the HasEdge predicate on the "inviter" edge.

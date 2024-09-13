@@ -1469,6 +1469,30 @@ func (pl *PlayerCreate) SetNotNilGcicsReturnURL(value *string) *PlayerCreate {
 }
 
 // set field if value's pointer is not nil.
+func (pl *PlayerUpdate) SetNotNilGcicsUserName(value *string) *PlayerUpdate {
+	if value != nil {
+		return pl.SetGcicsUserName(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerUpdateOne) SetNotNilGcicsUserName(value *string) *PlayerUpdateOne {
+	if value != nil {
+		return pl.SetGcicsUserName(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
+func (pl *PlayerCreate) SetNotNilGcicsUserName(value *string) *PlayerCreate {
+	if value != nil {
+		return pl.SetGcicsUserName(*value)
+	}
+	return pl
+}
+
+// set field if value's pointer is not nil.
 func (po *PoolUpdate) SetNotNilUpdatedAt(value *time.Time) *PoolUpdate {
 	if value != nil {
 		return po.SetUpdatedAt(*value)
