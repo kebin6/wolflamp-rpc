@@ -461,16 +461,39 @@ func (l *DealOpenGameLogic) DealOpenGame(in *wolflamp.DealOpenGameReq) (*wolflam
 		return nil, err
 	}
 
-	if len(allInvests) == 0 {
+	hasRealPlayer := false
+	for _, v := range allInvests {
+		if v.PlayerID < util.PlayerMaxId {
+			hasRealPlayer = true
+			break
+		}
+	}
+	// 机器人空跑则直接将机器人投注全部返回机器人池
+	if !hasRealPlayer {
+		totalInvest := 0
+		for _, v := range allInvests {
+			totalInvest += int(v.LambNum)
+		}
 		err := l.svcCtx.DB.Round.UpdateOneID(round.Id).
 			SetStatus(uint8(roundenum.Opening.Val())).
 			SetComputeAmount(0).
 			SetOpenType(roundenum.SingleWolf.Val()).
 			SetSyncStatus(uint32(roundenum.NoNeed)).
-			SetSelectedFold(uint32(rand.Intn(8) + 1)).Exec(l.ctx)
+			SetSelectedFold(0).Exec(l.ctx)
 		if err != nil {
 			fmt.Printf("ProcessOpen[%s]: update round error : %s", in.Mode, err.Error())
 			return nil, err
+		}
+		if totalInvest > 0 {
+			err := l.svcCtx.DB.Pool.Create().SetMode(in.Mode).
+				SetStatus(1).SetRoundID(round.Id).SetType(poolenum.Robot.Val()).
+				SetLambNum(float64(totalInvest)).
+				SetRemark("机器人空跑资金原路返回").
+				Exec(l.ctx)
+			if err != nil {
+				fmt.Printf("ProcessOpen[%s]: create robot pool return error : %s", in.Mode, err.Error())
+				return nil, err
+			}
 		}
 		return &wolflamp.BaseIDResp{}, nil
 	}
